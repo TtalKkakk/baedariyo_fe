@@ -1,0 +1,362 @@
+:root {
+  /* =========================
+   * Atomic - Common / Neutral
+   * ========================= */
+  --color-atomic-common-100: #ffffff;
+  --color-atomic-common-0: #000000;
+
+  --color-global-neutral-100: #ffffff;
+  --color-global-neutral-0: #000000;
+
+  --color-atomic-neutral-99: #fbfbfb;
+  --color-atomic-neutral-98: #f5f5f5;
+  --color-atomic-neutral-97: #ececec;
+  --color-atomic-neutral-95: #dcdcdc;
+  --color-atomic-neutral-90: #c1c1c1;
+  --color-atomic-neutral-80: #b0b0b0;
+  --color-atomic-neutral-70: #9b9b9b;
+  --color-atomic-neutral-60: #8a8a8a;
+  --color-atomic-neutral-50: #737373;
+  --color-atomic-neutral-40: #5c5c5c;
+  --color-atomic-neutral-30: #474747;
+  --color-atomic-neutral-25: #1c1c1c;
+  --color-atomic-neutral-20: #2a2a2a;
+  --color-atomic-neutral-15: #333333;
+  --color-atomic-neutral-10: #171717;
+  --color-atomic-neutral-5: #0f0f0f;
+
+  /* =========================
+   * Atomic - CoolNeutral
+   * ========================= */
+  --color-global-coolNeutral-100: #ffffff;
+  --color-global-coolNeutral-0: #000000;
+
+  --color-atomic-coolNeutral-99: #fafbfc;
+  --color-atomic-coolNeutral-98: #f6f7fa;
+  --color-atomic-coolNeutral-97: #edeff2;
+  --color-atomic-coolNeutral-96: #e6e8ed;
+  --color-atomic-coolNeutral-95: #d7dae0;
+  --color-atomic-coolNeutral-90: #cbced4;
+  --color-atomic-coolNeutral-80: #bbbcc6;
+  --color-atomic-coolNeutral-70: #979ba6;
+  --color-atomic-coolNeutral-60: #878b94;
+  --color-atomic-coolNeutral-50: #747883;
+  --color-atomic-coolNeutral-40: #636670;
+  --color-atomic-coolNeutral-30: #50525b;
+  --color-atomic-coolNeutral-25: #37383c;
+  --color-atomic-coolNeutral-23: #212225;
+  --color-atomic-coolNeutral-22: #0e0e10;
+  --color-atomic-coolNeutral-20: #383940;
+  --color-atomic-coolNeutral-17: #333438;
+  --color-atomic-coolNeutral-15: #1b1c1e;
+  --color-atomic-coolNeutral-10: #1d1d21;
+  --color-atomic-coolNeutral-7: #141415;
+  --color-atomic-coolNeutral-5: #2e2f33;
+
+  /* =========================
+   * Atomic - Blue
+   * ========================= */
+  --color-global-blue-100: #ffffff;
+  --color-global-blue-0: #000000;
+
+  --color-atomic-blue-99: #f5f9ff;
+  --color-atomic-blue-98: #edf4ff;
+  --color-atomic-blue-95: #d8e7ff;
+  --color-atomic-blue-90: #a6c8ff;
+  --color-atomic-blue-80: #76abff;
+  --color-atomic-blue-70: #3b82f6;
+  --color-atomic-blue-65: #4f95ff;
+  --color-atomic-blue-60: #276de3;
+  --color-atomic-blue-55: #1a75ff;
+  --color-atomic-blue-50: #1c59c4;
+  --color-atomic-blue-45: #005eeb;
+  --color-atomic-blue-40: #144294;
+  --color-atomic-blue-30: #0f2f69;
+  --color-atomic-blue-20: #0b2045;
+  --color-atomic-blue-10: #011129;
+
+  /* =========================
+   * Atomic - Red
+   * ========================= */
+  --color-global-red-100: #ffffff;
+  --color-global-red-0: #000000;
+
+  --color-atomic-red-99: #fff8f8;
+  --color-atomic-red-98: #ffeded;
+  --color-atomic-red-95: #ffd1d1;
+  --color-atomic-red-90: #ff9393;
+  --color-atomic-red-80: #ff5555;
+  --color-atomic-red-70: #f92e2e;
+  --color-atomic-red-60: #dc2626;
+  --color-atomic-red-50: #ae0a06;
+  --color-atomic-red-40: #8f1610;
+  --color-atomic-red-30: #6a0701;
+  --color-atomic-red-20: #450700;
+  --color-atomic-red-10: #300000;
+
+  /* =========================
+   * Atomic - RedOrange
+   * ========================= */
+  --color-global-redOrange-100: #ffffff;
+  --color-global-redOrange-0: #000000;
+
+  --color-atomic-redOrange-99: #fff9f4;
+  --color-atomic-redOrange-98: #fff2e6;
+  --color-atomic-redOrange-95: #ffe4cd;
+  --color-atomic-redOrange-90: #ffc196;
+  --color-atomic-redOrange-80: #ff954e;
+  --color-atomic-redOrange-70: #ff6f1d;
+  --color-atomic-redOrange-60: #ea580c;
+  --color-atomic-redOrange-50: #cd4506;
+  --color-atomic-redOrange-48: #f55a00;
+  --color-atomic-redOrange-40: #9f3b10;
+  --color-atomic-redOrange-30: #752a0d;
+  --color-atomic-redOrange-20: #4d1805;
+  --color-atomic-redOrange-10: #300d01;
+
+  /* =========================
+   * Atomic - Yellow
+   * ========================= */
+  --color-global-orange-100: #ffffff;
+  --color-global-orange-0: #000000;
+
+  --color-atomic-yellow-99: #fffdef;
+  --color-atomic-yellow-98: #fffbe5;
+  --color-atomic-yellow-95: #fff8d0;
+  --color-atomic-yellow-90: #fff1b3;
+  --color-atomic-yellow-80: #ffe98e;
+  --color-atomic-yellow-70: #ffe15f;
+  --color-atomic-yellow-60: #ffd919;
+  --color-atomic-yellow-50: #f3c600;
+  --color-atomic-yellow-40: #d7a900;
+  --color-atomic-yellow-30: #af8101;
+  --color-atomic-yellow-20: #433405;
+  --color-atomic-yellow-10: #433405;
+
+  /* =========================
+   * Atomic - Green / Lime
+   * ========================= */
+  --color-global-green-100: #ffffff;
+  --color-global-green-0: #000000;
+
+  --color-atomic-green-99: #f1fff3;
+  --color-atomic-green-98: #e2ffe5;
+  --color-atomic-green-95: #cffcd5;
+  --color-atomic-green-90: #a5f2b1;
+  --color-atomic-green-80: #81ea93;
+  --color-atomic-green-70: #62dd7b;
+  --color-atomic-green-60: #3dcc5a;
+  --color-atomic-green-50: #10b932;
+  --color-atomic-green-40: #12912b;
+  --color-atomic-green-30: #136825;
+  --color-atomic-green-20: #0e4e1c;
+  --color-atomic-green-10: #03350f;
+
+  --color-global-lime-100: #ffffff;
+  --color-global-lime-0: #000000;
+
+  --color-atomic-lime-99: #fbfff3;
+  --color-atomic-lime-98: #f5ffe4;
+  --color-atomic-lime-95: #ebffc5;
+  --color-atomic-lime-90: #daff9b;
+  --color-atomic-lime-80: #c9fb72;
+  --color-atomic-lime-70: #b5f350;
+  --color-atomic-lime-60: #99ea17;
+  --color-atomic-lime-50: #83d10d;
+  --color-atomic-lime-40: #67ad05;
+  --color-atomic-lime-30: #497b08;
+  --color-atomic-lime-20: #2d4d07;
+  --color-atomic-lime-10: #1b3300;
+  --color-atomic-lime-37: #429e00;
+
+  /* =========================
+   * Atomic - LightBlue / Cyan
+   * ========================= */
+  --color-global-lightBlue-100: #ffffff;
+  --color-global-lightBlue-0: #005580;
+
+  --color-global-cyan-100: #ffffff;
+  --color-global-cyan-0: #000000;
+
+  --color-atomic-lightBlue-99: #f2fbff;
+  --color-atomic-lightBlue-98: #e6f8ff;
+  --color-atomic-lightBlue-95: #c9f0ff;
+  --color-atomic-lightBlue-90: #abe7ff;
+  --color-atomic-lightBlue-80: #89dcff;
+  --color-atomic-lightBlue-70: #60cfff;
+  --color-atomic-lightBlue-60: #00aeff;
+  --color-atomic-lightBlue-50: #0097e4;
+  --color-atomic-lightBlue-40: #0077b2;
+  --color-atomic-lightBlue-30: #000000;
+  --color-atomic-lightBlue-20: #00324c;
+  --color-atomic-lightBlue-10: #001d2c;
+
+  /* =========================
+   * Atomic - Purple / Pink / Violet
+   * ========================= */
+  --color-global-purple-100: #ffffff;
+  --color-global-purple-0: #000000;
+
+  --color-global-violet-100: #ffffff;
+  --color-global-violet-0: #000000;
+
+  --color-global-pink-100: #ffffff;
+  --color-global-pink-0: #000000;
+
+  --color-atomic-purple-99: #fdf6ff;
+  --color-atomic-purple-98: #faeaff;
+  --color-atomic-purple-95: #f7d2ff;
+  --color-atomic-purple-90: #eca1ff;
+  --color-atomic-purple-80: #dd64ff;
+  --color-atomic-purple-70: #cd27fb;
+  --color-atomic-purple-60: #af04e1;
+  --color-atomic-purple-50: #9c00cb;
+  --color-atomic-purple-40: #8b09b4;
+  --color-atomic-purple-30: #6f0894;
+  --color-atomic-purple-20: #500671;
+  --color-atomic-purple-10: #320041;
+
+  --color-atomic-pink-99: #fff7fd;
+  --color-atomic-pink-98: #ffebfb;
+  --color-atomic-pink-95: #ffd7f6;
+  --color-atomic-pink-90: #ffacec;
+  --color-atomic-pink-80: #ff82e3;
+  --color-atomic-pink-70: #ff4ad8;
+  --color-atomic-pink-60: #fa23ca;
+  --color-atomic-pink-50: #dd11b1;
+  --color-atomic-pink-46: #e846cd;
+  --color-atomic-pink-40: #ad148b;
+  --color-atomic-pink-30: #8f1573;
+  --color-atomic-pink-20: #630d4e;
+  --color-atomic-pink-10: #3a002d;
+
+  /* =========================
+   * Atomic - Opacity
+   * ========================= */
+  --opacity-0: 0;
+  --opacity-3: 0.03;
+  --opacity-5: 0.05;
+  --opacity-8: 0.08;
+  --opacity-12: 0.12;
+  --opacity-16: 0.16;
+  --opacity-24: 0.24;
+  --opacity-32: 0.32;
+  --opacity-42: 0.42;
+  --opacity-52: 0.52;
+  --opacity-60: 0.6;
+  --opacity-76: 0.76;
+  --opacity-88: 0.88;
+  --opacity-94: 0.94;
+  --opacity-100: 1;
+
+  /* =========================
+   * Semantic - Static
+   * ========================= */
+  --color-semantic-static-white: var(--color-atomic-common-100);
+  --color-semantic-static-black: var(--color-atomic-common-0);
+
+  /* =========================
+   * Semantic - Label
+   * ========================= */
+  --color-semantic-label-normal: var(--color-atomic-coolNeutral-10);
+  --color-semantic-label-strong: var(--color-atomic-common-0);
+
+  /* "neutral + opacity-88" 등은 rgba로 만든 변수를 따로 제공 */
+  --color-semantic-label-neutral: rgba(
+    56,
+    57,
+    64,
+    0.88
+  ); /* coolNeutral-20 (#383940) */
+  --color-semantic-label-alternative: rgba(
+    56,
+    57,
+    64,
+    0.6
+  ); /* coolNeutral-20 */
+  --color-semantic-label-assistive: rgba(56, 57, 64, 0.32); /* coolNeutral-20 */
+  --color-semantic-label-disable: rgba(56, 57, 64, 0.24); /* coolNeutral-20 */
+
+  /* =========================
+   * Semantic - Background
+   * ========================= */
+  --color-semantic-background-normal-normal: var(--color-atomic-common-100);
+  --color-semantic-background-normal-alternative: var(
+    --color-atomic-coolNeutral-99
+  );
+  --color-semantic-background-elevated-normal: var(--color-atomic-common-100);
+  --color-semantic-background-elevated-alternative: var(
+    --color-atomic-coolNeutral-99
+  );
+
+  /* =========================
+   * Semantic - Interaction
+   * ========================= */
+  --color-semantic-interaction-inactive: var(--color-atomic-coolNeutral-70);
+  --color-semantic-interaction-disable: var(--color-atomic-coolNeutral-97);
+
+  /* =========================
+   * Semantic - Line
+   * ========================= */
+  --color-semantic-line-normal-normal: rgba(
+    151,
+    155,
+    166,
+    0.24
+  ); /* coolNeutral-70 (#979BA6) */
+  --color-semantic-line-normal-neutral: rgba(151, 155, 166, 0.16);
+  --color-semantic-line-normal-alternative: rgba(151, 155, 166, 0.08);
+
+  --color-semantic-line-solid-normal: var(--color-atomic-coolNeutral-96);
+  --color-semantic-line-solid-neutral: var(--color-atomic-coolNeutral-97);
+  --color-semantic-line-solid-alternative: var(--color-atomic-coolNeutral-98);
+
+  /* =========================
+   * Component - Fill
+   * ========================= */
+  --color-component-fill-normal: rgba(
+    151,
+    155,
+    166,
+    0.08
+  ); /* global-coolNeutral-70 == #979BA6 */
+  --color-component-fill-strong: rgba(151, 155, 166, 0.16);
+  --color-component-fill-alternative: rgba(151, 155, 166, 0.05);
+
+  /* =========================
+   * Semantic - Status
+   * ========================= */
+  --color-semantic-status-info: var(--color-atomic-blue-70);
+  --color-semantic-status-positive: var(--color-atomic-green-60);
+  --color-semantic-status-cautionary: var(--color-atomic-redOrange-70);
+  --color-semantic-status-negative: var(--color-atomic-red-70);
+  --color-semantic-status-favorite: var(--color-atomic-yellow-60);
+
+  /* =========================
+   * Semantic - Accent Background
+   * ========================= */
+  --color-semantic-accent-background-blue: var(--color-atomic-blue-95);
+  --color-semantic-accent-background-red: var(--color-atomic-red-95);
+  --color-semantic-accent-background-redOrange: var(
+    --color-atomic-redOrange-95
+  );
+  --color-semantic-accent-background-yellow: var(--color-atomic-yellow-95);
+  --color-semantic-accent-background-green: var(--color-atomic-green-95);
+  --color-semantic-accent-background-lime: var(--color-atomic-lime-95);
+  --color-semantic-accent-background-lightBlue: var(
+    --color-atomic-lightBlue-95
+  );
+  --color-semantic-accent-background-purple: var(--color-atomic-purple-95);
+  --color-semantic-accent-background-pink: var(--color-atomic-pink-95);
+
+  /* =========================
+   * Semantic - Inverse
+   * ========================= */
+  --color-semantic-inverse-background: var(--color-atomic-coolNeutral-10);
+  --color-semantic-inverse-label: var(--color-atomic-coolNeutral-98);
+
+  /* =========================
+   * Component - Material (Dimmer)
+   * ========================= */
+  --color-component-material-dimmer: rgba(0, 0, 0, 0.52);
+}

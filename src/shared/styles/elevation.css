@@ -1,0 +1,27 @@
+:root {
+  /* Shadows */
+  --style-semantic-shadow-normal:
+    0px 0px 4px 0px rgba(0, 0, 0, 0.08), 0px 1px 2px 0px rgba(0, 0, 0, 0.08),
+    0px 0px 2px 0px rgba(0, 0, 0, 0.04);
+
+  --style-semantic-shadow-emphasize:
+    0px 2px 8px 0px rgba(0, 0, 0, 0.08), 0px 1px 4px 0px rgba(0, 0, 0, 0.08),
+    0px 1px 2px 0px rgba(0, 0, 0, 0.04);
+
+  --style-semantic-shadow-strong:
+    0px 6px 20px 0px rgba(0, 0, 0, 0.08), 0px 2px 8px 0px rgba(0, 0, 0, 0.08),
+    0px 1px 2px 0px rgba(0, 0, 0, 0.04);
+
+  --style-semantic-shadow-heavy:
+    0px 12px 32px 0px rgba(0, 0, 0, 0.08), 0px 6px 16px 0px rgba(0, 0, 0, 0.08),
+    0px 2px 4px 0px rgba(0, 0, 0, 0.04);
+
+  --style-semantic-shadow-soft:
+    0px 2px 24px 0px rgba(0, 0, 0, 0.06), 0px 1px 12px 0px rgba(0, 0, 0, 0.04),
+    0px 1px 2px 0px rgba(0, 0, 0, 0.02);
+
+  /* Background Blur */
+  --style-semantic-backgroundBlur-normal: blur(5px);
+  --style-semantic-backgroundBlur-strong: blur(12px);
+  --style-semantic-backgroundBlur-heavy: blur(20px);
+}
