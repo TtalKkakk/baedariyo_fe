@@ -1,4 +1,4 @@
-import KakaoMap from '@/components/KakaoMap';
+import { KakaoMap } from '@/features/map';
 
 export default function DashboardPage() {
   return <KakaoMap />;

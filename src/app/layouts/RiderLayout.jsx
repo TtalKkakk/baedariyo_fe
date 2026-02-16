@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import Header from '@/components/Header';
+import { Header } from '@/widgets';
 
 /**
  * RiderLayout - 라이더(배달원)용 레이아웃
@@ -8,16 +8,10 @@ export default function RiderLayout() {
   return (
     <>
       <Header />
-      <main style={mainStyle}>
+      <main className="flex-1 min-h-0 overflow-auto">
         <Outlet />
       </main>
       {/* 필요시 RiderNavigation 추가 */}
     </>
   );
 }
-
-const mainStyle = {
-  flex: 1,
-  minHeight: 0,
-  overflow: 'auto',
-};

@@ -1,4 +1,100 @@
+@import 'tailwindcss';
 @import './shared/styles/index.css';
+
+@layer components {
+  .layout-page {
+    @apply min-h-screen flex items-center justify-center bg-[var(--color-semantic-background-normal-alternative)] p-6;
+  }
+
+  .layout-frame {
+    @apply w-[390px] h-[844px] bg-[var(--color-bg,#ffffff)] rounded-[24px] overflow-hidden flex flex-col border border-[var(--color-semantic-line-solid-neutral)] shadow-[var(--style-semantic-shadow-emphasize)];
+  }
+
+  .layout-section {
+    @apply p-4;
+  }
+
+  .layout-center {
+    @apply flex-1 flex flex-col items-center justify-center gap-4 p-6;
+  }
+}
+
+@layer utilities {
+  .text-primary {
+    color: var(--color-primary);
+  }
+
+  .bg-surface {
+    background: var(--color-bg, #ffffff);
+  }
+
+  .border-divider {
+    border-color: var(--color-semantic-line-solid-neutral);
+  }
+
+  .text-h1 {
+    font-family: var(--font-sans);
+    font-size: var(--h1-size);
+    line-height: var(--h1-line);
+    letter-spacing: var(--h1-track);
+  }
+
+  .text-h2 {
+    font-family: var(--font-sans);
+    font-size: var(--h2-size);
+    line-height: var(--h2-line);
+    letter-spacing: var(--h2-track);
+  }
+
+  .text-h3 {
+    font-family: var(--font-sans);
+    font-size: var(--h3-size);
+    line-height: var(--h3-line);
+    letter-spacing: var(--h3-track);
+  }
+
+  .text-h4 {
+    font-family: var(--font-sans);
+    font-size: var(--h4-size);
+    line-height: var(--h4-line);
+    letter-spacing: var(--h4-track);
+  }
+
+  .text-body1 {
+    font-family: var(--font-sans);
+    font-size: var(--body1-size);
+    line-height: var(--body1-line);
+    letter-spacing: var(--body1-track);
+  }
+
+  .text-body2 {
+    font-family: var(--font-sans);
+    font-size: var(--body2-size);
+    line-height: var(--body2-line);
+    letter-spacing: var(--body2-track);
+  }
+
+  .text-body3 {
+    font-family: var(--font-sans);
+    font-size: var(--body3-size);
+    line-height: var(--body3-line);
+    letter-spacing: var(--body3-track);
+  }
+
+  .text-caption1 {
+    font-family: var(--font-sans);
+    font-size: var(--caption1-size);
+    line-height: var(--caption1-line);
+    letter-spacing: var(--caption1-track);
+  }
+
+  .text-caption2 {
+    font-family: var(--font-sans);
+    font-size: var(--caption2-size);
+    line-height: var(--caption2-line);
+    letter-spacing: var(--caption2-track);
+  }
+}
 
 :root {
   font-family: var(--font-sans);

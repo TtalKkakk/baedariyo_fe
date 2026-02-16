@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { loadKakaoMapSdk } from '../lib/loadKakaoMap';
+import { loadKakaoMapSdk } from '@/shared/lib/loadKakaoMap';
 
 export default function KakaoMap() {
   const mapElRef = useRef(null);
@@ -29,14 +29,8 @@ export default function KakaoMap() {
   }, []);
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-      <div
-        ref={mapElRef}
-        style={{
-          width: '100%',
-          height: '100%',
-        }}
-      />
+    <div className="relative w-full h-full">
+      <div ref={mapElRef} className="w-full h-full" />
     </div>
   );
 }
