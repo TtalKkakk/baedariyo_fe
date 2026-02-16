@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import Header from '@/components/Header';
+import { Header } from '@/widgets';
 
 /**
  * RiderLayout - 라이더(배달원)용 레이아웃

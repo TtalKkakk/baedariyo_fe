@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import Header from '@/components/Header';
+import { Header } from '@/widgets';
 
 /**
  * UserLayout - 사용자(고객)용 레이아웃
