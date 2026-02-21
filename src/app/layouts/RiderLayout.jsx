@@ -1,5 +1,5 @@
 import { Outlet, NavLink } from 'react-router-dom';
-import { Header } from '@/widgets';
+import Header from './Header';
 
 export default function RiderLayout() {
   return (

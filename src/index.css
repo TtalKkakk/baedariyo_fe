@@ -7,7 +7,7 @@
   }
 
   .layout-frame {
-    @apply w-[390px] h-[844px] bg-[var(--color-bg,#ffffff)] rounded-[24px] overflow-hidden flex flex-col border border-[var(--color-semantic-line-solid-neutral)] shadow-[var(--style-semantic-shadow-emphasize)];
+    @apply w-[375px] h-[812px] bg-[var(--color-bg,#ffffff)] rounded-[12px] overflow-hidden flex flex-col border border-[var(--color-semantic-line-solid-neutral)];
   }
 
   .layout-section {
@@ -20,6 +20,14 @@
 }
 
 @layer utilities {
+  .nav-active {
+    color: var(--color-atomic-redOrange-80);
+  }
+
+  .nav-inactive {
+    color: var(--color-semantic-label-alternative);
+  }
+
   .text-primary {
     color: var(--color-primary);
   }
@@ -120,11 +128,13 @@ body {
   color: var(--color-text, #111111);
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+@layer base {
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 
-button {
-  font: inherit;
+  button {
+    font: inherit;
+  }
 }
