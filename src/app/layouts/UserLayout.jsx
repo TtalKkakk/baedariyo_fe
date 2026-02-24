@@ -1,9 +1,7 @@
 import { Outlet } from 'react-router-dom';
-import { Header } from '@/widgets';
+import Header from './Header';
+import BottomNav from './BottomNav';
 
-/**
- * UserLayout - 사용자(고객)용 레이아웃
- */
 export default function UserLayout() {
   return (
     <>
@@ -11,7 +9,7 @@ export default function UserLayout() {
       <main className="flex-1 min-h-0 overflow-auto">
         <Outlet />
       </main>
-      {/* 필요시 BottomNavigation 추가 */}
+      <BottomNav />
     </>
   );
 }
