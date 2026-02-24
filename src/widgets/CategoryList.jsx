@@ -26,7 +26,7 @@ const CATEGORIES = [
 
 export default function CategoryList() {
   return (
-    <div className="grid grid-cols-5 gap-y-4 px-4 py-2">
+    <div className="grid grid-cols-5 gap-[8px] px-4 py-2">
       {CATEGORIES.map((category) => (
         <Link
           key={category.id}
@@ -34,7 +34,7 @@ export default function CategoryList() {
           className="flex flex-col items-center gap-1.5"
         >
           <img src={category.icon} alt={category.label} className="w-16 h-16" />
-          <span className="text-body3 font-medium text-center text-[var(--color-semantic-label-normal)]">
+          <span className="text-body3 font-medium text-center text-[var(--color-semantic-label-normal)] whitespace-nowrap">
             {category.label}
           </span>
         </Link>

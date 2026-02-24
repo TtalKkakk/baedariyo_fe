@@ -7,7 +7,7 @@
   }
 
   .layout-frame {
-    @apply w-[375px] h-[812px] bg-[var(--color-bg,#ffffff)] rounded-[12px] overflow-hidden flex flex-col border border-[var(--color-semantic-line-solid-neutral)];
+    @apply w-[360px] h-[800px] bg-[var(--color-bg,#ffffff)] overflow-hidden flex flex-col;
   }
 
   .layout-section {
