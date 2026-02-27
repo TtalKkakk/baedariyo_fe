@@ -11,7 +11,7 @@ export default function HomePage() {
       <div className="px-4 pt-2 pb-4">
         <button
           onClick={() => navigate('/search')}
-          className="w-full flex items-center gap-3 h-10 pl-2 pr-4 bg-white border border-[var(--color-semantic-line-normal-normal)] rounded-[8px]"
+          className="w-full flex items-center gap-3 h-10 pl-2 pr-4 bg-white border border-[var(--color-semantic-line-normal-normal)] rounded-lg"
         >
           <SearchIcon className="size-5 [&_path]:fill-[var(--color-atomic-redOrange-80)] shrink-0" />
           <span className="text-body1 font-normal text-[var(--color-semantic-label-alternative)]">
@@ -19,7 +19,9 @@ export default function HomePage() {
           </span>
         </button>
       </div>
-      <CategoryList />
+      <div className="px-4 py-2">
+        <CategoryList />
+      </div>
     </div>
   );
 }

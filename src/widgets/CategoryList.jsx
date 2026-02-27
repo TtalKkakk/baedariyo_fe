@@ -26,7 +26,7 @@ const CATEGORIES = [
 
 export default function CategoryList() {
   return (
-    <div className="grid grid-cols-5 gap-[8px] px-4 py-2">
+    <div className="grid grid-cols-5 gap-[8px]">
       {CATEGORIES.map((category) => (
         <Link
           key={category.id}
