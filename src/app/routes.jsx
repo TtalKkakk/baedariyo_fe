@@ -51,6 +51,9 @@ const router = createBrowserRouter([
   {
     element: <RootLayout />,
     children: [
+      // 검색
+      { path: '/search', element: <SearchPage /> },
+
       // 로그인/회원가입
       { path: '/login', element: <LoginPage /> },
       { path: '/signup', element: <SignupPage /> },
@@ -68,7 +71,6 @@ const router = createBrowserRouter([
         children: [
           // 홈
           { path: '/', element: <HomePage /> },
-          { path: '/search', element: <SearchPage /> },
           { path: '/category/:categoryId', element: <CategoryPage /> },
 
           // 가게/메뉴
