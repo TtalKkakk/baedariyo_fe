@@ -50,6 +50,16 @@ export default function OrderDetailPage() {
     navigate(`/orders${nextSearch}`);
   };
 
+  const moveToTracking = () => {
+    if (!payment) return;
+
+    const nextSearch =
+      selectedStatus === 'ALL' ? '' : `?status=${selectedStatus}`;
+    navigate(`/orders/${routeId}/tracking${nextSearch}`, {
+      state: { payment, routeId },
+    });
+  };
+
   if (!routeId) {
     return (
       <div className="px-4 py-6">
@@ -239,6 +249,16 @@ export default function OrderDetailPage() {
           </div>
         </section>
       ) : null}
+
+      <div className="mt-4">
+        <button
+          type="button"
+          onClick={moveToTracking}
+          className="w-full h-10 rounded-lg bg-[var(--color-atomic-redOrange-80)] text-white text-body2 font-semibold"
+        >
+          주문 추적 보기
+        </button>
+      </div>
     </div>
   );
 }
