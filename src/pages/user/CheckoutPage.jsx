@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { createOrder, getStoreMenus } from '@/shared/api';
-import { useCartStore } from '@/shared/store';
+import { useAddressBookStore, useCartStore } from '@/shared/store';
 
 const PAYMENT_METHODS = [
   { value: 'CARD', label: '카드' },
@@ -87,12 +87,34 @@ function getOrderErrorMessage(error) {
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const items = useCartStore((state) => state.items);
   const clearCart = useCartStore((state) => state.clearCart);
+  const addresses = useAddressBookStore((state) => state.addresses);
+  const defaultAddressId = useAddressBookStore(
+    (state) => state.defaultAddressId
+  );
+  const selectedAddressId = location.state?.selectedAddressId ?? null;
+  const defaultAddress = useMemo(
+    () => addresses.find((item) => item.id === defaultAddressId) ?? null,
+    [addresses, defaultAddressId]
+  );
+  const selectedAddress = useMemo(() => {
+    if (!selectedAddressId) return defaultAddress;
+    return (
+      addresses.find((item) => item.id === selectedAddressId) ?? defaultAddress
+    );
+  }, [addresses, defaultAddress, selectedAddressId]);
 
-  const [roadAddress, setRoadAddress] = useState('');
-  const [jibunAddress, setJibunAddress] = useState('');
-  const [detailAddress, setDetailAddress] = useState('');
+  const [roadAddress, setRoadAddress] = useState(
+    selectedAddress?.roadAddress ?? ''
+  );
+  const [jibunAddress, setJibunAddress] = useState(
+    selectedAddress?.jibunAddress ?? ''
+  );
+  const [detailAddress, setDetailAddress] = useState(
+    selectedAddress?.detailAddress ?? ''
+  );
   const [storeRequest, setStoreRequest] = useState('');
   const [riderRequest, setRiderRequest] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('CARD');
@@ -112,6 +134,14 @@ export default function CheckoutPage() {
     (acc, item) => acc + getItemUnitAmount(item) * (item?.quantity ?? 0),
     0
   );
+
+  const applyDefaultAddress = () => {
+    if (!defaultAddress) return;
+
+    setRoadAddress(defaultAddress.roadAddress ?? '');
+    setJibunAddress(defaultAddress.jibunAddress ?? '');
+    setDetailAddress(defaultAddress.detailAddress ?? '');
+  };
 
   const createOrderMutation = useMutation({
     mutationFn: async () => {
@@ -263,6 +293,28 @@ export default function CheckoutPage() {
           <h2 className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
             배달 주소
           </h2>
+          <div className="mt-2 flex gap-2">
+            <button
+              type="button"
+              onClick={applyDefaultAddress}
+              disabled={!defaultAddress}
+              className="h-8 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-caption1 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              기본 주소 불러오기
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/mypage/addresses')}
+              className="h-8 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-caption1"
+            >
+              주소 관리
+            </button>
+          </div>
+          {selectedAddress ? (
+            <p className="mt-2 text-caption1 text-[var(--color-semantic-label-alternative)]">
+              선택 주소: {selectedAddress.label}
+            </p>
+          ) : null}
           <div className="mt-2 space-y-2">
             <input
               type="text"
