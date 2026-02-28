@@ -156,19 +156,29 @@ export default function StoreDetailPage() {
                 key={`${menu.menuName ?? 'menu'}-${index}`}
                 className="px-3 py-3 bg-white"
               >
-                <div className="flex items-start justify-between gap-2">
-                  <p className="text-body1 font-medium text-[var(--color-semantic-label-normal)]">
-                    {menu.menuName ?? '이름 없음'}
-                  </p>
-                  <span className="text-body2 font-semibold text-[var(--color-semantic-label-normal)]">
-                    {formatPrice(menu.price)}
-                  </span>
-                </div>
-                {menu.menuDescription ? (
-                  <p className="mt-1 text-body3 text-[var(--color-semantic-label-alternative)]">
-                    {menu.menuDescription}
-                  </p>
-                ) : null}
+                <button
+                  type="button"
+                  onClick={() =>
+                    navigate(
+                      `/stores/${trimmedStoreId}/menu/${menu?.id ?? index + 1}`
+                    )
+                  }
+                  className="w-full text-left"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="text-body1 font-medium text-[var(--color-semantic-label-normal)]">
+                      {menu.menuName ?? '이름 없음'}
+                    </p>
+                    <span className="text-body2 font-semibold text-[var(--color-semantic-label-normal)]">
+                      {formatPrice(menu.price)}
+                    </span>
+                  </div>
+                  {menu.menuDescription ? (
+                    <p className="mt-1 text-body3 text-[var(--color-semantic-label-alternative)]">
+                      {menu.menuDescription}
+                    </p>
+                  ) : null}
+                </button>
               </li>
             ))}
           </ul>
