@@ -1,7 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
-import { getMyReviews } from '@/shared/api';
+import { deleteMyReview, getMyReviews } from '@/shared/api';
 
 function formatDate(value) {
   if (!value) return '-';
@@ -24,10 +24,20 @@ function getErrorMessage(error) {
   );
 }
 
-function ReviewCard({ review, onOpenStore }) {
+function getDeleteErrorMessage(error) {
+  return (
+    error?.response?.data?.message ??
+    error?.message ??
+    '리뷰 삭제에 실패했습니다.'
+  );
+}
+
+function ReviewCard({ review, onOpenStore, onDelete, deletingReviewId }) {
   const images = Array.isArray(review?.orderMenuImages)
     ? review.orderMenuImages
     : [];
+  const reviewId = review?.publicStoreReviewId;
+  const isDeleting = deletingReviewId === reviewId;
 
   return (
     <li className="rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-white p-4">
@@ -61,21 +71,34 @@ function ReviewCard({ review, onOpenStore }) {
         </div>
       ) : null}
 
-      {review?.storePublicId ? (
-        <button
-          type="button"
-          onClick={() => onOpenStore(review.storePublicId)}
-          className="mt-3 h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body3 font-medium text-[var(--color-semantic-label-normal)]"
-        >
-          가게 상세 보기
-        </button>
-      ) : null}
+      <div className="mt-3 flex gap-2">
+        {review?.storePublicId ? (
+          <button
+            type="button"
+            onClick={() => onOpenStore(review.storePublicId)}
+            className="h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body3 font-medium text-[var(--color-semantic-label-normal)]"
+          >
+            가게 상세 보기
+          </button>
+        ) : null}
+        {reviewId ? (
+          <button
+            type="button"
+            onClick={() => onDelete(reviewId)}
+            disabled={isDeleting}
+            className="h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body3 font-medium text-[var(--color-semantic-status-cautionary)] disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {isDeleting ? '삭제 중...' : '리뷰 삭제'}
+          </button>
+        ) : null}
+      </div>
     </li>
   );
 }
 
 export default function MyReviewsPage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { data, isLoading, isFetching, isError, error, refetch } = useQuery({
     queryKey: ['my-reviews'],
@@ -87,6 +110,18 @@ export default function MyReviewsPage() {
 
   const openStoreDetail = (storePublicId) => {
     navigate(`/stores/${storePublicId}`);
+  };
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteMyReview,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['my-reviews'] });
+    },
+  });
+
+  const handleDeleteReview = (publicStoreReviewId) => {
+    if (!publicStoreReviewId) return;
+    deleteMutation.mutate(publicStoreReviewId);
   };
 
   if (isLoading) {
@@ -147,15 +182,25 @@ export default function MyReviewsPage() {
           </p>
         </div>
       ) : (
-        <ul className="mt-4 space-y-3">
-          {reviews.map((review, index) => (
-            <ReviewCard
-              key={`${review?.publicStoreReviewId ?? review?.createdAt ?? 'review'}-${index}`}
-              review={review}
-              onOpenStore={openStoreDetail}
-            />
-          ))}
-        </ul>
+        <>
+          {deleteMutation.isError ? (
+            <p className="mt-3 text-body3 text-[var(--color-semantic-status-cautionary)]">
+              {getDeleteErrorMessage(deleteMutation.error)}
+            </p>
+          ) : null}
+
+          <ul className="mt-4 space-y-3">
+            {reviews.map((review, index) => (
+              <ReviewCard
+                key={`${review?.publicStoreReviewId ?? review?.createdAt ?? 'review'}-${index}`}
+                review={review}
+                onOpenStore={openStoreDetail}
+                onDelete={handleDeleteReview}
+                deletingReviewId={deleteMutation.variables}
+              />
+            ))}
+          </ul>
+        </>
       )}
     </div>
   );
