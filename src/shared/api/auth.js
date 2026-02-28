@@ -1,5 +1,10 @@
 import { api } from './instance';
 
+export async function signupUser(payload) {
+  const response = await api.post('/api/auth/user/signup', payload);
+  return response.data?.data ?? response.data;
+}
+
 export async function loginUser(payload) {
   const response = await api.post('/api/auth/user/login', payload);
   return response.data?.data ?? response.data;
