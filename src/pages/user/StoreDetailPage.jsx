@@ -115,6 +115,13 @@ export default function StoreDetailPage() {
         <p className="mt-1 text-body2 text-[var(--color-semantic-label-alternative)]">
           평점 {store?.totalRating ?? 0} · 리뷰 {store?.reviewCount ?? 0}개
         </p>
+        <button
+          type="button"
+          onClick={() => navigate(`/stores/${trimmedStoreId}/reviews`)}
+          className="mt-2 h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body3 font-medium text-[var(--color-semantic-label-normal)]"
+        >
+          리뷰 전체 보기
+        </button>
       </div>
 
       {store?.thumbnailUrl ? (
