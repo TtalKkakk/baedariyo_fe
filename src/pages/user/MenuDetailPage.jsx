@@ -150,23 +150,6 @@ export default function MenuDetailPage() {
   const unitTotal = basePriceAmount + selectedOptionTotal;
   const totalAmount = unitTotal * quantity;
 
-  if (!selectedMenu) {
-    return (
-      <div className="px-4 py-6">
-        <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
-          메뉴를 찾을 수 없습니다.
-        </p>
-        <button
-          type="button"
-          onClick={() => navigate(`/stores/${trimmedStoreId}`)}
-          className="mt-3 h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body2 font-medium text-[var(--color-semantic-label-normal)]"
-        >
-          가게 상세로 이동
-        </button>
-      </div>
-    );
-  }
-
   const toggleOption = (group, option) => {
     setSelectionError('');
     setAddFeedback('');
@@ -272,6 +255,23 @@ export default function MenuDetailPage() {
             </button>
           ) : null}
         </div>
+      </div>
+    );
+  }
+
+  if (!selectedMenu) {
+    return (
+      <div className="px-4 py-6">
+        <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
+          메뉴를 찾을 수 없습니다.
+        </p>
+        <button
+          type="button"
+          onClick={() => navigate(`/stores/${trimmedStoreId}`)}
+          className="mt-3 h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body2 font-medium text-[var(--color-semantic-label-normal)]"
+        >
+          가게 상세로 이동
+        </button>
       </div>
     );
   }
