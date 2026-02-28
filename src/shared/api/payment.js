@@ -1,37 +1,54 @@
 import { api } from './instance';
+import { requestWithMockFallback } from './fallback';
+import { mockApi } from './mockData';
 
 export async function createPayment(payload) {
-  const response = await api.post('/api/payments', payload);
-  return response.data?.data ?? response.data;
+  return requestWithMockFallback({
+    apiName: 'createPayment',
+    request: () => api.post('/api/payments', payload),
+    fallback: () => mockApi.createPayment(payload),
+  });
 }
 
 export async function approvePayment(paymentId, payload) {
-  const response = await api.post(
-    `/api/payments/${paymentId}/approve`,
-    payload
-  );
-  return response.data?.data ?? response.data;
+  return requestWithMockFallback({
+    apiName: 'approvePayment',
+    request: () => api.post(`/api/payments/${paymentId}/approve`, payload),
+    fallback: () => mockApi.approvePayment(paymentId, payload),
+  });
 }
 
 export async function failPayment(paymentId) {
-  const response = await api.post(`/api/payments/${paymentId}/fail`);
-  return response.data?.data ?? response.data;
+  return requestWithMockFallback({
+    apiName: 'failPayment',
+    request: () => api.post(`/api/payments/${paymentId}/fail`),
+    fallback: () => mockApi.failPayment(paymentId),
+  });
 }
 
 export async function cancelPayment(paymentId) {
-  const response = await api.post(`/api/payments/${paymentId}/cancel`);
-  return response.data?.data ?? response.data;
+  return requestWithMockFallback({
+    apiName: 'cancelPayment',
+    request: () => api.post(`/api/payments/${paymentId}/cancel`),
+    fallback: () => mockApi.cancelPayment(paymentId),
+  });
 }
 
 export async function getPaymentDetail(paymentId) {
-  const response = await api.get(`/api/payments/${paymentId}`);
-  return response.data?.data ?? response.data;
+  return requestWithMockFallback({
+    apiName: 'getPaymentDetail',
+    request: () => api.get(`/api/payments/${paymentId}`),
+    fallback: () => mockApi.getPaymentDetail(paymentId),
+  });
 }
 
 export async function getMyPayments(status) {
-  const response = await api.get('/api/payments/my', {
-    params: status ? { status } : undefined,
+  return requestWithMockFallback({
+    apiName: 'getMyPayments',
+    request: () =>
+      api.get('/api/payments/my', {
+        params: status ? { status } : undefined,
+      }),
+    fallback: () => mockApi.getMyPayments(status),
   });
-
-  return response.data?.data ?? response.data;
 }

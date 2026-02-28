@@ -1,21 +1,35 @@
 import { api } from './instance';
+import { requestWithMockFallback } from './fallback';
+import { mockApi } from './mockData';
 
 export async function createStore(payload) {
-  const response = await api.post('/api/stores', payload);
-  return response.data?.data ?? response.data;
+  return requestWithMockFallback({
+    apiName: 'createStore',
+    request: () => api.post('/api/stores', payload),
+    fallback: () => mockApi.createStore(payload),
+  });
 }
 
 export async function getStoreDetail(storePublicId) {
-  const response = await api.get(`/api/stores/${storePublicId}`);
-  return response.data?.data ?? response.data;
+  return requestWithMockFallback({
+    apiName: 'getStoreDetail',
+    request: () => api.get(`/api/stores/${storePublicId}`),
+    fallback: () => mockApi.getStoreDetail(storePublicId),
+  });
 }
 
 export async function getStoreReviews(storePublicId) {
-  const response = await api.get(`/api/stores/${storePublicId}/reviews`);
-  return response.data?.data ?? response.data;
+  return requestWithMockFallback({
+    apiName: 'getStoreReviews',
+    request: () => api.get(`/api/stores/${storePublicId}/reviews`),
+    fallback: () => mockApi.getStoreReviews(storePublicId),
+  });
 }
 
 export async function getStoreMenus(storePublicId) {
-  const response = await api.get(`/api/stores/${storePublicId}/menus`);
-  return response.data?.data ?? response.data;
+  return requestWithMockFallback({
+    apiName: 'getStoreMenus',
+    request: () => api.get(`/api/stores/${storePublicId}/menus`),
+    fallback: () => mockApi.getStoreMenus(storePublicId),
+  });
 }

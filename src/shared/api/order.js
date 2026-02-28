@@ -1,11 +1,19 @@
 import { api } from './instance';
+import { requestWithMockFallback } from './fallback';
+import { mockApi } from './mockData';
 
 export async function createOrder(payload) {
-  const response = await api.post('/api/orders/rider/assign', payload);
-  return response.data?.data ?? response.data;
+  return requestWithMockFallback({
+    apiName: 'createOrder',
+    request: () => api.post('/api/orders/rider/assign', payload),
+    fallback: () => mockApi.createOrder(payload),
+  });
 }
 
 export async function assignRiderToOrder(payload) {
-  const response = await api.post('/api/orders/users/create', payload);
-  return response.data?.data ?? response.data;
+  return requestWithMockFallback({
+    apiName: 'assignRiderToOrder',
+    request: () => api.post('/api/orders/users/create', payload),
+    fallback: () => mockApi.assignRiderToOrder(payload),
+  });
 }
