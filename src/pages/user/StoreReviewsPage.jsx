@@ -102,6 +102,8 @@ export default function StoreReviewsPage() {
   const canFetch = isUuid(trimmedStoreId);
   const [orderIdInput, setOrderIdInput] = useState('');
   const [ratingInput, setRatingInput] = useState(5);
+  const [commentInput, setCommentInput] = useState('');
+  const [imageUrlsInput, setImageUrlsInput] = useState('');
 
   const { data, isLoading, isFetching, isError, error, refetch } = useQuery({
     queryKey: ['store-reviews', trimmedStoreId],
@@ -119,6 +121,8 @@ export default function StoreReviewsPage() {
     mutationFn: (payload) => createStoreReview(trimmedStoreId, payload),
     onSuccess: () => {
       setOrderIdInput('');
+      setCommentInput('');
+      setImageUrlsInput('');
       refetch();
     },
   });
@@ -132,9 +136,30 @@ export default function StoreReviewsPage() {
       return;
     }
 
+    const normalizedComment = commentInput.trim();
+    if (normalizedComment.length > 150) {
+      window.alert('리뷰 코멘트는 150자 이하여야 합니다.');
+      return;
+    }
+
+    const normalizedImageUrls = imageUrlsInput
+      .split(',')
+      .map((value) => value.trim())
+      .filter(Boolean);
+    if (normalizedImageUrls.length > 4) {
+      window.alert('리뷰 이미지는 최대 4개까지 입력할 수 있습니다.');
+      return;
+    }
+
     createMutation.mutate({
       orderId: parsedOrderId,
       rating: ratingInput,
+      ...(normalizedComment
+        ? { storeReviewComment: { comment: normalizedComment } }
+        : {}),
+      ...(normalizedImageUrls.length > 0
+        ? { storeReviewImages: { images: normalizedImageUrls } }
+        : {}),
     });
   };
   const averageRating =
@@ -221,7 +246,7 @@ export default function StoreReviewsPage() {
           리뷰 작성
         </h2>
         <p className="mt-1 text-body3 text-[var(--color-semantic-label-alternative)]">
-          orderId와 평점으로 리뷰를 등록합니다.
+          orderId/평점은 필수, 코멘트/이미지 URL은 선택입니다.
         </p>
 
         <form onSubmit={handleCreateReview} className="mt-2 space-y-2">
@@ -245,6 +270,20 @@ export default function StoreReviewsPage() {
               </option>
             ))}
           </select>
+          <textarea
+            value={commentInput}
+            onChange={(event) => setCommentInput(event.target.value)}
+            placeholder="리뷰 코멘트 (선택, 최대 150자)"
+            maxLength={150}
+            className="w-full min-h-20 px-3 py-2 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body3 outline-none resize-y"
+          />
+          <input
+            type="text"
+            value={imageUrlsInput}
+            onChange={(event) => setImageUrlsInput(event.target.value)}
+            placeholder="이미지 URL 1~4개 (쉼표로 구분, 선택)"
+            className="w-full h-10 px-3 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body3 outline-none"
+          />
           <button
             type="submit"
             disabled={createMutation.isPending}
