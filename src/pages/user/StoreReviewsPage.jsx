@@ -1,7 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { getStoreReviews } from '@/shared/api';
+import { createStoreReview, getStoreReviews } from '@/shared/api';
 
 const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -29,6 +30,20 @@ function getErrorMessage(error) {
     error?.message ??
     '리뷰 목록을 불러오지 못했습니다.'
   );
+}
+
+function getCreateErrorMessage(error) {
+  return (
+    error?.response?.data?.message ??
+    error?.message ??
+    '리뷰 작성에 실패했습니다.'
+  );
+}
+
+function toPositiveInteger(value) {
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed <= 0) return null;
+  return parsed;
 }
 
 function ReviewItem({ review, onOpenDetail }) {
@@ -85,6 +100,8 @@ export default function StoreReviewsPage() {
   const { storeId = '' } = useParams();
   const trimmedStoreId = storeId.trim();
   const canFetch = isUuid(trimmedStoreId);
+  const [orderIdInput, setOrderIdInput] = useState('');
+  const [ratingInput, setRatingInput] = useState(5);
 
   const { data, isLoading, isFetching, isError, error, refetch } = useQuery({
     queryKey: ['store-reviews', trimmedStoreId],
@@ -96,6 +113,29 @@ export default function StoreReviewsPage() {
   const reviews = Array.isArray(data) ? data : [];
   const openReviewDetail = (reviewPublicId) => {
     navigate(`/reviews/${reviewPublicId}`);
+  };
+
+  const createMutation = useMutation({
+    mutationFn: (payload) => createStoreReview(trimmedStoreId, payload),
+    onSuccess: () => {
+      setOrderIdInput('');
+      refetch();
+    },
+  });
+
+  const handleCreateReview = (event) => {
+    event.preventDefault();
+
+    const parsedOrderId = toPositiveInteger(orderIdInput);
+    if (!parsedOrderId) {
+      window.alert('orderId는 1 이상의 정수여야 합니다.');
+      return;
+    }
+
+    createMutation.mutate({
+      orderId: parsedOrderId,
+      rating: ratingInput,
+    });
   };
   const averageRating =
     reviews.length === 0
@@ -175,6 +215,62 @@ export default function StoreReviewsPage() {
           ★ {averageRating}
         </p>
       </div>
+
+      <section className="mt-4 rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-white p-4">
+        <h2 className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
+          리뷰 작성
+        </h2>
+        <p className="mt-1 text-body3 text-[var(--color-semantic-label-alternative)]">
+          orderId와 평점으로 리뷰를 등록합니다.
+        </p>
+
+        <form onSubmit={handleCreateReview} className="mt-2 space-y-2">
+          <input
+            type="number"
+            value={orderIdInput}
+            onChange={(event) => setOrderIdInput(event.target.value)}
+            placeholder="orderId"
+            min={1}
+            className="w-full h-10 px-3 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body3 outline-none"
+            required
+          />
+          <select
+            value={ratingInput}
+            onChange={(event) => setRatingInput(Number(event.target.value))}
+            className="w-full h-10 px-3 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body3 outline-none bg-white"
+          >
+            {[5, 4, 3, 2, 1].map((rating) => (
+              <option key={rating} value={rating}>
+                평점 {rating}
+              </option>
+            ))}
+          </select>
+          <button
+            type="submit"
+            disabled={createMutation.isPending}
+            className="w-full h-10 rounded-lg bg-[var(--color-atomic-redOrange-80)] text-white text-body2 font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {createMutation.isPending ? '작성 중...' : '리뷰 작성'}
+          </button>
+        </form>
+
+        {createMutation.isError ? (
+          <div className="mt-2">
+            <p className="text-body3 text-[var(--color-semantic-status-cautionary)]">
+              {getCreateErrorMessage(createMutation.error)}
+            </p>
+            {createMutation.error?.response?.status === 401 ? (
+              <button
+                type="button"
+                onClick={() => navigate('/login')}
+                className="mt-2 h-8 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-caption1"
+              >
+                로그인하러 가기
+              </button>
+            ) : null}
+          </div>
+        ) : null}
+      </section>
 
       {reviews.length === 0 ? (
         <div className="mt-8 rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-[var(--color-semantic-background-normal-normal)] p-6 text-center">

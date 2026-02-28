@@ -13,6 +13,7 @@ export { failPayment } from './payment';
 export { cancelPayment } from './payment';
 export { getPaymentDetail } from './payment';
 export { getMyPayments } from './payment';
+export { createStoreReview } from './review';
 export { deleteMyReview } from './review';
 export { getMyReviews } from './review';
 export { getReviewDetail } from './review';
