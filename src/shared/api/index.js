@@ -4,6 +4,7 @@ export { signupUser } from './auth';
 export { loginRider } from './auth';
 export { signupRider } from './auth';
 export { withdrawUser } from './auth';
+export { withdrawRider } from './auth';
 export { createOrder } from './order';
 export { getMyPayments } from './payment';
 export { deleteMyReview } from './review';

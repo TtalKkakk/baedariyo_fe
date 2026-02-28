@@ -24,3 +24,8 @@ export async function withdrawUser() {
   const response = await api.patch('/api/auth/user/withdraw');
   return response.data?.data ?? response.data;
 }
+
+export async function withdrawRider() {
+  const response = await api.patch('/api/auth/rider/withdraw');
+  return response.data?.data ?? response.data;
+}
