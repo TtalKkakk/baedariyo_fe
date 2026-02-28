@@ -60,6 +60,13 @@ export default function HomePage() {
                 열기
               </button>
             </div>
+            <button
+              type="button"
+              onClick={() => navigate('/login')}
+              className="mt-2 h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body3 font-medium text-[var(--color-semantic-label-normal)]"
+            >
+              로그인 페이지 열기
+            </button>
           </section>
         </div>
       ) : null}

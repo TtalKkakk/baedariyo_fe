@@ -20,11 +20,10 @@ export const api = axios.create({
 // Request Interceptor
 api.interceptors.request.use(
   (config) => {
-    // 토큰이 필요한 경우 여기서 추가
-    // const token = localStorage.getItem('accessToken');
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => {

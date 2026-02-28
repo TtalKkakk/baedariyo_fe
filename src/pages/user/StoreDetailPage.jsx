@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { getStoreDetail } from '@/shared/api';
 
@@ -25,6 +25,7 @@ function getErrorMessage(error) {
 }
 
 export default function StoreDetailPage() {
+  const navigate = useNavigate();
   const { storeId = '' } = useParams();
   const trimmedStoreId = storeId.trim();
   const canFetch = isUuid(trimmedStoreId);
@@ -67,18 +68,31 @@ export default function StoreDetailPage() {
   }
 
   if (isError) {
+    const isUnauthorized = error?.response?.status === 401;
+
     return (
       <div className="px-4 py-6">
         <p className="text-body1 font-semibold text-[var(--color-semantic-status-cautionary)]">
           {getErrorMessage(error)}
         </p>
-        <button
-          type="button"
-          onClick={() => refetch()}
-          className="mt-3 h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body2 font-medium text-[var(--color-semantic-label-normal)]"
-        >
-          다시 시도
-        </button>
+        <div className="mt-3 flex gap-2">
+          <button
+            type="button"
+            onClick={() => refetch()}
+            className="h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body2 font-medium text-[var(--color-semantic-label-normal)]"
+          >
+            다시 시도
+          </button>
+          {isUnauthorized ? (
+            <button
+              type="button"
+              onClick={() => navigate('/login')}
+              className="h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body2 font-medium text-[var(--color-semantic-label-normal)]"
+            >
+              로그인하러 가기
+            </button>
+          ) : null}
+        </div>
       </div>
     );
   }
