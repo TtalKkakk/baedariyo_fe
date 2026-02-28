@@ -36,7 +36,6 @@ export function getPaymentRouteId(payment) {
 
   const fingerprint = [
     payment?.storeName ?? '',
-    payment?.paymentStatus ?? '',
     payment?.amount ?? '',
     payment?.createdAt ?? '',
     getMenuSignature(payment?.orderMenus),
