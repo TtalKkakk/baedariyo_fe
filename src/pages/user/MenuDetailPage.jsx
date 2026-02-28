@@ -37,18 +37,25 @@ function formatOptionPrice(amount) {
 }
 
 function normalizeMenu(menu, index) {
-  const menuId = menu?.id ?? menu?.menuId ?? index + 1;
+  const rawMenuId = menu?.id ?? menu?.menuId ?? index + 1;
+  const parsedMenuId = Number(rawMenuId);
+  const menuNumericId = Number.isFinite(parsedMenuId) ? parsedMenuId : null;
+  const rawStoreId = menu?.storeId ?? menu?.store?.id ?? null;
+  const parsedStoreId = Number(rawStoreId);
+  const storeIdNumeric = Number.isFinite(parsedStoreId) ? parsedStoreId : null;
   const optionGroups = Array.isArray(menu?.menuOptionGroups)
     ? menu.menuOptionGroups
     : [];
 
   return {
-    id: String(menuId),
+    id: String(rawMenuId),
+    menuNumericId,
+    storeIdNumeric,
     menuName: toMenuName(menu),
     menuDescription: menu?.menuDescription ?? menu?.description ?? '',
     priceAmount: toPriceAmount(menu?.price),
     optionGroups: optionGroups.map((group, groupIndex) => ({
-      id: group?.id ?? `${menuId}-${groupIndex}`,
+      id: group?.id ?? `${rawMenuId}-${groupIndex}`,
       groupName: group?.groupName ?? `옵션 그룹 ${groupIndex + 1}`,
       maxSelectableCount:
         typeof group?.maxSelectableCount === 'number'
@@ -197,8 +204,10 @@ export default function MenuDetailPage() {
   const addToCart = () => {
     addItem({
       storePublicId: trimmedStoreId,
+      storeId: selectedMenu.storeIdNumeric,
       storeName: data?.store?.storeName ?? '가게명 없음',
       menuId: selectedMenu.id,
+      menuNumericId: selectedMenu.menuNumericId,
       menuName: selectedMenu.menuName,
       menuDescription: selectedMenu.menuDescription,
       basePriceAmount,

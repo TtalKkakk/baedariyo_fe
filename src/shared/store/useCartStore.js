@@ -23,8 +23,10 @@ export const useCartStore = create(
 
         addItem: ({
           storePublicId,
+          storeId,
           storeName,
           menuId,
+          menuNumericId,
           menuName,
           menuDescription,
           basePriceAmount,
@@ -67,8 +69,17 @@ export const useCartStore = create(
                 {
                   itemKey,
                   storePublicId,
+                  storeId:
+                    typeof storeId === 'number' && Number.isFinite(storeId)
+                      ? storeId
+                      : null,
                   storeName,
                   menuId,
+                  menuNumericId:
+                    typeof menuNumericId === 'number' &&
+                    Number.isFinite(menuNumericId)
+                      ? menuNumericId
+                      : null,
                   menuName,
                   menuDescription,
                   basePriceAmount: toSafeNumber(basePriceAmount),
