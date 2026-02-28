@@ -6,6 +6,7 @@ import RiderLayout from './layouts/RiderLayout';
 
 import HomePage from '../pages/user/HomePage';
 import SearchPage from '../pages/user/SearchPage';
+import SearchResultPage from '../pages/user/SearchResultPage';
 import StoreDetailPage from '../pages/user/StoreDetailPage';
 import MenuDetailPage from '../pages/user/MenuDetailPage';
 import CartPage from '../pages/user/CartPage';
@@ -55,6 +56,7 @@ const router = createBrowserRouter([
     children: [
       // 검색
       { path: '/search', element: <SearchPage /> },
+      { path: '/search/result', element: <SearchResultPage /> },
 
       // 로그인/회원가입
       { path: '/login', element: <LoginPage /> },

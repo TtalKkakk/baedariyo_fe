@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 
 import SearchIcon from '@/shared/assets/icons/header/search.svg?react';
 import BackIcon from '@/shared/assets/icons/header/back.svg?react';
@@ -7,8 +8,7 @@ import DeleteIcon from '@/shared/assets/icons/header/delete.svg?react';
 import RecentIcon from '@/shared/assets/icons/header/recent.svg?react';
 import XCircleIcon from '@/shared/assets/icons/header/x-circle.svg?react';
 import { CategoryList } from '@/widgets';
-
-const INITIAL_RECENT = ['처갓집양념치킨', '메가커피', '춘'];
+import { getSearchHistory } from '@/shared/api';
 
 const RECOMMENDED = [
   '두쫀쿠',
@@ -52,17 +52,31 @@ function HighlightText({ text, query }) {
 
 export default function SearchPage() {
   const navigate = useNavigate();
-  const [query, setQuery] = useState('');
-  const [recentSearches, setRecentSearches] = useState(INITIAL_RECENT);
+  const [searchParams] = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get('q') ?? '');
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef(null);
+
+  const { data: historyData } = useQuery({
+    queryKey: ['search-history'],
+    queryFn: () => getSearchHistory(5),
+  });
+  const [removedKeys, setRemovedKeys] = useState(new Set());
+
+  const recentSearches = (historyData ?? []).filter((k) => !removedKeys.has(k));
 
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
+  function handleSearch() {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    navigate(`/search/result?q=${encodeURIComponent(trimmed)}`);
+  }
+
   const removeRecent = (keyword) => {
-    setRecentSearches((prev) => prev.filter((k) => k !== keyword));
+    setRemovedKeys((prev) => new Set([...prev, keyword]));
   };
 
   const left = POPULAR.slice(0, 5);
@@ -94,6 +108,7 @@ export default function SearchPage() {
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
+            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
             placeholder="퇴근 하고 나서 치킨에 맥주?"
             className="flex-1 bg-transparent py-2.5 text-body1 font-normal text-[var(--color-semantic-label-normal)] placeholder:text-[var(--color-semantic-label-alternative)] outline-none"
           />
@@ -134,12 +149,19 @@ export default function SearchPage() {
 
           {/* 자동완성 목록 */}
           {suggestions.map((keyword) => (
-            <div key={keyword} className="flex items-center gap-3 px-4 py-3">
+            <button
+              key={keyword}
+              className="w-full flex items-center gap-3 px-4 py-3 text-left"
+              onClick={() => {
+                setQuery(keyword);
+                navigate(`/search/result?q=${encodeURIComponent(keyword)}`);
+              }}
+            >
               <SearchIcon className="size-5 shrink-0 [&_path]:fill-[var(--color-semantic-label-alternative)]" />
               <span className="text-body2 font-medium">
                 <HighlightText text={keyword} query={query} />
               </span>
-            </div>
+            </button>
           ))}
         </div>
       ) : (
@@ -150,11 +172,11 @@ export default function SearchPage() {
               <p className="text-lg font-medium text-[var(--color-semantic-label-normal)] mb-2">
                 최근 검색어
               </p>
-              <div className="flex gap-1.5 overflow-x-auto scrollbar-none">
+              <div className="flex gap-1.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {recentSearches.map((keyword) => (
                   <span
                     key={keyword}
-                    className="flex items-center gap-0.5 px-2.5 py-1 bg-[var(--color-atomic-coolNeutral-98)] rounded-full text-body2 font-medium text-[var(--color-semantic-label-normal)]"
+                    className="flex items-center gap-0.5 px-2.5 py-1 bg-[var(--color-atomic-coolNeutral-98)] rounded-full text-body2 font-medium text-[var(--color-semantic-label-normal)] whitespace-nowrap shrink-0"
                   >
                     {keyword}
                     <button onClick={() => removeRecent(keyword)}>

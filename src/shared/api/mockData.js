@@ -1,4 +1,128 @@
 const DEFAULT_STORE_PUBLIC_ID = '11111111-1111-4111-8111-111111111111';
+
+const SEARCH_RESULT_STORES = [
+  {
+    storePublicId: 'aa000001-0000-4000-8000-000000000001',
+    storeName: '마라탕전문점 상츠마라 신도림점',
+    description:
+      'Self 마라탕 1인분, 꿔바로우 미니, 마라샹궈, 마라 로제 샹궈, 온면, 2~3인분 마라탕',
+    storeCategory: 'CHINESE',
+    thumbnailUrl: '/maratang1.png',
+    totalRating: 4.1,
+    reviewCount: 28000,
+    deliveryFee: { amount: 5000 },
+    minimumOrderAmount: { amount: 9800 },
+    deliveryTimeMin: 30,
+  },
+  {
+    storePublicId: 'aa000002-0000-4000-8000-000000000002',
+    storeName: '마라공방 고척돔점',
+    description:
+      'Self 마라탕 1인분, 꿔바로우 미니, 마라샹궈, 마라 로제 샹궈, 온면, 2~3인분 마라탕',
+    storeCategory: 'CHINESE',
+    thumbnailUrl: '/maratang2.png',
+    totalRating: 4.9,
+    reviewCount: 45000,
+    deliveryFee: { amount: 3500 },
+    minimumOrderAmount: { amount: 15100 },
+    deliveryTimeMin: 16,
+  },
+  {
+    storePublicId: 'aa000003-0000-4000-8000-000000000003',
+    storeName: '취향마라탕&마라상귀',
+    description:
+      'Self 마라탕 1인분, 꿔바로우 미니, 마라샹궈, 마라 로제 샹궈, 온면, 2~3인분 마라탕',
+    storeCategory: 'CHINESE',
+    thumbnailUrl: '/maratang3.png',
+    totalRating: 4.5,
+    reviewCount: 847,
+    deliveryFee: { amount: 6000 },
+    minimumOrderAmount: { amount: 12000 },
+    deliveryTimeMin: 25,
+  },
+  {
+    storePublicId: 'aa000004-0000-4000-8000-000000000004',
+    storeName: '용용선생 영등포점',
+    description:
+      'Self 마라탕 1인분, 꿔바로우 미니, 마라샹궈, 마라 로제 샹궈, 온면, 2~3인분 마라탕',
+    storeCategory: 'CHINESE',
+    thumbnailUrl: '/maratang4.png',
+    totalRating: 5.0,
+    reviewCount: 942,
+    deliveryFee: { amount: 3700 },
+    minimumOrderAmount: { amount: 10800 },
+    deliveryTimeMin: 12,
+  },
+  {
+    storePublicId: 'aa000005-0000-4000-8000-000000000005',
+    storeName: '추리 마라탕 & 궈바로우',
+    description:
+      'Self 마라탕 1인분, 꿔바로우 미니, 마라샹궈, 마라 로제 샹궈, 온면, 2~3인분 마라탕',
+    storeCategory: 'CHINESE',
+    thumbnailUrl: '/maratang5.png',
+    totalRating: 4.3,
+    reviewCount: 1200,
+    deliveryFee: { amount: 2000 },
+    minimumOrderAmount: { amount: 13000 },
+    deliveryTimeMin: 20,
+  },
+  {
+    storePublicId: 'aa000006-0000-4000-8000-000000000006',
+    storeName: '마라도 마라탕',
+    description: '직접 만든 마라소스, 신선한 재료, 매운맛 조절 가능',
+    storeCategory: 'CHINESE',
+    thumbnailUrl: '/maratang6.png',
+    totalRating: 4.7,
+    reviewCount: 3200,
+    deliveryFee: { amount: 0 },
+    minimumOrderAmount: { amount: 11000 },
+    deliveryTimeMin: 22,
+  },
+  {
+    storePublicId: 'aa000007-0000-4000-8000-000000000007',
+    storeName: '마라 헤이 신림점',
+    description: '마라탕, 마라샹궈, 꿔바로우 전문점',
+    storeCategory: 'CHINESE',
+    thumbnailUrl: '/maratang1.png',
+    totalRating: 4.2,
+    reviewCount: 520,
+    deliveryFee: { amount: 4000 },
+    minimumOrderAmount: { amount: 10000 },
+    deliveryTimeMin: 35,
+  },
+  {
+    storePublicId: 'aa000008-0000-4000-8000-000000000008',
+    storeName: '홍콩반점0410 관악점',
+    description: '짜장면, 짬뽕, 탕수육 전문 중화요리 레스토랑',
+    storeCategory: 'CHINESE',
+    thumbnailUrl: '/maratang2.png',
+    totalRating: 4.6,
+    reviewCount: 8900,
+    deliveryFee: { amount: 2500 },
+    minimumOrderAmount: { amount: 14000 },
+    deliveryTimeMin: 28,
+  },
+];
+
+function searchStores({ keyword, page = 0, size = 20 } = {}) {
+  const q = (keyword ?? '').trim().toLowerCase();
+  const filtered = q
+    ? SEARCH_RESULT_STORES.filter(
+        (s) =>
+          s.storeName.toLowerCase().includes(q) ||
+          s.description.toLowerCase().includes(q)
+      )
+    : SEARCH_RESULT_STORES;
+  const start = page * size;
+  const paged = filtered.slice(start, start + size);
+  return clone({ stores: paged, totalCount: filtered.length });
+}
+
+function getSearchHistory(limit = 5) {
+  return clone(
+    ['처갓집양념치킨', '메가커피', '춘', '마라탕', '치킨'].slice(0, limit)
+  );
+}
 const MOCK_USER_ID = 101;
 const MOCK_RIDER_ID = 201;
 
@@ -232,14 +356,33 @@ const seedStoreReviews = [
   }),
 ];
 
+const searchResultSeedStores = SEARCH_RESULT_STORES.map((s, i) => {
+  const store = buildStore({
+    id: 2 + i,
+    storePublicId: s.storePublicId,
+    storeName: s.storeName,
+    storeCategory: s.storeCategory,
+    thumbnailUrl: s.thumbnailUrl,
+    minimumOrderAmount: s.minimumOrderAmount,
+    deliveryFee: s.deliveryFee,
+  });
+  store.totalRating = s.totalRating;
+  store.reviewCount = s.reviewCount;
+  store.deliveryTimeMin = s.deliveryTimeMin;
+  return store;
+});
+
 const mockState = {
-  nextStoreId: 2,
+  nextStoreId: 2 + SEARCH_RESULT_STORES.length,
   nextMenuId: 100,
   nextOrderId: 5000,
   nextPaymentId: 7000,
-  stores: [seedStore],
+  stores: [seedStore, ...searchResultSeedStores],
   storeReviewsByStoreId: {
     [DEFAULT_STORE_PUBLIC_ID]: seedStoreReviews,
+    ...Object.fromEntries(
+      SEARCH_RESULT_STORES.map((s) => [s.storePublicId, []])
+    ),
   },
   myReviews: seedStoreReviews.map((review) => buildMyReview(review)),
   payments: [
@@ -304,9 +447,10 @@ function recalculateStoreStats(storePublicId) {
     0
   );
 
-  targetStore.reviewCount = reviewCount;
-  targetStore.totalRating =
-    reviewCount === 0 ? 0 : Number((totalRating / reviewCount).toFixed(1));
+  if (reviewCount > 0) {
+    targetStore.reviewCount = reviewCount;
+    targetStore.totalRating = Number((totalRating / reviewCount).toFixed(1));
+  }
   targetStore.recentPhotoReviews = reviews
     .filter(
       (review) =>
@@ -762,4 +906,6 @@ export const mockApi = {
   cancelPayment,
   getPaymentDetail,
   getMyPayments,
+  searchStores,
+  getSearchHistory,
 };

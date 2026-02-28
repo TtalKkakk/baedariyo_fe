@@ -18,6 +18,8 @@ export { deleteMyReview } from './review';
 export { getMyReviews } from './review';
 export { getReviewDetail } from './review';
 export { createStore } from './store';
+export { searchStores } from './store';
+export { getSearchHistory } from './store';
 export { getStoreDetail } from './store';
 export { getStoreMenus } from './store';
 export { getStoreReviews } from './store';

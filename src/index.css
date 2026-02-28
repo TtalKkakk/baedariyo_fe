@@ -1,6 +1,13 @@
 @import 'tailwindcss';
 @import './shared/styles/index.css';
 
+* {
+  scrollbar-width: none;
+}
+*::-webkit-scrollbar {
+  display: none;
+}
+
 @layer components {
   .layout-page {
     @apply min-h-screen flex items-center justify-center bg-[var(--color-semantic-background-normal-alternative)] p-6;
