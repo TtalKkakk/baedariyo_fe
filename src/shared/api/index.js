@@ -1,6 +1,7 @@
 export { api } from './instance';
 export { loginUser } from './auth';
 export { signupUser } from './auth';
+export { withdrawUser } from './auth';
 export { createOrder } from './order';
 export { getMyPayments } from './payment';
 export { deleteMyReview } from './review';

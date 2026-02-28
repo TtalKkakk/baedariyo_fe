@@ -9,3 +9,8 @@ export async function loginUser(payload) {
   const response = await api.post('/api/auth/user/login', payload);
   return response.data?.data ?? response.data;
 }
+
+export async function withdrawUser() {
+  const response = await api.patch('/api/auth/user/withdraw');
+  return response.data?.data ?? response.data;
+}
