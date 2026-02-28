@@ -2,63 +2,21 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 import { getMyPayments } from '@/shared/api';
+import {
+  PAYMENT_STATUS_FILTERS,
+  formatPaymentAmount,
+  formatPaymentDateTime,
+  getPaymentErrorMessage,
+  getPaymentRouteId,
+  getPaymentStatusClassName,
+  getPaymentStatusLabel,
+} from '@/shared/lib/paymentView';
 
-const STATUS_FILTERS = [
-  { key: 'ALL', label: '전체' },
-  { key: 'READY', label: '생성됨' },
-  { key: 'REQUESTED', label: '결제요청' },
-  { key: 'APPROVED', label: '결제완료' },
-  { key: 'FAILED', label: '실패' },
-  { key: 'CANCELED', label: '취소' },
-];
-
-function getStatusLabel(status) {
-  return STATUS_FILTERS.find((item) => item.key === status)?.label ?? status;
-}
-
-function getStatusClassName(status) {
-  if (status === 'APPROVED') {
-    return 'bg-[var(--color-atomic-blue-95)] text-[var(--color-atomic-blue-65)]';
-  }
-  if (status === 'FAILED' || status === 'CANCELED') {
-    return 'bg-[var(--color-atomic-redOrange-99)] text-[var(--color-semantic-status-cautionary)]';
-  }
-  return 'bg-[var(--color-semantic-background-normal-normal)] text-[var(--color-semantic-label-alternative)]';
-}
-
-function formatAmount(amount) {
-  if (typeof amount !== 'number') return '-';
-  return `${amount.toLocaleString('ko-KR')}원`;
-}
-
-function formatDateTime(value) {
-  if (!value) return '-';
-
-  const parsedDate = new Date(value);
-  if (Number.isNaN(parsedDate.getTime())) return value;
-
-  return parsedDate.toLocaleString('ko-KR', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
-
-function getErrorMessage(error) {
-  return (
-    error?.response?.data?.message ??
-    error?.message ??
-    '주문 내역을 불러오지 못했습니다.'
-  );
-}
-
-function PaymentItem({ payment }) {
+function PaymentItem({ payment, onOpenDetail }) {
   const orderMenus = Array.isArray(payment?.orderMenus)
     ? payment.orderMenus
     : [];
-  const statusClassName = getStatusClassName(payment?.paymentStatus);
+  const statusClassName = getPaymentStatusClassName(payment?.paymentStatus);
 
   return (
     <li className="rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-white p-4">
@@ -69,12 +27,12 @@ function PaymentItem({ payment }) {
         <span
           className={`rounded-full px-2 py-0.5 text-caption1 ${statusClassName}`}
         >
-          {getStatusLabel(payment?.paymentStatus)}
+          {getPaymentStatusLabel(payment?.paymentStatus)}
         </span>
       </div>
 
       <p className="mt-1 text-caption1 text-[var(--color-semantic-label-alternative)]">
-        주문일시: {formatDateTime(payment?.createdAt)}
+        주문일시: {formatPaymentDateTime(payment?.createdAt)}
       </p>
 
       <div className="mt-3 space-y-1">
@@ -92,7 +50,7 @@ function PaymentItem({ payment }) {
                 {menu?.menuName ?? '메뉴'} x{menu?.quantity ?? 0}
               </span>
               <span className="text-[var(--color-semantic-label-alternative)]">
-                {formatAmount(menu?.price)}
+                {formatPaymentAmount(menu?.price)}
               </span>
             </div>
           ))
@@ -104,8 +62,18 @@ function PaymentItem({ payment }) {
           결제금액
         </span>
         <span className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
-          {formatAmount(payment?.amount)}
+          {formatPaymentAmount(payment?.amount)}
         </span>
+      </div>
+
+      <div className="mt-3 flex justify-end">
+        <button
+          type="button"
+          onClick={() => onOpenDetail(payment)}
+          className="h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body3 font-medium text-[var(--color-semantic-label-normal)]"
+        >
+          상세 보기
+        </button>
       </div>
 
       {typeof payment?.rating === 'number' || payment?.storeReviewComment ? (
@@ -143,10 +111,21 @@ export default function OrderListPage() {
   });
 
   const payments = Array.isArray(data) ? data : [];
+  const selectedStatusSearch =
+    selectedStatus === 'ALL' ? '' : `?status=${selectedStatus}`;
 
   const moveWithStatus = (status) => {
     const nextSearch = status === 'ALL' ? '' : `?status=${status}`;
     navigate(`/orders${nextSearch}`);
+  };
+
+  const openOrderDetail = (payment) => {
+    if (!payment) return;
+
+    const paymentRouteId = getPaymentRouteId(payment);
+    navigate(`/orders/${paymentRouteId}${selectedStatusSearch}`, {
+      state: { payment, routeId: paymentRouteId },
+    });
   };
 
   if (isLoading) {
@@ -165,7 +144,7 @@ export default function OrderListPage() {
     return (
       <div className="px-4 py-6">
         <p className="text-body1 font-semibold text-[var(--color-semantic-status-cautionary)]">
-          {getErrorMessage(error)}
+          {getPaymentErrorMessage(error, '주문 내역을 불러오지 못했습니다.')}
         </p>
         <div className="mt-3 flex gap-2">
           <button
@@ -201,7 +180,7 @@ export default function OrderListPage() {
       </div>
 
       <div className="mt-3 flex gap-2 overflow-x-auto scrollbar-none">
-        {STATUS_FILTERS.map((filter) => {
+        {PAYMENT_STATUS_FILTERS.map((filter) => {
           const isActive = filter.key === selectedStatus;
           return (
             <button
@@ -233,8 +212,9 @@ export default function OrderListPage() {
         <ul className="mt-4 space-y-3">
           {payments.map((payment, index) => (
             <PaymentItem
-              key={`${payment?.createdAt ?? 'payment'}-${index}`}
+              key={`${getPaymentRouteId(payment)}-${index}`}
               payment={payment}
+              onOpenDetail={openOrderDetail}
             />
           ))}
         </ul>
