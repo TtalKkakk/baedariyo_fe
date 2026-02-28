@@ -3,7 +3,11 @@ import { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { createOrder, getStoreMenus } from '@/shared/api';
-import { useAddressBookStore, useCartStore } from '@/shared/store';
+import {
+  useAddressBookStore,
+  useCartStore,
+  useNotificationStore,
+} from '@/shared/store';
 
 const PAYMENT_METHODS = [
   { value: 'CARD', label: '카드' },
@@ -90,6 +94,9 @@ export default function CheckoutPage() {
   const location = useLocation();
   const items = useCartStore((state) => state.items);
   const clearCart = useCartStore((state) => state.clearCart);
+  const pushNotification = useNotificationStore(
+    (state) => state.pushNotification
+  );
   const addresses = useAddressBookStore((state) => state.addresses);
   const defaultAddressId = useAddressBookStore(
     (state) => state.defaultAddressId
@@ -216,6 +223,11 @@ export default function CheckoutPage() {
     },
     onSuccess: () => {
       clearCart();
+      pushNotification({
+        type: 'ORDER',
+        title: '주문이 생성되었습니다.',
+        description: '주문 내역에서 진행 상태를 확인해 주세요.',
+      });
       navigate('/orders');
     },
   });

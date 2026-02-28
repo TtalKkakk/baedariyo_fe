@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { createStoreReview, getStoreReviews } from '@/shared/api';
+import { useNotificationStore } from '@/shared/store';
 
 const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -97,6 +98,9 @@ function ReviewItem({ review, onOpenDetail }) {
 
 export default function StoreReviewsPage() {
   const navigate = useNavigate();
+  const pushNotification = useNotificationStore(
+    (state) => state.pushNotification
+  );
   const { storeId = '' } = useParams();
   const trimmedStoreId = storeId.trim();
   const canFetch = isUuid(trimmedStoreId);
@@ -123,6 +127,11 @@ export default function StoreReviewsPage() {
       setOrderIdInput('');
       setCommentInput('');
       setImageUrlsInput('');
+      pushNotification({
+        type: 'REVIEW',
+        title: '리뷰가 등록되었습니다.',
+        description: '내 리뷰 목록에서 작성한 내용을 확인할 수 있습니다.',
+      });
       refetch();
     },
   });
