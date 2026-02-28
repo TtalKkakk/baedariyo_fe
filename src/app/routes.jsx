@@ -29,6 +29,7 @@ import NotificationsPage from '../pages/user/NotificationsPage';
 import CategoryPage from '../pages/user/CategoryPage';
 import StoreReviewsPage from '../pages/user/StoreReviewsPage';
 import StoreInfoPage from '../pages/user/StoreInfoPage';
+import StoreCreatePage from '../pages/user/StoreCreatePage';
 import SecurityPage from '../pages/user/SecurityPage';
 import NotificationSettingsPage from '../pages/user/NotificationSettingsPage';
 import WithdrawPage from '../pages/user/WithdrawPage';
@@ -85,6 +86,7 @@ const router = createBrowserRouter([
             element: <StoreReviewsPage />,
           },
           { path: '/stores/:storeId/info', element: <StoreInfoPage /> },
+          { path: '/stores/create', element: <StoreCreatePage /> },
           { path: '/reviews/:reviewId', element: <ReviewDetailPage /> },
 
           // 장바구니/주문

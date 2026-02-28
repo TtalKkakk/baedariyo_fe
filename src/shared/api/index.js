@@ -17,6 +17,7 @@ export { createStoreReview } from './review';
 export { deleteMyReview } from './review';
 export { getMyReviews } from './review';
 export { getReviewDetail } from './review';
+export { createStore } from './store';
 export { getStoreDetail } from './store';
 export { getStoreMenus } from './store';
 export { getStoreReviews } from './store';

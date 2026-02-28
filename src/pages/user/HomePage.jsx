@@ -67,6 +67,13 @@ export default function HomePage() {
             >
               로그인 페이지 열기
             </button>
+            <button
+              type="button"
+              onClick={() => navigate('/stores/create')}
+              className="mt-2 ml-2 h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body3 font-medium text-[var(--color-semantic-label-normal)]"
+            >
+              가게 생성 페이지 열기
+            </button>
           </section>
         </div>
       ) : null}
