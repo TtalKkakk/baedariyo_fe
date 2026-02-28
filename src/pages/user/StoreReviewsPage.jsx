@@ -31,12 +31,13 @@ function getErrorMessage(error) {
   );
 }
 
-function ReviewItem({ review }) {
+function ReviewItem({ review, onOpenDetail }) {
   const images = Array.isArray(review?.storeReviewImages)
     ? review.storeReviewImages
     : Array.isArray(review?.StoreReviewImages)
       ? review.StoreReviewImages
       : [];
+  const reviewPublicId = review?.publicId;
 
   return (
     <li className="rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-white p-4">
@@ -65,6 +66,16 @@ function ReviewItem({ review }) {
           ))}
         </div>
       ) : null}
+
+      {reviewPublicId ? (
+        <button
+          type="button"
+          onClick={() => onOpenDetail(reviewPublicId)}
+          className="mt-3 h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body3 font-medium text-[var(--color-semantic-label-normal)]"
+        >
+          리뷰 상세 보기
+        </button>
+      ) : null}
     </li>
   );
 }
@@ -83,6 +94,9 @@ export default function StoreReviewsPage() {
   });
 
   const reviews = Array.isArray(data) ? data : [];
+  const openReviewDetail = (reviewPublicId) => {
+    navigate(`/reviews/${reviewPublicId}`);
+  };
   const averageRating =
     reviews.length === 0
       ? 0
@@ -174,6 +188,7 @@ export default function StoreReviewsPage() {
             <ReviewItem
               key={`${review?.publicId ?? review?.createdAt ?? 'review'}-${index}`}
               review={review}
+              onOpenDetail={openReviewDetail}
             />
           ))}
         </ul>

@@ -32,7 +32,13 @@ function getDeleteErrorMessage(error) {
   );
 }
 
-function ReviewCard({ review, onOpenStore, onDelete, deletingReviewId }) {
+function ReviewCard({
+  review,
+  onOpenStore,
+  onOpenDetail,
+  onDelete,
+  deletingReviewId,
+}) {
   const images = Array.isArray(review?.orderMenuImages)
     ? review.orderMenuImages
     : [];
@@ -84,6 +90,15 @@ function ReviewCard({ review, onOpenStore, onDelete, deletingReviewId }) {
         {reviewId ? (
           <button
             type="button"
+            onClick={() => onOpenDetail(reviewId)}
+            className="h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body3 font-medium text-[var(--color-semantic-label-normal)]"
+          >
+            리뷰 상세 보기
+          </button>
+        ) : null}
+        {reviewId ? (
+          <button
+            type="button"
             onClick={() => onDelete(reviewId)}
             disabled={isDeleting}
             className="h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body3 font-medium text-[var(--color-semantic-status-cautionary)] disabled:opacity-40 disabled:cursor-not-allowed"
@@ -110,6 +125,10 @@ export default function MyReviewsPage() {
 
   const openStoreDetail = (storePublicId) => {
     navigate(`/stores/${storePublicId}`);
+  };
+
+  const openReviewDetail = (reviewId) => {
+    navigate(`/reviews/${reviewId}`);
   };
 
   const deleteMutation = useMutation({
@@ -195,6 +214,7 @@ export default function MyReviewsPage() {
                 key={`${review?.publicStoreReviewId ?? review?.createdAt ?? 'review'}-${index}`}
                 review={review}
                 onOpenStore={openStoreDetail}
+                onOpenDetail={openReviewDetail}
                 onDelete={handleDeleteReview}
                 deletingReviewId={deleteMutation.variables}
               />
