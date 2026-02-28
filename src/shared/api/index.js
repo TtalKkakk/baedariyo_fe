@@ -6,6 +6,7 @@ export { signupRider } from './auth';
 export { withdrawUser } from './auth';
 export { withdrawRider } from './auth';
 export { createOrder } from './order';
+export { assignRiderToOrder } from './order';
 export { createPayment } from './payment';
 export { approvePayment } from './payment';
 export { failPayment } from './payment';
