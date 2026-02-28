@@ -42,6 +42,12 @@ npm run dev
 
 http://localhost:5173 에서 확인
 
+### Backend Local Run Guide
+
+백엔드(`baedariyo_be`, `payment`) 실행 방법은 아래 문서를 참고하세요.
+
+- [docs/backend-run-guide.md](docs/backend-run-guide.md)
+
 ### Build
 
 ```bash
