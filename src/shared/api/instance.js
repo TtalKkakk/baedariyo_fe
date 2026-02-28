@@ -1,13 +1,16 @@
 import axios from 'axios';
 
+const DEFAULT_LOCAL_API_BASE_URL = 'http://localhost:8080';
 const ENV_BASE_URL = import.meta.env.VITE_API_BASE_URL?.trim();
+const RESOLVED_BASE_URL = ENV_BASE_URL || DEFAULT_LOCAL_API_BASE_URL;
+
 const isDefaultLocalApi =
-  ENV_BASE_URL === 'http://localhost:8080' ||
-  ENV_BASE_URL === 'https://localhost:8080';
+  RESOLVED_BASE_URL === 'http://localhost:8080' ||
+  RESOLVED_BASE_URL === 'https://localhost:8080';
 
 // In local dev, route requests through Vite proxy to avoid CORS issues.
 const BASE_URL =
-  import.meta.env.DEV && isDefaultLocalApi ? '' : (ENV_BASE_URL ?? '');
+  import.meta.env.DEV && isDefaultLocalApi ? '' : RESOLVED_BASE_URL;
 
 export const api = axios.create({
   baseURL: BASE_URL,
