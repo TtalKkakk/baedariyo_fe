@@ -18,6 +18,28 @@ export async function getStoreDetail(storePublicId) {
   });
 }
 
+export async function searchStores({
+  keyword,
+  categoryId,
+  page = 0,
+  size = 20,
+} = {}) {
+  return requestWithMockFallback({
+    apiName: 'searchStores',
+    request: () =>
+      api.get('/api/stores', { params: { keyword, categoryId, page, size } }),
+    fallback: () => mockApi.searchStores({ keyword, categoryId, page, size }),
+  });
+}
+
+export async function getSearchHistory(limit = 5) {
+  return requestWithMockFallback({
+    apiName: 'getSearchHistory',
+    request: () => api.get('/api/search/history', { params: { limit } }),
+    fallback: () => mockApi.getSearchHistory(limit),
+  });
+}
+
 export async function getStoreReviews(storePublicId) {
   return requestWithMockFallback({
     apiName: 'getStoreReviews',

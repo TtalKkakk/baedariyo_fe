@@ -115,6 +115,10 @@ export default function StoreDetailPage() {
         <p className="mt-1 text-body2 text-[var(--color-semantic-label-alternative)]">
           평점 {store?.totalRating ?? 0} · 리뷰 {store?.reviewCount ?? 0}개
         </p>
+        <p className="mt-1 text-body2 text-[var(--color-semantic-label-alternative)]">
+          배달팁 {formatPrice(store?.deliveryFee ?? 0)}
+          {store?.deliveryTimeMin ? ` · 약 ${store.deliveryTimeMin}분` : ''}
+        </p>
         <div className="mt-2 flex gap-2">
           <button
             type="button"
