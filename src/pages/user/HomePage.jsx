@@ -9,6 +9,7 @@ export default function HomePage() {
   const [storeIdInput, setStoreIdInput] = useState(
     import.meta.env.VITE_DEFAULT_STORE_PUBLIC_ID ?? ''
   );
+  const isBackendReady = false;
 
   const moveToStoreDetail = () => {
     const trimmedStoreId = storeIdInput.trim();
@@ -33,7 +34,7 @@ export default function HomePage() {
         <CategoryList />
       </div>
 
-      {import.meta.env.DEV ? (
+      {import.meta.env.DEV && isBackendReady ? (
         <div className="px-4 py-4">
           <section className="p-4 rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-white">
             <h2 className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
