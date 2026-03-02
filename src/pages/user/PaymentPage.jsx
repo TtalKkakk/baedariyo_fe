@@ -207,13 +207,6 @@ export default function PaymentPage() {
 
   return (
     <div className="min-h-full bg-white px-4 py-4 pb-8">
-      <h1 className="text-title2 font-semibold text-[var(--color-semantic-label-normal)]">
-        결제 관리
-      </h1>
-      <p className="mt-1 text-body3 text-[var(--color-semantic-label-alternative)]">
-        결제 생성/승인/실패/취소/조회 API를 직접 확인할 수 있습니다.
-      </p>
-
       <section className="mt-4 rounded-xl border border-[var(--color-semantic-line-normal-normal)] p-4">
         <h2 className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
           결제 생성

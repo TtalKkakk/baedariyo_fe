@@ -26,13 +26,6 @@ export default function NotificationSettingsPage() {
 
   return (
     <div className="min-h-full bg-white px-4 py-4 pb-8">
-      <h1 className="text-title2 font-semibold text-[var(--color-semantic-label-normal)]">
-        알림 설정
-      </h1>
-      <p className="mt-1 text-body3 text-[var(--color-semantic-label-alternative)]">
-        설정값은 브라우저에 저장되며, 이후 알림 생성 시 반영됩니다.
-      </p>
-
       <section className="mt-4 rounded-xl border border-[var(--color-semantic-line-normal-normal)] divide-y divide-[var(--color-semantic-line-normal-normal)] px-3">
         <SettingRow
           title="주문 상태 알림"

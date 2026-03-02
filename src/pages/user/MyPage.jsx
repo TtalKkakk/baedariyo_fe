@@ -64,14 +64,7 @@ export default function MyPage() {
 
   return (
     <div className="min-h-full bg-white px-4 py-4 pb-8">
-      <h1 className="text-title2 font-semibold text-[var(--color-semantic-label-normal)]">
-        마이페이지
-      </h1>
-      <p className="mt-1 text-body3 text-[var(--color-semantic-label-alternative)]">
-        계정/주문/주소 관련 설정을 한 곳에서 관리합니다.
-      </p>
-
-      <section className="mt-4 grid grid-cols-2 gap-2">
+      <section className="grid grid-cols-2 gap-2">
         <SummaryCard
           title="로그인 상태"
           value={isLoggedIn ? '인증됨' : '미인증'}

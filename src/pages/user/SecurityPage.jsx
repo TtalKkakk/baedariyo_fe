@@ -31,13 +31,6 @@ export default function SecurityPage() {
 
   return (
     <div className="min-h-full bg-white px-4 py-6">
-      <h1 className="text-title2 font-semibold text-[var(--color-semantic-label-normal)]">
-        보안 설정
-      </h1>
-      <p className="mt-1 text-body3 text-[var(--color-semantic-label-alternative)]">
-        토큰 상태 확인 및 로컬 저장 데이터 정리를 수행할 수 있습니다.
-      </p>
-
       <section className="mt-4 rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-white p-4">
         <p className="text-body2 font-medium text-[var(--color-semantic-label-normal)]">
           인증 상태: {hasToken ? '로그인됨' : '로그아웃됨'}

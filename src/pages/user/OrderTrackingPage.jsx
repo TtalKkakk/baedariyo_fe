@@ -186,10 +186,7 @@ export default function OrderTrackingPage() {
 
   return (
     <div className="min-h-full bg-white px-4 py-4 pb-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-title2 font-semibold text-[var(--color-semantic-label-normal)]">
-          실시간 주문 추적
-        </h1>
+      <div className="flex justify-end">
         <button
           type="button"
           onClick={moveToOrderDetail}

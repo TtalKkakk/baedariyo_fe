@@ -26,13 +26,6 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-full bg-white px-4 py-6">
-      <h1 className="text-title2 font-semibold text-[var(--color-semantic-label-normal)]">
-        프로필 수정
-      </h1>
-      <p className="mt-1 text-body3 text-[var(--color-semantic-label-alternative)]">
-        프로필 정보는 브라우저 로컬 저장소에 저장됩니다.
-      </p>
-
       <form onSubmit={handleSubmit} className="mt-5 space-y-3">
         <input
           type="email"
