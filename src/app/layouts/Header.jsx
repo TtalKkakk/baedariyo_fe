@@ -34,11 +34,20 @@ export default function Header() {
 
   const orderTrackingMatch = useMatch('/orders/:orderId/tracking');
   const orderDetailMatch = useMatch('/orders/:orderId');
+  const storeDetailMatch = useMatch('/stores/:storeId');
+  const storeReviewsMatch = useMatch('/stores/:storeId/reviews');
+  const storeInfoMatch = useMatch('/stores/:storeId/info');
   const dynamicBackTitle = orderTrackingMatch
     ? '실시간 주문 추적'
     : orderDetailMatch
       ? '주문 상세'
-      : null;
+      : storeDetailMatch
+        ? '가게 상세'
+        : storeReviewsMatch
+          ? '리뷰'
+          : storeInfoMatch
+            ? '가게 정보'
+            : null;
 
   const activeBackTitle = backTitle || dynamicBackTitle;
 

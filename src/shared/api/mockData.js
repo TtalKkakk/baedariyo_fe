@@ -29,7 +29,7 @@ const SEARCH_RESULT_STORES = [
   },
   {
     storePublicId: 'aa000003-0000-4000-8000-000000000003',
-    storeName: '취향마라탕&마라상귀',
+    storeName: '취향마라탕&마라샹궈',
     description:
       'Self 마라탕 1인분, 꿔바로우 미니, 마라샹궈, 마라 로제 샹궈, 온면, 2~3인분 마라탕',
     storeCategory: 'CHINESE',
