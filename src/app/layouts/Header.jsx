@@ -1,22 +1,75 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, useMatch } from 'react-router-dom';
 
 import ArrowIcon from '@/shared/assets/icons/header/arrow.svg?react';
+import BackIcon from '@/shared/assets/icons/header/back.svg?react';
 import CartIcon from '@/shared/assets/icons/header/cart.svg?react';
 import LocationIcon from '@/shared/assets/icons/header/location.svg?react';
 import SearchIcon from '@/shared/assets/icons/header/search.svg?react';
 
+const TITLE_ROUTES = {
+  '/orders': '주문 내역',
+  '/mypage': '마이페이지',
+};
+
+const BACK_TITLE_ROUTES = {
+  '/cart': '장바구니',
+  '/mypage/profile': '프로필 수정',
+  '/mypage/addresses': '주소 관리',
+  '/mypage/payment': '결제 관리',
+  '/mypage/reviews': '내 리뷰',
+  '/mypage/coupons': '쿠폰',
+  '/mypage/terms': '약관 및 정책',
+  '/mypage/support': '고객센터',
+  '/mypage/inquiries': '문의하기',
+  '/mypage/security': '보안 설정',
+  '/mypage/notification-settings': '알림 설정',
+  '/mypage/withdraw': '회원 탈퇴',
+};
+
 export default function Header() {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const title = TITLE_ROUTES[pathname];
+  const backTitle = BACK_TITLE_ROUTES[pathname];
+
+  const orderTrackingMatch = useMatch('/orders/:orderId/tracking');
+  const orderDetailMatch = useMatch('/orders/:orderId');
+  const dynamicBackTitle = orderTrackingMatch
+    ? '실시간 주문 추적'
+    : orderDetailMatch
+      ? '주문 상세'
+      : null;
+
+  const activeBackTitle = backTitle || dynamicBackTitle;
+
+  if (activeBackTitle) {
+    return (
+      <header className="relative flex items-center py-3 px-4 bg-white sticky top-0 z-10">
+        <button onClick={() => navigate(-1)} className="shrink-0">
+          <BackIcon className="size-5" />
+        </button>
+        <span className="absolute left-1/2 -translate-x-1/2 text-[18px] font-medium text-[var(--color-semantic-label-normal)]">
+          {activeBackTitle}
+        </span>
+      </header>
+    );
+  }
 
   return (
     <header className="flex items-center justify-between py-3 px-4 bg-white sticky top-0 z-10">
-      <button className="flex items-center pl-1">
-        <LocationIcon />
-        <span className="text-[20px] font-bold text-[var(--color-semantic-static-black)] ml-[10px] mr-[6px]">
-          주소지
+      {title ? (
+        <span className="text-[20px] font-bold text-[var(--color-semantic-static-black)]">
+          {title}
         </span>
-        <ArrowIcon className="size-4 [&_path]:fill-[var(--color-semantic-label-normal)]" />
-      </button>
+      ) : (
+        <button className="flex items-center pl-1">
+          <LocationIcon />
+          <span className="text-[20px] font-bold text-[var(--color-semantic-static-black)] ml-[10px] mr-[6px]">
+            주소지
+          </span>
+          <ArrowIcon className="size-4 [&_path]:fill-[var(--color-semantic-label-normal)]" />
+        </button>
+      )}
       <div className="flex items-center gap-5">
         <button onClick={() => navigate('/search')}>
           <SearchIcon className="size-5 [&_path]:fill-[var(--color-semantic-label-normal)]" />

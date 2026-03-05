@@ -104,7 +104,7 @@ export default function OrderListPage() {
   const selectedStatus = searchParams.get('status') || 'ALL';
   const queryStatus = selectedStatus === 'ALL' ? undefined : selectedStatus;
 
-  const { data, isLoading, isFetching, isError, error, refetch } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['my-payments', queryStatus ?? 'ALL'],
     queryFn: () => getMyPayments(queryStatus),
     retry: 1,
@@ -170,15 +170,6 @@ export default function OrderListPage() {
 
   return (
     <div className="min-h-full bg-white px-4 py-4 pb-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-title2 font-semibold text-[var(--color-semantic-label-normal)]">
-          주문 내역
-        </h1>
-        <p className="text-caption1 text-[var(--color-semantic-label-alternative)]">
-          {isFetching ? '동기화 중...' : `${payments.length}건`}
-        </p>
-      </div>
-
       <div className="mt-3 flex gap-2 overflow-x-auto scrollbar-none">
         {PAYMENT_STATUS_FILTERS.map((filter) => {
           const isActive = filter.key === selectedStatus;

@@ -32,13 +32,6 @@ export default function WithdrawPage() {
 
   return (
     <div className="min-h-full bg-white px-4 py-6">
-      <h1 className="text-title2 font-semibold text-[var(--color-semantic-label-normal)]">
-        회원 탈퇴
-      </h1>
-      <p className="mt-2 text-body3 text-[var(--color-semantic-label-alternative)]">
-        탈퇴 시 계정 접근이 중단됩니다. 진행 전 중요한 정보를 확인해 주세요.
-      </p>
-
       <section className="mt-4 rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-[var(--color-semantic-background-normal-normal)] p-4">
         <p className="text-body2 text-[var(--color-semantic-label-normal)]">
           탈퇴 API: <code>/api/auth/user/withdraw</code>

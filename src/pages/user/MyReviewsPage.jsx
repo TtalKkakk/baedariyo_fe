@@ -115,7 +115,7 @@ export default function MyReviewsPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { data, isLoading, isFetching, isError, error, refetch } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['my-reviews'],
     queryFn: getMyReviews,
     retry: 1,
@@ -185,15 +185,6 @@ export default function MyReviewsPage() {
 
   return (
     <div className="min-h-full bg-white px-4 py-4 pb-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-title2 font-semibold text-[var(--color-semantic-label-normal)]">
-          내 리뷰
-        </h1>
-        <p className="text-caption1 text-[var(--color-semantic-label-alternative)]">
-          {isFetching ? '동기화 중...' : `${reviews.length}개`}
-        </p>
-      </div>
-
       {reviews.length === 0 ? (
         <div className="mt-8 rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-[var(--color-semantic-background-normal-normal)] p-6 text-center">
           <p className="text-body1 font-medium text-[var(--color-semantic-label-normal)]">

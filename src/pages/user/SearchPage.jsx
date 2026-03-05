@@ -178,7 +178,15 @@ export default function SearchPage() {
                     key={keyword}
                     className="flex items-center gap-0.5 px-2.5 py-1 bg-[var(--color-atomic-coolNeutral-98)] rounded-full text-body2 font-medium text-[var(--color-semantic-label-normal)] whitespace-nowrap shrink-0"
                   >
-                    {keyword}
+                    <button
+                      onClick={() =>
+                        navigate(
+                          `/search/result?q=${encodeURIComponent(keyword)}`
+                        )
+                      }
+                    >
+                      {keyword}
+                    </button>
                     <button onClick={() => removeRecent(keyword)}>
                       <DeleteIcon className="size-3.5" />
                     </button>
@@ -197,7 +205,10 @@ export default function SearchPage() {
               {RECOMMENDED.map((keyword) => (
                 <button
                   key={keyword}
-                  className="h-7 px-2.5 py-1 border border-[var(--color-atomic-redOrange-80)] rounded-full text-body2 text-[var(--color-semantic-status-cautionary)]"
+                  className="h-7 px-2.5 flex items-center border border-[var(--color-atomic-redOrange-80)] rounded-full text-body2 text-[var(--color-semantic-status-cautionary)]"
+                  onClick={() =>
+                    navigate(`/search/result?q=${encodeURIComponent(keyword)}`)
+                  }
                 >
                   {keyword}
                 </button>
@@ -213,25 +224,43 @@ export default function SearchPage() {
             <div className="flex gap-8">
               <ul className="flex-1 flex flex-col gap-3">
                 {left.map((keyword, i) => (
-                  <li key={keyword} className="flex items-center gap-3">
-                    <span className="text-body2 font-bold text-[var(--color-semantic-label-normal)] w-4">
-                      {i + 1}
-                    </span>
-                    <span className="text-body2 font-medium text-[var(--color-semantic-label-normal)]">
-                      {keyword}
-                    </span>
+                  <li key={keyword}>
+                    <button
+                      className="flex items-center gap-3 w-full"
+                      onClick={() =>
+                        navigate(
+                          `/search/result?q=${encodeURIComponent(keyword)}`
+                        )
+                      }
+                    >
+                      <span className="text-body2 font-bold text-[var(--color-semantic-label-normal)] w-4">
+                        {i + 1}
+                      </span>
+                      <span className="text-body2 font-medium text-[var(--color-semantic-label-normal)]">
+                        {keyword}
+                      </span>
+                    </button>
                   </li>
                 ))}
               </ul>
               <ul className="flex-1 flex flex-col gap-3">
                 {right.map((keyword, i) => (
-                  <li key={keyword} className="flex items-center gap-3">
-                    <span className="text-body2 font-bold text-[var(--color-semantic-label-normal)] w-4">
-                      {i + 6}
-                    </span>
-                    <span className="text-body2 font-medium text-[var(--color-semantic-label-normal)]">
-                      {keyword}
-                    </span>
+                  <li key={keyword}>
+                    <button
+                      className="flex items-center gap-3 w-full"
+                      onClick={() =>
+                        navigate(
+                          `/search/result?q=${encodeURIComponent(keyword)}`
+                        )
+                      }
+                    >
+                      <span className="text-body2 font-bold text-[var(--color-semantic-label-normal)] w-4">
+                        {i + 6}
+                      </span>
+                      <span className="text-body2 font-medium text-[var(--color-semantic-label-normal)]">
+                        {keyword}
+                      </span>
+                    </button>
                   </li>
                 ))}
               </ul>
