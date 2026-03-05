@@ -115,7 +115,7 @@ export default function MyReviewsPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { data, isLoading, isFetching, isError, error, refetch } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['my-reviews'],
     queryFn: getMyReviews,
     retry: 1,

@@ -104,7 +104,7 @@ export default function OrderListPage() {
   const selectedStatus = searchParams.get('status') || 'ALL';
   const queryStatus = selectedStatus === 'ALL' ? undefined : selectedStatus;
 
-  const { data, isLoading, isFetching, isError, error, refetch } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['my-payments', queryStatus ?? 'ALL'],
     queryFn: () => getMyPayments(queryStatus),
     retry: 1,

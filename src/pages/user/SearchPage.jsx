@@ -178,7 +178,13 @@ export default function SearchPage() {
                     key={keyword}
                     className="flex items-center gap-0.5 px-2.5 py-1 bg-[var(--color-atomic-coolNeutral-98)] rounded-full text-body2 font-medium text-[var(--color-semantic-label-normal)] whitespace-nowrap shrink-0"
                   >
-                    <button onClick={() => navigate(`/search/result?q=${encodeURIComponent(keyword)}`)}>
+                    <button
+                      onClick={() =>
+                        navigate(
+                          `/search/result?q=${encodeURIComponent(keyword)}`
+                        )
+                      }
+                    >
                       {keyword}
                     </button>
                     <button onClick={() => removeRecent(keyword)}>
@@ -200,7 +206,9 @@ export default function SearchPage() {
                 <button
                   key={keyword}
                   className="h-7 px-2.5 flex items-center border border-[var(--color-atomic-redOrange-80)] rounded-full text-body2 text-[var(--color-semantic-status-cautionary)]"
-                  onClick={() => navigate(`/search/result?q=${encodeURIComponent(keyword)}`)}
+                  onClick={() =>
+                    navigate(`/search/result?q=${encodeURIComponent(keyword)}`)
+                  }
                 >
                   {keyword}
                 </button>
@@ -219,7 +227,11 @@ export default function SearchPage() {
                   <li key={keyword}>
                     <button
                       className="flex items-center gap-3 w-full"
-                      onClick={() => navigate(`/search/result?q=${encodeURIComponent(keyword)}`)}
+                      onClick={() =>
+                        navigate(
+                          `/search/result?q=${encodeURIComponent(keyword)}`
+                        )
+                      }
                     >
                       <span className="text-body2 font-bold text-[var(--color-semantic-label-normal)] w-4">
                         {i + 1}
@@ -236,7 +248,11 @@ export default function SearchPage() {
                   <li key={keyword}>
                     <button
                       className="flex items-center gap-3 w-full"
-                      onClick={() => navigate(`/search/result?q=${encodeURIComponent(keyword)}`)}
+                      onClick={() =>
+                        navigate(
+                          `/search/result?q=${encodeURIComponent(keyword)}`
+                        )
+                      }
                     >
                       <span className="text-body2 font-bold text-[var(--color-semantic-label-normal)] w-4">
                         {i + 6}
