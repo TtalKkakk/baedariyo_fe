@@ -17,6 +17,9 @@ import OrderTrackingPage from '../pages/user/OrderTrackingPage';
 import LoginPage from '../pages/user/LoginPage';
 import SignupPage from '../pages/user/SignupPage';
 import AddressRegisterPage from '../pages/user/AddressRegisterPage';
+import AddressSearchPage from '../pages/user/AddressSearchPage';
+import AddressSettingPage from '../pages/user/AddressSettingPage';
+import LocationConfirmPage from '../pages/user/LocationConfirmPage';
 import MyPage from '../pages/user/MyPage';
 import ProfilePage from '../pages/user/ProfilePage';
 import AddressPage from '../pages/user/AddressPage';
@@ -62,6 +65,7 @@ const router = createBrowserRouter([
       { path: '/login', element: <LoginPage /> },
       { path: '/signup', element: <SignupPage /> },
       { path: '/address/register', element: <AddressRegisterPage /> },
+      { path: '/address/location', element: <LocationConfirmPage /> },
 
       // 배달원 로그인/회원가입/교육
       { path: '/rider/login', element: <RiderLoginPage /> },
@@ -76,6 +80,10 @@ const router = createBrowserRouter([
           // 홈
           { path: '/', element: <HomePage /> },
           { path: '/category/:categoryId', element: <CategoryPage /> },
+
+          // 주소
+          { path: '/address/search', element: <AddressSearchPage /> },
+          { path: '/address/setting', element: <AddressSettingPage /> },
 
           // 가게/메뉴
           { path: '/stores/:storeId', element: <StoreDetailPage /> },

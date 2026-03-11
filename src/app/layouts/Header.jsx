@@ -3,8 +3,10 @@ import { useNavigate, useLocation, useMatch } from 'react-router-dom';
 import ArrowIcon from '@/shared/assets/icons/header/arrow.svg?react';
 import BackIcon from '@/shared/assets/icons/header/back.svg?react';
 import CartIcon from '@/shared/assets/icons/header/cart.svg?react';
+import EditIcon from '@/shared/assets/icons/header/edit.svg?react';
 import LocationIcon from '@/shared/assets/icons/header/location.svg?react';
 import SearchIcon from '@/shared/assets/icons/header/search.svg?react';
+import { useAddressBookStore } from '@/shared/store';
 
 const TITLE_ROUTES = {
   '/orders': '주문 내역',
@@ -13,6 +15,9 @@ const TITLE_ROUTES = {
 
 const BACK_TITLE_ROUTES = {
   '/cart': '장바구니',
+  '/address/search': '주소 검색',
+  '/address/setting': '주소 설정',
+  '/address/location': '위치 확인',
   '/mypage/profile': '프로필 수정',
   '/mypage/addresses': '주소 관리',
   '/mypage/payment': '결제 관리',
@@ -31,6 +36,10 @@ export default function Header() {
   const { pathname } = useLocation();
   const title = TITLE_ROUTES[pathname];
   const backTitle = BACK_TITLE_ROUTES[pathname];
+  const addresses = useAddressBookStore((state) => state.addresses);
+  const defaultAddress = useAddressBookStore((state) =>
+    state.addresses.find((a) => a.id === state.defaultAddressId)
+  );
 
   const orderTrackingMatch = useMatch('/orders/:orderId/tracking');
   const orderDetailMatch = useMatch('/orders/:orderId');
@@ -53,28 +62,41 @@ export default function Header() {
 
   if (activeBackTitle) {
     return (
-      <header className="relative flex items-center py-3 px-4 bg-white sticky top-0 z-10">
+      <header className="relative flex items-center h-12 px-4 bg-white sticky top-0 z-10">
         <button onClick={() => navigate(-1)} className="shrink-0">
           <BackIcon className="size-5" />
         </button>
         <span className="absolute left-1/2 -translate-x-1/2 text-[18px] font-medium text-[var(--color-semantic-label-normal)]">
           {activeBackTitle}
         </span>
+        {pathname === '/address/setting' ? (
+          <button
+            onClick={() => navigate('/mypage/addresses')}
+            className="ml-auto"
+          >
+            <EditIcon className="size-5 [&_path]:fill-[var(--color-semantic-label-normal)]" />
+          </button>
+        ) : null}
       </header>
     );
   }
 
   return (
-    <header className="flex items-center justify-between py-3 px-4 bg-white sticky top-0 z-10">
+    <header className="flex items-center justify-between h-12 px-4 bg-white sticky top-0 z-10">
       {title ? (
         <span className="text-[20px] font-bold text-[var(--color-semantic-static-black)]">
           {title}
         </span>
       ) : (
-        <button className="flex items-center pl-1">
+        <button
+          className="flex items-center pl-1"
+          onClick={() =>
+            navigate(addresses.length > 0 ? '/address/setting' : '/address/search')
+          }
+        >
           <LocationIcon />
           <span className="text-[20px] font-bold text-[var(--color-semantic-static-black)] ml-[10px] mr-[6px]">
-            주소지
+            {defaultAddress ? defaultAddress.label : '주소지'}
           </span>
           <ArrowIcon className="size-4 [&_path]:fill-[var(--color-semantic-label-normal)]" />
         </button>
