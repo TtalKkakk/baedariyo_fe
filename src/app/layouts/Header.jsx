@@ -63,7 +63,16 @@ export default function Header() {
   if (activeBackTitle) {
     return (
       <header className="relative flex items-center h-12 px-4 bg-white sticky top-0 z-10">
-        <button onClick={() => navigate(-1)} className="shrink-0">
+        <button
+          onClick={() =>
+            pathname === '/mypage/addresses'
+              ? navigate('/address/setting')
+              : pathname === '/address/setting'
+                ? navigate('/')
+                : navigate(-1)
+          }
+          className="shrink-0"
+        >
           <BackIcon className="size-5" />
         </button>
         <span className="absolute left-1/2 -translate-x-1/2 text-[18px] font-medium text-[var(--color-semantic-label-normal)]">
@@ -91,7 +100,9 @@ export default function Header() {
         <button
           className="flex items-center pl-1"
           onClick={() =>
-            navigate(addresses.length > 0 ? '/address/setting' : '/address/search')
+            navigate(
+              addresses.length > 0 ? '/address/setting' : '/address/search'
+            )
           }
         >
           <LocationIcon />

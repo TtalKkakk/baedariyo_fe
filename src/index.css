@@ -14,7 +14,7 @@
   }
 
   .layout-frame {
-    @apply w-[360px] h-[800px] bg-[var(--color-bg,#ffffff)] overflow-hidden flex flex-col;
+    @apply relative w-[360px] h-[800px] bg-[var(--color-bg,#ffffff)] overflow-hidden flex flex-col;
   }
 
   .layout-section {

@@ -130,7 +130,7 @@ export default function OrderListPage() {
 
   if (isLoading) {
     return (
-      <div className="px-4 py-6">
+      <div className="py-6">
         <p className="text-body1 text-[var(--color-semantic-label-normal)]">
           주문 내역을 불러오는 중입니다...
         </p>
@@ -142,7 +142,7 @@ export default function OrderListPage() {
     const isUnauthorized = error?.response?.status === 401;
 
     return (
-      <div className="px-4 py-6">
+      <div className="py-6">
         <p className="text-body1 font-semibold text-[var(--color-semantic-status-cautionary)]">
           {getPaymentErrorMessage(error, '주문 내역을 불러오지 못했습니다.')}
         </p>
@@ -169,7 +169,7 @@ export default function OrderListPage() {
   }
 
   return (
-    <div className="min-h-full bg-white px-4 py-4 pb-8">
+    <div className="min-h-full bg-white py-4 pb-8">
       <div className="mt-3 flex gap-2 overflow-x-auto scrollbar-none">
         {PAYMENT_STATUS_FILTERS.map((filter) => {
           const isActive = filter.key === selectedStatus;

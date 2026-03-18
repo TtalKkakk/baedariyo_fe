@@ -220,7 +220,7 @@ export default function MenuDetailPage() {
 
   if (!canFetch) {
     return (
-      <div className="px-4 py-6">
+      <div className="py-6">
         <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
           잘못된 요청입니다.
         </p>
@@ -230,7 +230,7 @@ export default function MenuDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="px-4 py-6">
+      <div className="py-6">
         <p className="text-body1 text-[var(--color-semantic-label-normal)]">
           메뉴 정보를 불러오는 중입니다...
         </p>
@@ -242,7 +242,7 @@ export default function MenuDetailPage() {
     const isUnauthorized = error?.response?.status === 401;
 
     return (
-      <div className="px-4 py-6">
+      <div className="py-6">
         <p className="text-body1 font-semibold text-[var(--color-semantic-status-cautionary)]">
           {getErrorMessage(error)}
         </p>
@@ -270,7 +270,7 @@ export default function MenuDetailPage() {
 
   if (!selectedMenu) {
     return (
-      <div className="px-4 py-6">
+      <div className="py-6">
         <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
           메뉴를 찾을 수 없습니다.
         </p>
@@ -286,7 +286,7 @@ export default function MenuDetailPage() {
   }
 
   return (
-    <div className="min-h-full bg-white px-4 py-4 pb-8">
+    <div className="min-h-full bg-white py-4 pb-8">
       <p className="text-caption1 text-[var(--color-semantic-label-alternative)]">
         {isFetching
           ? '최신 데이터 동기화 중...'

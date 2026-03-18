@@ -31,7 +31,7 @@ export default function WithdrawPage() {
   };
 
   return (
-    <div className="min-h-full bg-white px-4 py-6">
+    <div className="min-h-full bg-white py-6">
       <section className="mt-4 rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-[var(--color-semantic-background-normal-normal)] p-4">
         <p className="text-body2 text-[var(--color-semantic-label-normal)]">
           탈퇴 API: <code>/api/auth/user/withdraw</code>

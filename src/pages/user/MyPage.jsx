@@ -63,7 +63,7 @@ export default function MyPage() {
   };
 
   return (
-    <div className="min-h-full bg-white px-4 py-4 pb-8">
+    <div className="min-h-full bg-white py-4 pb-8">
       <section className="grid grid-cols-2 gap-2">
         <SummaryCard
           title="로그인 상태"

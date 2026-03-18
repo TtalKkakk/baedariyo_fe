@@ -1,66 +1,90 @@
+import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 
 import { useAddressBookStore } from '@/shared/store';
 
-function AddressItem({
-  address,
-  isDefault,
-  onSetDefault,
-  onDelete,
-  onApplyToCheckout,
-}) {
-  return (
-    <li className="rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-white p-4">
-      <div className="flex items-start justify-between gap-2">
-        <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
-          {address?.label ?? '주소'}
+function DeleteConfirmModal({ onCancel, onConfirm }) {
+  const frame = document.querySelector('.layout-frame') ?? document.body;
+
+  return createPortal(
+    <div className="absolute inset-0 z-50 flex items-center justify-center px-6">
+      <div
+        className="absolute inset-0 bg-black/40"
+        onClick={onCancel}
+      />
+      <div className="relative w-[328px] bg-white rounded-xl px-4 pt-5 pb-4 flex flex-col">
+        <p className="text-[20px] font-bold text-center text-[var(--color-semantic-label-normal)]">
+          주소를 삭제할까요?
         </p>
-        {isDefault ? (
-          <span className="rounded-full px-2 py-0.5 text-caption1 bg-[var(--color-atomic-redOrange-99)] text-[var(--color-semantic-status-cautionary)]">
-            기본 주소
-          </span>
-        ) : null}
-      </div>
-
-      <p className="mt-2 text-body3 text-[var(--color-semantic-label-normal)]">
-        {address?.roadAddress}
-      </p>
-      <p className="mt-1 text-body3 text-[var(--color-semantic-label-alternative)]">
-        {address?.jibunAddress}
-      </p>
-      <p className="mt-1 text-body3 text-[var(--color-semantic-label-alternative)]">
-        {address?.detailAddress}
-      </p>
-
-      <div className="mt-2 text-body3 text-[var(--color-semantic-label-alternative)]">
-        <p>받는 사람: {address?.recipientName || '-'}</p>
-        <p>연락처: {address?.phoneNumber || '-'}</p>
-      </div>
-
-      <div className="mt-3 flex flex-wrap gap-2">
-        {!isDefault ? (
+        <p className="mt-2 text-[16px] font-medium text-center text-[var(--color-semantic-label-neutral)]">
+          주소는 삭제하면 되돌릴 수 없습니다.
+        </p>
+        <div className="mt-3 flex gap-2">
           <button
             type="button"
-            onClick={() => onSetDefault(address.id)}
-            className="h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body3 font-medium text-[var(--color-semantic-label-normal)]"
+            onClick={onCancel}
+            className="flex-1 h-11 rounded-[10px] bg-[var(--color-atomic-coolNeutral-96)] text-[16px] font-medium text-[var(--color-semantic-label-normal)]"
           >
-            기본으로 설정
+            취소
           </button>
-        ) : null}
-        <button
-          type="button"
-          onClick={() => onApplyToCheckout(address.id)}
-          className="h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body3 font-medium text-[var(--color-semantic-label-normal)]"
-        >
-          주문서에 적용
-        </button>
-        <button
-          type="button"
-          onClick={() => onDelete(address.id)}
-          className="h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body3 font-medium text-[var(--color-semantic-status-cautionary)]"
-        >
-          삭제
-        </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            className="flex-1 h-11 rounded-[10px] bg-[var(--color-atomic-redOrange-80)] text-[16px] font-medium text-white"
+          >
+            삭제
+          </button>
+        </div>
+      </div>
+    </div>,
+    frame
+  );
+}
+
+function AddressItem({ address, isDefault, onDeleteRequest, onEdit }) {
+  return (
+    <li className="py-5 border-b border-[var(--color-semantic-line-normal-normal)] last:border-b-0">
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <p className="text-[16px] font-bold text-[var(--color-semantic-label-normal)]">
+              {address?.label ?? '주소'}
+            </p>
+            {isDefault && (
+              <span className="px-[6px] py-[2px] rounded-sm text-[12px] bg-[var(--color-atomic-redOrange-95)] text-[var(--color-atomic-redOrange-80)]">
+                현재 설정된 주소
+              </span>
+            )}
+          </div>
+          <p className="mt-1 text-[14px] text-[var(--color-semantic-label-alternative)]">
+            {address?.roadAddress}
+            {address?.detailAddress ? ` ${address.detailAddress}` : ''}
+          </p>
+          {address?.riderMemo && (
+            <p className="mt-1 text-[13px] text-[var(--color-semantic-label-alternative)]">
+              {address.riderMemo}
+            </p>
+          )}
+        </div>
+        <div className="flex gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={() => onEdit(address)}
+            className="h-8 px-4 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-[13px] text-[var(--color-semantic-label-normal)]"
+          >
+            수정
+          </button>
+          {!isDefault && (
+            <button
+              type="button"
+              onClick={() => onDeleteRequest(address.id)}
+              className="h-8 px-4 rounded-md border border-[var(--color-atomic-redOrange-80)] text-[13px] text-[var(--color-atomic-redOrange-80)]"
+            >
+              삭제
+            </button>
+          )}
+        </div>
       </div>
     </li>
   );
@@ -72,53 +96,69 @@ export default function AddressPage() {
   const defaultAddressId = useAddressBookStore(
     (state) => state.defaultAddressId
   );
-  const setDefaultAddress = useAddressBookStore(
-    (state) => state.setDefaultAddress
-  );
   const removeAddress = useAddressBookStore((state) => state.removeAddress);
 
-  const applyAddressToCheckout = (addressId) => {
-    navigate('/checkout', { state: { selectedAddressId: addressId } });
+  const [pendingDeleteId, setPendingDeleteId] = useState(null);
+
+  const handleEdit = (address) => {
+    navigate('/address/register', {
+      state: {
+        addressId: address.id,
+        label: address.label,
+        roadAddress: address.roadAddress,
+        jibunAddress: address.jibunAddress,
+        detailAddress: address.detailAddress,
+        riderMemo: address.riderMemo,
+        directions: address.directions,
+        latitude: address.latitude,
+        longitude: address.longitude,
+      },
+    });
+  };
+
+  const handleConfirmDelete = () => {
+    removeAddress(pendingDeleteId);
+    setPendingDeleteId(null);
   };
 
   return (
-    <div className="min-h-full bg-white px-4 py-4 pb-8">
-      <div className="flex justify-end">
-        <button
-          type="button"
-          onClick={() => navigate('/address/register')}
-          className="h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body3 font-medium text-[var(--color-semantic-label-normal)]"
-        >
-          주소 추가
-        </button>
-      </div>
-
+    <div className="min-h-full bg-white py-2">
       {addresses.length === 0 ? (
-        <div className="mt-8 rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-[var(--color-semantic-background-normal-normal)] p-6 text-center">
-          <p className="text-body1 font-medium text-[var(--color-semantic-label-normal)]">
+        <div className="mt-8 text-center">
+          <p className="text-[15px] text-[var(--color-semantic-label-alternative)]">
             저장된 주소가 없습니다.
           </p>
           <button
             type="button"
-            onClick={() => navigate('/address/register')}
-            className="mt-3 h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body2 font-medium text-[var(--color-semantic-label-normal)]"
+            onClick={() => navigate('/address/search')}
+            className="mt-3 h-9 px-4 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-[14px] text-[var(--color-semantic-label-normal)]"
           >
-            첫 주소 등록하기
+            주소 추가하기
           </button>
         </div>
       ) : (
-        <ul className="mt-4 space-y-3">
-          {addresses.map((address) => (
-            <AddressItem
-              key={address.id}
-              address={address}
-              isDefault={address.id === defaultAddressId}
-              onSetDefault={setDefaultAddress}
-              onDelete={removeAddress}
-              onApplyToCheckout={applyAddressToCheckout}
-            />
-          ))}
+        <ul>
+          {[...addresses]
+            .sort((a, b) =>
+              a.id === defaultAddressId ? -1 : b.id === defaultAddressId ? 1 : 0
+            )
+            .map((address) => (
+              <AddressItem
+                key={address.id}
+                address={address}
+                isDefault={address.id === defaultAddressId}
+                onDeleteRequest={setPendingDeleteId}
+                onEdit={handleEdit}
+              />
+            ))}
         </ul>
+      )}
+
+      {pendingDeleteId && (
+        <DeleteConfirmModal
+          onCancel={() => setPendingDeleteId(null)}
+          onConfirm={handleConfirmDelete}
+        />
       )}
     </div>
   );

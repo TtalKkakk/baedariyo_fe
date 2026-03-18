@@ -193,6 +193,7 @@ function buildDefaultMenus(storeId, startMenuId) {
       menuName: '후라이드 치킨',
       menuDescription: '겉바속촉 기본 후라이드',
       price: { amount: 18000 },
+      reviewCount: 107,
       menuOptionGroups: [
         {
           id: `${startMenuId}-g1`,
@@ -213,6 +214,7 @@ function buildDefaultMenus(storeId, startMenuId) {
       menuName: '양념 치킨',
       menuDescription: '달콤한 특제 양념소스',
       price: { amount: 20000 },
+      reviewCount: 1,
       menuOptionGroups: [
         {
           id: `${startMenuId + 1}-g1`,
@@ -232,7 +234,71 @@ function buildDefaultMenus(storeId, startMenuId) {
       menuName: '감자튀김',
       menuDescription: '사이드 메뉴',
       price: { amount: 4000 },
+      reviewCount: 3,
       menuOptionGroups: [],
+    },
+    {
+      id: startMenuId + 3,
+      storeId,
+      store: { id: storeId },
+      menuName: '메인 메뉴 1',
+      menuDescription: '메인 메뉴 1에 대한 설명이 어쩌고 저쩌고',
+      price: { amount: 10000 },
+      reviewCount: 22,
+      menuOptionGroups: [],
+    },
+    {
+      id: startMenuId + 4,
+      storeId,
+      store: { id: storeId },
+      menuName: '메인 메뉴 2',
+      menuDescription: '메인 메뉴 2에 대한 설명이 어쩌고 저쩌고',
+      price: { amount: 12000 },
+      reviewCount: 8,
+      menuOptionGroups: [],
+    },
+  ];
+}
+
+function buildMenuGroupsFromMenus(menus) {
+  const popularMenus = menus.slice(0, 3).map((m, i) => ({ ...m, rank: i + 1 }));
+  const mainMenus = menus.map((m) => ({ ...m, rank: null }));
+  return [
+    {
+      id: 'popular',
+      groupTabName: '인기메뉴',
+      groupName: '가장 인기 있는 메뉴',
+      groupDescription: '한 달간 주문수가 많고 만족도가 가장 높은 메뉴',
+      menus: popularMenus,
+    },
+    {
+      id: 'main',
+      groupTabName: '메인메뉴',
+      groupName: '메인 메뉴',
+      groupDescription:
+        '메뉴 그룹의 설명이 여기에 나옵니다 이렇게 저렇게 어쩌고 저쩌고',
+      menus: mainMenus,
+    },
+    {
+      id: 'set',
+      groupTabName: '세트메뉴',
+      groupName: '세트 메뉴',
+      groupDescription: '',
+      menus: [],
+    },
+    {
+      id: 'side',
+      groupTabName: '사이드 메뉴',
+      groupName: '사이드 메뉴',
+      groupDescription: '',
+      menus: [],
+    },
+    {
+      id: 'drink',
+      groupTabName: '음료',
+      groupName: '음료',
+      groupDescription: '',
+      menus: [],
     },
   ];
 }
@@ -247,6 +313,7 @@ function buildStore({
   deliveryFee = { amount: 3000 },
   menus,
 }) {
+  const resolvedMenus = Array.isArray(menus) ? menus : buildDefaultMenus(id, 1);
   return {
     id,
     storePublicId,
@@ -259,7 +326,8 @@ function buildStore({
     deliveryFee,
     totalRating: 0,
     reviewCount: 0,
-    menus: Array.isArray(menus) ? menus : buildDefaultMenus(id, 1),
+    menus: resolvedMenus,
+    menuGroups: buildMenuGroupsFromMenus(resolvedMenus),
     recentPhotoReviews: [],
   };
 }

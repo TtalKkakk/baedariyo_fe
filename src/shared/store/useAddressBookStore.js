@@ -19,6 +19,10 @@ export const useAddressBookStore = create(
           roadAddress,
           jibunAddress,
           detailAddress,
+          riderMemo,
+          directions,
+          latitude,
+          longitude,
           isDefault = false,
         }) =>
           set((state) => {
@@ -30,6 +34,10 @@ export const useAddressBookStore = create(
               roadAddress: roadAddress?.trim() || '',
               jibunAddress: jibunAddress?.trim() || '',
               detailAddress: detailAddress?.trim() || '',
+              riderMemo: riderMemo ?? '',
+              directions: directions ?? '',
+              latitude: latitude ?? null,
+              longitude: longitude ?? null,
               createdAt: new Date().toISOString(),
             };
 
@@ -69,6 +77,13 @@ export const useAddressBookStore = create(
               defaultAddressId: nextDefaultAddressId,
             };
           }),
+
+        updateAddress: (addressId, fields) =>
+          set((state) => ({
+            addresses: state.addresses.map((item) =>
+              item.id === addressId ? { ...item, ...fields } : item
+            ),
+          })),
 
         clearAddresses: () =>
           set({

@@ -239,7 +239,7 @@ export default function CheckoutPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-full bg-white px-4 py-8">
+      <div className="min-h-full bg-white py-8">
         <h1 className="text-title2 font-semibold text-[var(--color-semantic-label-normal)]">
           주문하기
         </h1>
@@ -260,7 +260,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-full bg-white px-4 py-4 pb-8">
+    <div className="min-h-full bg-white py-4 pb-8">
       <h1 className="text-title2 font-semibold text-[var(--color-semantic-label-normal)]">
         주문하기
       </h1>

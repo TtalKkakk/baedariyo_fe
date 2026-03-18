@@ -80,7 +80,7 @@ export default function StoreCreatePage() {
   };
 
   return (
-    <div className="min-h-full bg-white px-4 py-6">
+    <div className="min-h-full bg-white py-6">
       <h1 className="text-title2 font-semibold text-[var(--color-semantic-label-normal)]">
         가게 생성
       </h1>

@@ -18,8 +18,8 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-full bg-gradient-to-b from-white to-[var(--color-atomic-redOrange-99)]">
-      <div className="px-4 pt-2 pb-4">
+    <div className="min-h-[calc(100%+16px)] bg-gradient-to-b from-white to-[var(--color-atomic-redOrange-99)] -mx-4 -my-2 px-4 py-2">
+      <div className="pt-2 pb-4">
         <button
           onClick={() => navigate('/search')}
           className="w-full flex items-center gap-3 h-10 pl-2 pr-4 bg-white border border-[var(--color-semantic-line-normal-normal)] rounded-lg"
@@ -30,12 +30,12 @@ export default function HomePage() {
           </span>
         </button>
       </div>
-      <div className="px-4 py-2">
+      <div className="py-2">
         <CategoryList />
       </div>
 
       {import.meta.env.DEV && isBackendReady ? (
-        <div className="px-4 py-4">
+        <div className="py-4">
           <section className="p-4 rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-white">
             <h2 className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
               백엔드 연동 테스트

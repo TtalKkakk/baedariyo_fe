@@ -30,7 +30,7 @@ export default function SecurityPage() {
   };
 
   return (
-    <div className="min-h-full bg-white px-4 py-6">
+    <div className="min-h-full bg-white py-6">
       <section className="mt-4 rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-white p-4">
         <p className="text-body2 font-medium text-[var(--color-semantic-label-normal)]">
           인증 상태: {hasToken ? '로그인됨' : '로그아웃됨'}
