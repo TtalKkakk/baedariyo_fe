@@ -62,7 +62,7 @@ export default function OrderDetailPage() {
 
   if (!routeId) {
     return (
-      <div className="px-4 py-6">
+      <div className="py-6">
         <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
           잘못된 주문 경로입니다.
         </p>
@@ -79,7 +79,7 @@ export default function OrderDetailPage() {
 
   if (shouldFetch && isLoading) {
     return (
-      <div className="px-4 py-6">
+      <div className="py-6">
         <p className="text-body1 text-[var(--color-semantic-label-normal)]">
           주문 상세를 불러오는 중입니다...
         </p>
@@ -91,7 +91,7 @@ export default function OrderDetailPage() {
     const isUnauthorized = error?.response?.status === 401;
 
     return (
-      <div className="px-4 py-6">
+      <div className="py-6">
         <p className="text-body1 font-semibold text-[var(--color-semantic-status-cautionary)]">
           {getPaymentErrorMessage(error, '주문 상세를 불러오지 못했습니다.')}
         </p>
@@ -119,7 +119,7 @@ export default function OrderDetailPage() {
 
   if (!payment) {
     return (
-      <div className="px-4 py-6">
+      <div className="py-6">
         <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
           주문 정보를 찾을 수 없습니다.
         </p>
@@ -146,7 +146,7 @@ export default function OrderDetailPage() {
   const statusClassName = getPaymentStatusClassName(payment?.paymentStatus);
 
   return (
-    <div className="min-h-full bg-white px-4 py-4 pb-8">
+    <div className="min-h-full bg-white py-4 pb-8">
       <div className="flex justify-end">
         <button
           type="button"

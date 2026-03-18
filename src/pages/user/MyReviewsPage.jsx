@@ -145,7 +145,7 @@ export default function MyReviewsPage() {
 
   if (isLoading) {
     return (
-      <div className="px-4 py-6">
+      <div className="py-6">
         <p className="text-body1 text-[var(--color-semantic-label-normal)]">
           내 리뷰를 불러오는 중입니다...
         </p>
@@ -157,7 +157,7 @@ export default function MyReviewsPage() {
     const isUnauthorized = error?.response?.status === 401;
 
     return (
-      <div className="px-4 py-6">
+      <div className="py-6">
         <p className="text-body1 font-semibold text-[var(--color-semantic-status-cautionary)]">
           {getErrorMessage(error)}
         </p>
@@ -184,7 +184,7 @@ export default function MyReviewsPage() {
   }
 
   return (
-    <div className="min-h-full bg-white px-4 py-4 pb-8">
+    <div className="min-h-full bg-white py-4 pb-8">
       {reviews.length === 0 ? (
         <div className="mt-8 rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-[var(--color-semantic-background-normal-normal)] p-6 text-center">
           <p className="text-body1 font-medium text-[var(--color-semantic-label-normal)]">

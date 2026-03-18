@@ -147,7 +147,7 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-full bg-white px-4 py-4 pb-8">
+      <div className="min-h-full bg-white py-4 pb-8">
         <div className="rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-[var(--color-semantic-background-normal-normal)] p-6 text-center">
           <p className="text-body1 font-medium text-[var(--color-semantic-label-normal)]">
             담긴 메뉴가 없습니다.
@@ -165,7 +165,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-full bg-white px-4 py-4 pb-8">
+    <div className="min-h-full bg-white py-4 pb-8">
       <div className="flex items-center justify-end">
         <button
           type="button"

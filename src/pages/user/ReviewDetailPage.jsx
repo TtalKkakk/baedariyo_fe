@@ -65,7 +65,7 @@ export default function ReviewDetailPage() {
 
   if (!canFetch) {
     return (
-      <div className="px-4 py-6">
+      <div className="py-6">
         <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
           잘못된 리뷰 ID입니다.
         </p>
@@ -75,7 +75,7 @@ export default function ReviewDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="px-4 py-6">
+      <div className="py-6">
         <p className="text-body1 text-[var(--color-semantic-label-normal)]">
           리뷰 상세를 불러오는 중입니다...
         </p>
@@ -87,7 +87,7 @@ export default function ReviewDetailPage() {
     const isUnauthorized = error?.response?.status === 401;
 
     return (
-      <div className="px-4 py-6">
+      <div className="py-6">
         <p className="text-body1 font-semibold text-[var(--color-semantic-status-cautionary)]">
           {getErrorMessage(error)}
         </p>
@@ -120,7 +120,7 @@ export default function ReviewDetailPage() {
   const storePublicId = review?.storePublicId;
 
   return (
-    <div className="min-h-full bg-white px-4 py-4 pb-8">
+    <div className="min-h-full bg-white py-4 pb-8">
       <div className="flex items-center justify-between">
         <h1 className="text-title2 font-semibold text-[var(--color-semantic-label-normal)]">
           리뷰 상세

@@ -12,7 +12,7 @@ import { getSearchHistory } from '@/shared/api';
 
 const RECOMMENDED = [
   '두쫀쿠',
-  '마라상귀',
+  '마라샹궈',
   '삼첩분식',
   '족발',
   '와플대학',

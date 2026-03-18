@@ -73,7 +73,7 @@ export default function NotificationsPage() {
   );
 
   return (
-    <div className="min-h-full bg-white px-4 py-4 pb-8">
+    <div className="min-h-full bg-white py-4 pb-8">
       <div className="flex items-center justify-between">
         <h1 className="text-title2 font-semibold text-[var(--color-semantic-label-normal)]">
           알림

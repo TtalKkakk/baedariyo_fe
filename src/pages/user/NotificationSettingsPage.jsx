@@ -25,7 +25,7 @@ export default function NotificationSettingsPage() {
   const updateSetting = useNotificationStore((state) => state.updateSetting);
 
   return (
-    <div className="min-h-full bg-white px-4 py-4 pb-8">
+    <div className="min-h-full bg-white py-4 pb-8">
       <section className="mt-4 rounded-xl border border-[var(--color-semantic-line-normal-normal)] divide-y divide-[var(--color-semantic-line-normal-normal)] px-3">
         <SettingRow
           title="주문 상태 알림"

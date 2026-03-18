@@ -11,6 +11,7 @@ import StarIcon from '@/shared/assets/icons/store/star.svg?react';
 import TimeIcon from '@/shared/assets/icons/store/time.svg?react';
 import DeliveryFeeIcon from '@/shared/assets/icons/store/deliveryfee.svg?react';
 import { searchStores } from '@/shared/api';
+import { BottomModal } from '@/shared/ui';
 
 function formatPrice(amount) {
   return `${amount.toLocaleString('ko-KR')}원`;
@@ -80,6 +81,21 @@ const MIN_ORDER_OPTIONS = [
   '15,000원 이하',
 ];
 
+const RATING_OPTIONS = [
+  '전체',
+  '4.5점 이상',
+  '4.0점 이상',
+  '3.5점 이상',
+  '3.0점 이상',
+];
+
+const RATING_MAP = {
+  '4.5점 이상': 4.5,
+  '4.0점 이상': 4.0,
+  '3.5점 이상': 3.5,
+  '3.0점 이상': 3.0,
+};
+
 const MIN_ORDER_MAP = {
   '5,000원 이하': 5000,
   '10,000원 이하': 10000,
@@ -100,7 +116,9 @@ export default function SearchResultPage() {
   const [minOrder, setMinOrder] = useState(null);
   const [freeDelivery, setFreeDelivery] = useState(false);
   const [instantDiscount, setInstantDiscount] = useState(false);
+  const [rating, setRating] = useState('전체');
   const [sortOpen, setSortOpen] = useState(false);
+  const [ratingOpen, setRatingOpen] = useState(false);
   const [minOrderOpen, setMinOrderOpen] = useState(false);
 
   const { data, isLoading } = useQuery({
@@ -115,6 +133,13 @@ export default function SearchResultPage() {
 
   if (freeDelivery) {
     filteredStores = filteredStores.filter((s) => s.deliveryFee?.amount === 0);
+  }
+
+  if (rating !== '전체') {
+    const minRating = RATING_MAP[rating];
+    filteredStores = filteredStores.filter(
+      (s) => (s.totalRating ?? 0) >= minRating
+    );
   }
 
   if (minOrder) {
@@ -147,6 +172,11 @@ export default function SearchResultPage() {
     const trimmed = inputValue.trim();
     if (!trimmed) return;
     setSearchParams({ q: trimmed });
+    setSort('기본순');
+    setRating('전체');
+    setMinOrder(null);
+    setFreeDelivery(false);
+    setInstantDiscount(false);
   }
 
   function handleKeyDown(e) {
@@ -154,7 +184,7 @@ export default function SearchResultPage() {
   }
 
   return (
-    <div className="flex flex-col h-full bg-white">
+    <div className="relative flex flex-col h-full bg-white">
       {/* 헤더 */}
       <div className="flex items-center gap-3 px-4 py-3 bg-white shrink-0">
         <button onClick={() => navigate(-1)} className="shrink-0">
@@ -201,10 +231,23 @@ export default function SearchResultPage() {
             className="flex items-center gap-1 h-[31px] px-3 rounded-full border border-[var(--color-atomic-coolNeutral-90)] bg-[var(--color-atomic-coolNeutral-98)] text-body2 font-medium text-[var(--color-semantic-label-normal)] shrink-0 whitespace-nowrap"
             onClick={() => {
               setSortOpen((v) => !v);
+              setRatingOpen(false);
               setMinOrderOpen(false);
             }}
           >
             {sort}
+            <ArrowIcon className="size-3.5" />
+          </button>
+          {/* 별점 */}
+          <button
+            className="flex items-center gap-1 h-[31px] px-3 rounded-full border border-[var(--color-atomic-coolNeutral-90)] bg-[var(--color-atomic-coolNeutral-98)] text-body2 font-medium text-[var(--color-semantic-label-normal)] shrink-0 whitespace-nowrap"
+            onClick={() => {
+              setRatingOpen((v) => !v);
+              setSortOpen(false);
+              setMinOrderOpen(false);
+            }}
+          >
+            {rating === '전체' ? '별점' : rating}
             <ArrowIcon className="size-3.5" />
           </button>
           {/* 최소주문금액 */}
@@ -213,6 +256,7 @@ export default function SearchResultPage() {
             onClick={() => {
               setMinOrderOpen((v) => !v);
               setSortOpen(false);
+              setRatingOpen(false);
             }}
           >
             {minOrder ?? '최소주문금액'}
@@ -241,51 +285,64 @@ export default function SearchResultPage() {
             즉시 할인
           </button>
         </div>
-
-        {/* 정렬 드롭다운  */}
-        {sortOpen && (
-          <div className="absolute top-full mt-1 left-4 z-50 bg-[var(--color-atomic-coolNeutral-98)] border border-[var(--color-atomic-coolNeutral-90)] rounded-2xl shadow-sm w-fit overflow-hidden">
-            {SORT_OPTIONS.map((opt) => (
-              <button
-                key={opt}
-                className={`w-full text-left px-4 py-2 text-body2 font-medium whitespace-nowrap ${
-                  opt === sort
-                    ? 'text-[var(--color-atomic-redOrange-80)]'
-                    : 'text-[var(--color-semantic-label-normal)]'
-                }`}
-                onClick={() => {
-                  setSort(opt);
-                  setSortOpen(false);
-                }}
-              >
-                {opt}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* 최소주문금액 드롭다운*/}
-        {minOrderOpen && (
-          <div className="absolute top-full mt-1 left-4 z-50 bg-[var(--color-atomic-coolNeutral-98)] border border-[var(--color-atomic-coolNeutral-90)] rounded-2xl shadow-sm w-fit overflow-hidden">
-            {MIN_ORDER_OPTIONS.map((opt) => (
-              <button
-                key={opt}
-                className={`w-full text-left px-4 py-2 text-body2 font-medium whitespace-nowrap ${
-                  opt === minOrder
-                    ? 'text-[var(--color-atomic-redOrange-80)]'
-                    : 'text-[var(--color-semantic-label-normal)]'
-                }`}
-                onClick={() => {
-                  setMinOrder(opt);
-                  setMinOrderOpen(false);
-                }}
-              >
-                {opt}
-              </button>
-            ))}
-          </div>
-        )}
       </div>
+
+      <BottomModal
+        title="정렬"
+        isOpen={sortOpen}
+        onClose={() => setSortOpen(false)}
+      >
+        {SORT_OPTIONS.map((opt) => (
+          <button
+            key={opt}
+            className={`w-full text-left px-6 py-4 text-body1 text-[var(--color-semantic-label-normal)] ${opt === sort ? 'font-bold' : 'font-normal'}`}
+            onClick={() => {
+              setSort(opt);
+              setSortOpen(false);
+            }}
+          >
+            {opt}
+          </button>
+        ))}
+      </BottomModal>
+
+      <BottomModal
+        title="별점"
+        isOpen={ratingOpen}
+        onClose={() => setRatingOpen(false)}
+      >
+        {RATING_OPTIONS.map((opt) => (
+          <button
+            key={opt}
+            className={`w-full text-left px-6 py-4 text-body1 text-[var(--color-semantic-label-normal)] ${opt === rating ? 'font-bold' : 'font-normal'}`}
+            onClick={() => {
+              setRating(opt);
+              setRatingOpen(false);
+            }}
+          >
+            {opt}
+          </button>
+        ))}
+      </BottomModal>
+
+      <BottomModal
+        title="최소주문금액"
+        isOpen={minOrderOpen}
+        onClose={() => setMinOrderOpen(false)}
+      >
+        {MIN_ORDER_OPTIONS.map((opt) => (
+          <button
+            key={opt}
+            className={`w-full text-left px-6 py-4 text-body1 text-[var(--color-semantic-label-normal)] ${opt === minOrder ? 'font-bold' : 'font-normal'}`}
+            onClick={() => {
+              setMinOrder(opt);
+              setMinOrderOpen(false);
+            }}
+          >
+            {opt}
+          </button>
+        ))}
+      </BottomModal>
 
       {/* 콘텐츠 */}
       <div className="flex-1 overflow-y-auto">

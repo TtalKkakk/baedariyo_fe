@@ -25,7 +25,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-full bg-white px-4 py-6">
+    <div className="min-h-full bg-white py-6">
       <form onSubmit={handleSubmit} className="mt-5 space-y-3">
         <input
           type="email"
