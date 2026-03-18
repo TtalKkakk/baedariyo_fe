@@ -127,7 +127,7 @@ export default function StoreDetailPage() {
       {/* Store Info */}
       <div className="px-4 pt-4 pb-5">
         <div className="flex items-start justify-between gap-2">
-          <h1 className="flex-1 text-[18px] font-bold leading-snug text-[var(--color-semantic-label-normal)]">
+          <h1 className="flex-1 text-h6 font-bold leading-snug text-[var(--color-semantic-label-normal)]">
             {store?.storeName ?? '가게 이름 없음'}
           </h1>
           <div className="flex items-center gap-4 mt-0.5 text-[var(--color-semantic-label-normal)]">
@@ -147,10 +147,10 @@ export default function StoreDetailPage() {
           className="flex items-center gap-1 mt-2"
         >
           <StarIcon className="w-4 h-4 [&_path]:fill-[var(--color-semantic-status-favorite)]" />
-          <span className="text-[14px] font-semibold text-[var(--color-semantic-label-normal)]">
+          <span className="text-body2 font-semibold text-[var(--color-semantic-label-normal)]">
             {store?.totalRating ?? 0}
           </span>
-          <span className="text-[14px] text-[var(--color-semantic-label-alternative)]">
+          <span className="text-body2 text-[var(--color-semantic-label-alternative)]">
             ({(store?.reviewCount ?? 0).toLocaleString('ko-KR')})
           </span>
           <ArrowIcon className="size-4 -rotate-90 [&_path]:fill-[var(--color-semantic-label-alternative)]" />
@@ -159,24 +159,24 @@ export default function StoreDetailPage() {
         {/* Info rows */}
         <div className="mt-3 space-y-[6px]">
           <div className="flex gap-4">
-            <span className="w-14 text-[13px] text-[var(--color-semantic-label-alternative)]">
+            <span className="w-14 text-body3 text-[var(--color-semantic-label-alternative)]">
               최소주문
             </span>
-            <span className="text-[13px] text-[var(--color-semantic-label-normal)]">
+            <span className="text-body3 text-[var(--color-semantic-label-normal)]">
               {formatPrice(store?.minimumOrderAmount)}
             </span>
           </div>
           <div className="flex items-center gap-4">
-            <span className="w-14 text-[13px] text-[var(--color-semantic-label-alternative)]">
+            <span className="w-14 text-body3 text-[var(--color-semantic-label-alternative)]">
               배달비
             </span>
-            <span className="text-[13px] text-[var(--color-semantic-label-normal)]">
+            <span className="text-body3 text-[var(--color-semantic-label-normal)]">
               {formatPrice(store?.deliveryFee)}
             </span>
             {store?.deliveryTimeMin && (
               <div className="flex items-center gap-1">
                 <TimeIcon className="size-4" />
-                <span className="text-[13px] text-[var(--color-semantic-label-normal)]">
+                <span className="text-body3 text-[var(--color-semantic-label-normal)]">
                   약 {store.deliveryTimeMin}분 소요
                 </span>
               </div>
@@ -197,7 +197,7 @@ export default function StoreDetailPage() {
                 key={group.id}
                 type="button"
                 onClick={() => handleTabClick(i)}
-                className={`shrink-0 px-4 py-[6px] rounded-full text-[13px] font-medium transition-colors ${
+                className={`shrink-0 px-4 py-[6px] rounded-full text-body3 font-medium transition-colors ${
                   activeTab === i
                     ? 'bg-[var(--color-semantic-label-normal)] text-white'
                     : 'bg-[var(--color-semantic-background-alternative)] text-[var(--color-semantic-label-alternative)]'
@@ -221,11 +221,11 @@ export default function StoreDetailPage() {
         >
           {/* Group header */}
           <div className="px-4 pt-5 pb-1">
-            <h2 className="text-[16px] font-bold text-[var(--color-semantic-label-normal)]">
+            <h2 className="text-body1 font-bold text-[var(--color-semantic-label-normal)]">
               {group.groupName}
             </h2>
             {group.groupDescription ? (
-              <p className="text-[12px] text-[var(--color-semantic-label-alternative)] mt-0.5">
+              <p className="text-caption1 text-[var(--color-semantic-label-alternative)] mt-0.5">
                 {group.groupDescription}
               </p>
             ) : null}
@@ -244,24 +244,24 @@ export default function StoreDetailPage() {
               {/* Left: text content */}
               <div className="flex-1 min-w-0">
                 {menu.rank != null && (
-                  <span className="inline-block mb-1.5 text-[11px] text-[var(--color-semantic-label-alternative)] bg-[var(--color-semantic-background-alternative)] px-[6px] py-[2px] rounded">
+                  <span className="inline-block mb-1.5 text-caption2 text-[var(--color-semantic-label-alternative)] bg-[var(--color-semantic-background-alternative)] px-[6px] py-[2px] rounded">
                     인기 {menu.rank}위
                   </span>
                 )}
-                <p className="text-[15px] font-bold leading-snug text-[var(--color-semantic-label-normal)]">
+                <p className="text-body1 font-bold leading-snug text-[var(--color-semantic-label-normal)]">
                   {menu.menuName}
                 </p>
                 {menu.menuDescription ? (
-                  <p className="text-[13px] text-[var(--color-semantic-label-alternative)] mt-0.5 line-clamp-1">
+                  <p className="text-body3 text-[var(--color-semantic-label-alternative)] mt-0.5 line-clamp-1">
                     {menu.menuDescription}
                   </p>
                 ) : null}
                 <div className="mt-2 flex items-center gap-1.5">
-                  <span className="text-[14px] font-bold text-[var(--color-semantic-label-normal)]">
+                  <span className="text-body2 font-bold text-[var(--color-semantic-label-normal)]">
                     {formatPrice(menu.price)}
                   </span>
                   {menu.reviewCount > 0 && (
-                    <span className="text-[12px] text-[var(--color-semantic-label-alternative)]">
+                    <span className="text-caption1 text-[var(--color-semantic-label-alternative)]">
                       리뷰 {menu.reviewCount}개
                     </span>
                   )}
@@ -278,7 +278,7 @@ export default function StoreDetailPage() {
                   alt={menu.menuName}
                   className="w-full h-full object-cover rounded-xl"
                 />
-                <span className="absolute bottom-1.5 right-1.5 w-7 h-7 bg-white rounded-xl flex items-center justify-center text-[20px] font-light leading-none shadow-md">
+                <span className="absolute bottom-1.5 right-1.5 w-7 h-7 bg-white rounded-xl flex items-center justify-center text-h5 font-light leading-none shadow-md">
                   +
                 </span>
               </div>
@@ -290,7 +290,7 @@ export default function StoreDetailPage() {
       {/* Fallback: flat menus when no groups */}
       {menuGroups.length === 0 && (
         <section className="px-4 pt-4">
-          <h2 className="text-[16px] font-bold text-[var(--color-semantic-label-normal)]">
+          <h2 className="text-body1 font-bold text-[var(--color-semantic-label-normal)]">
             메뉴
           </h2>
           {(store?.menus ?? []).length === 0 ? (
@@ -311,15 +311,15 @@ export default function StoreDetailPage() {
                     className="w-full py-4 flex items-start justify-between gap-2 text-left"
                   >
                     <div>
-                      <p className="text-[15px] font-bold text-[var(--color-semantic-label-normal)]">
+                      <p className="text-body1 font-bold text-[var(--color-semantic-label-normal)]">
                         {menu.menuName}
                       </p>
                       {menu.menuDescription && (
-                        <p className="text-[13px] text-[var(--color-semantic-label-alternative)] mt-0.5">
+                        <p className="text-body3 text-[var(--color-semantic-label-alternative)] mt-0.5">
                           {menu.menuDescription}
                         </p>
                       )}
-                      <p className="text-[14px] font-bold text-[var(--color-semantic-label-normal)] mt-1.5">
+                      <p className="text-body2 font-bold text-[var(--color-semantic-label-normal)] mt-1.5">
                         {formatPrice(menu.price)}
                       </p>
                     </div>

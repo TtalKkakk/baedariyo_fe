@@ -75,6 +75,20 @@
     letter-spacing: var(--h4-track);
   }
 
+  .text-h5 {
+    font-family: var(--font-sans);
+    font-size: var(--h5-size);
+    line-height: var(--h5-line);
+    letter-spacing: var(--h5-track);
+  }
+
+  .text-h6 {
+    font-family: var(--font-sans);
+    font-size: var(--h6-size);
+    line-height: var(--h6-line);
+    letter-spacing: var(--h6-track);
+  }
+
   .text-body1 {
     font-family: var(--font-sans);
     font-size: var(--body1-size);

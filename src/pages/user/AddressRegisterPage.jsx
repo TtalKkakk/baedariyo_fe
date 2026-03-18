@@ -132,7 +132,7 @@ export default function AddressRegisterPage() {
         <button type="button" onClick={() => navigate(-1)} className="shrink-0">
           <BackIcon className="size-5" />
         </button>
-        <span className="absolute left-1/2 -translate-x-1/2 text-[18px] font-medium text-[var(--color-semantic-label-normal)]">
+        <span className="absolute left-1/2 -translate-x-1/2 text-h6 font-medium text-[var(--color-semantic-label-normal)]">
           {isEditing ? '주소 편집' : '주소 상세'}
         </span>
       </header>
@@ -143,7 +143,7 @@ export default function AddressRegisterPage() {
         <button
           type="button"
           onClick={() => setIsMapExpanded(true)}
-          className="absolute bottom-3 right-7 z-10 h-7 px-3 bg-[#3A3A3A] text-white text-[11px] font-medium rounded-full"
+          className="absolute bottom-3 right-7 z-10 h-7 px-3 bg-[#3A3A3A] text-white text-caption2 font-medium rounded-full"
         >
           지도에서 위치 확인
         </button>
@@ -153,11 +153,11 @@ export default function AddressRegisterPage() {
       <div className="flex-1 overflow-auto px-4 pt-4 pb-4">
         {/* 주소 표시 */}
         <div className="mb-4">
-          <p className="text-[20px] font-bold text-[var(--color-semantic-label-normal)]">
+          <p className="text-h5 font-bold text-[var(--color-semantic-label-normal)]">
             {roadAddress || '주소 정보 없음'}
           </p>
           {jibunAddress ? (
-            <p className="mt-[6px] text-[16px] font-medium text-[var(--color-semantic-label-normal)]">
+            <p className="mt-[6px] text-body1 font-medium text-[var(--color-semantic-label-normal)]">
               {jibunAddress}
             </p>
           ) : null}
@@ -165,7 +165,7 @@ export default function AddressRegisterPage() {
 
         {/* 주소 이름 */}
         <div className="mb-4">
-          <p className="text-[14px] font-medium text-[var(--color-semantic-label-normal)] mb-[6px]">
+          <p className="text-body2 font-medium text-[var(--color-semantic-label-normal)] mb-[6px]">
             주소 이름
           </p>
           <div className="flex gap-2">
@@ -174,7 +174,7 @@ export default function AddressRegisterPage() {
                 key={preset}
                 type="button"
                 onClick={() => setLabelPreset(preset)}
-                className={`flex-1 h-9 rounded-lg border text-[14px] font-medium ${
+                className={`flex-1 h-9 rounded-lg border text-body2 font-medium ${
                   labelPreset === preset
                     ? 'bg-[var(--color-atomic-redOrange-80)] text-white border-[var(--color-atomic-redOrange-80)]'
                     : 'bg-white text-[var(--color-semantic-label-normal)] border-[var(--color-semantic-line-normal-normal)]'
@@ -190,7 +190,7 @@ export default function AddressRegisterPage() {
               value={customLabel}
               onChange={(e) => setCustomLabel(e.target.value)}
               placeholder="주소 이름 입력"
-              className="mt-2 w-full h-10 py-2 px-3 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-[16px] text-[var(--color-semantic-label-normal)] placeholder:text-[var(--color-semantic-label-alternative)] outline-none"
+              className="mt-2 w-full h-10 py-2 px-3 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body1 text-[var(--color-semantic-label-normal)] placeholder:text-[var(--color-semantic-label-alternative)] outline-none"
             />
           )}
         </div>
@@ -205,7 +205,7 @@ export default function AddressRegisterPage() {
               setShowDetailError(false);
             }}
             placeholder="건물명, 동/호수 등의 상세주소 입력"
-            className="w-full h-10 py-2 px-3 pr-9 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-[16px] text-[var(--color-semantic-label-normal)] placeholder:text-[var(--color-semantic-label-alternative)] outline-none"
+            className="w-full h-10 py-2 px-3 pr-9 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body1 text-[var(--color-semantic-label-normal)] placeholder:text-[var(--color-semantic-label-alternative)] outline-none"
           />
           {detailAddress && (
             <button
@@ -218,21 +218,21 @@ export default function AddressRegisterPage() {
           )}
         </div>
         {showDetailError && (
-          <p className="mt-1.5 text-[14px] text-[var(--color-semantic-status-negative)]">
+          <p className="mt-1.5 text-body2 text-[var(--color-semantic-status-negative)]">
             상세주소를 입력하면 더 정확하게 배달이 가능합니다
           </p>
         )}
 
         {/* 라이더에게 메모 */}
         <div className="mt-4">
-          <p className="text-[14px] font-medium text-[var(--color-semantic-label-normal)] mb-[6px]">
+          <p className="text-body2 font-medium text-[var(--color-semantic-label-normal)] mb-[6px]">
             라이더에게 메모
           </p>
           <div className="relative">
             <button
               type="button"
               onClick={() => setIsMemoOpen((v) => !v)}
-              className="w-full h-10 py-2 px-3 pr-10 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-[16px] text-[var(--color-semantic-label-normal)] bg-white text-left"
+              className="w-full h-10 py-2 px-3 pr-10 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body1 text-[var(--color-semantic-label-normal)] bg-white text-left"
             >
               {riderMemo}
             </button>
@@ -256,7 +256,7 @@ export default function AddressRegisterPage() {
                           <CheckIcon className="size-3 [&_path]:fill-[var(--color-semantic-label-normal)]" />
                         )}
                       </span>
-                      <span className="text-[14px] font-normal text-[var(--color-semantic-label-normal)]">
+                      <span className="text-body2 font-normal text-[var(--color-semantic-label-normal)]">
                         {opt}
                       </span>
                     </button>
@@ -269,7 +269,7 @@ export default function AddressRegisterPage() {
 
         {/* 길 안내 */}
         <div className="mt-4">
-          <p className="text-[14px] font-medium text-[var(--color-semantic-label-normal)] mb-[6px]">
+          <p className="text-body2 font-medium text-[var(--color-semantic-label-normal)] mb-[6px]">
             길 안내
           </p>
           <div className="relative">
@@ -278,7 +278,7 @@ export default function AddressRegisterPage() {
               value={directions}
               onChange={(e) => setDirections(e.target.value)}
               placeholder="예) 1층에 미용실에서 우측으로 있는 아파트입니다"
-              className="w-full h-10 py-2 px-3 pr-9 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-[16px] text-[var(--color-semantic-label-normal)] placeholder:text-[var(--color-semantic-label-alternative)] outline-none"
+              className="w-full h-10 py-2 px-3 pr-9 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body1 text-[var(--color-semantic-label-normal)] placeholder:text-[var(--color-semantic-label-alternative)] outline-none"
             />
             {directions && (
               <button
@@ -298,7 +298,7 @@ export default function AddressRegisterPage() {
         <button
           type="button"
           onClick={handleSubmit}
-          className={`w-full h-12 rounded-lg text-[18px] font-medium transition-colors ${
+          className={`w-full h-12 rounded-lg text-h6 font-medium transition-colors ${
             detailAddress
               ? 'bg-[var(--color-atomic-redOrange-80)] text-[var(--color-semantic-static-white)]'
               : 'bg-[var(--color-semantic-interaction-disable)] text-[var(--color-semantic-label-disable)]'
@@ -319,7 +319,7 @@ export default function AddressRegisterPage() {
             >
               <BackIcon className="size-5" />
             </button>
-            <span className="absolute left-1/2 -translate-x-1/2 text-[18px] font-medium text-[var(--color-semantic-label-normal)]">
+            <span className="absolute left-1/2 -translate-x-1/2 text-h6 font-medium text-[var(--color-semantic-label-normal)]">
               위치 확인
             </span>
           </header>

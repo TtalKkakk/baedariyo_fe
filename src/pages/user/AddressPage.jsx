@@ -9,29 +9,26 @@ function DeleteConfirmModal({ onCancel, onConfirm }) {
 
   return createPortal(
     <div className="absolute inset-0 z-50 flex items-center justify-center px-6">
-      <div
-        className="absolute inset-0 bg-black/40"
-        onClick={onCancel}
-      />
+      <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
       <div className="relative w-[328px] bg-white rounded-xl px-4 pt-5 pb-4 flex flex-col">
-        <p className="text-[20px] font-bold text-center text-[var(--color-semantic-label-normal)]">
+        <p className="text-h5 font-bold text-center text-[var(--color-semantic-label-normal)]">
           주소를 삭제할까요?
         </p>
-        <p className="mt-2 text-[16px] font-medium text-center text-[var(--color-semantic-label-neutral)]">
+        <p className="mt-2 text-body1 font-medium text-center text-[var(--color-semantic-label-neutral)]">
           주소는 삭제하면 되돌릴 수 없습니다.
         </p>
         <div className="mt-3 flex gap-2">
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 h-11 rounded-[10px] bg-[var(--color-atomic-coolNeutral-96)] text-[16px] font-medium text-[var(--color-semantic-label-normal)]"
+            className="flex-1 h-11 rounded-[10px] bg-[var(--color-atomic-coolNeutral-96)] text-body1 font-medium text-[var(--color-semantic-label-normal)]"
           >
             취소
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className="flex-1 h-11 rounded-[10px] bg-[var(--color-atomic-redOrange-80)] text-[16px] font-medium text-white"
+            className="flex-1 h-11 rounded-[10px] bg-[var(--color-atomic-redOrange-80)] text-body1 font-medium text-white"
           >
             삭제
           </button>
@@ -48,21 +45,21 @@ function AddressItem({ address, isDefault, onDeleteRequest, onEdit }) {
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <p className="text-[16px] font-bold text-[var(--color-semantic-label-normal)]">
+            <p className="text-body1 font-bold text-[var(--color-semantic-label-normal)]">
               {address?.label ?? '주소'}
             </p>
             {isDefault && (
-              <span className="px-[6px] py-[2px] rounded-sm text-[12px] bg-[var(--color-atomic-redOrange-95)] text-[var(--color-atomic-redOrange-80)]">
+              <span className="px-[6px] py-[2px] rounded-sm text-caption1 bg-[var(--color-atomic-redOrange-95)] text-[var(--color-atomic-redOrange-80)]">
                 현재 설정된 주소
               </span>
             )}
           </div>
-          <p className="mt-1 text-[14px] text-[var(--color-semantic-label-alternative)]">
+          <p className="mt-1 text-body2 text-[var(--color-semantic-label-alternative)]">
             {address?.roadAddress}
             {address?.detailAddress ? ` ${address.detailAddress}` : ''}
           </p>
           {address?.riderMemo && (
-            <p className="mt-1 text-[13px] text-[var(--color-semantic-label-alternative)]">
+            <p className="mt-1 text-body3 text-[var(--color-semantic-label-alternative)]">
               {address.riderMemo}
             </p>
           )}
@@ -71,7 +68,7 @@ function AddressItem({ address, isDefault, onDeleteRequest, onEdit }) {
           <button
             type="button"
             onClick={() => onEdit(address)}
-            className="h-8 px-4 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-[13px] text-[var(--color-semantic-label-normal)]"
+            className="h-8 px-4 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body3 text-[var(--color-semantic-label-normal)]"
           >
             수정
           </button>
@@ -79,7 +76,7 @@ function AddressItem({ address, isDefault, onDeleteRequest, onEdit }) {
             <button
               type="button"
               onClick={() => onDeleteRequest(address.id)}
-              className="h-8 px-4 rounded-md border border-[var(--color-atomic-redOrange-80)] text-[13px] text-[var(--color-atomic-redOrange-80)]"
+              className="h-8 px-4 rounded-md border border-[var(--color-atomic-redOrange-80)] text-body3 text-[var(--color-atomic-redOrange-80)]"
             >
               삭제
             </button>
@@ -125,13 +122,13 @@ export default function AddressPage() {
     <div className="min-h-full bg-white py-2">
       {addresses.length === 0 ? (
         <div className="mt-8 text-center">
-          <p className="text-[15px] text-[var(--color-semantic-label-alternative)]">
+          <p className="text-body1 text-[var(--color-semantic-label-alternative)]">
             저장된 주소가 없습니다.
           </p>
           <button
             type="button"
             onClick={() => navigate('/address/search')}
-            className="mt-3 h-9 px-4 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-[14px] text-[var(--color-semantic-label-normal)]"
+            className="mt-3 h-9 px-4 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body2 text-[var(--color-semantic-label-normal)]"
           >
             주소 추가하기
           </button>

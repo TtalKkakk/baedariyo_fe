@@ -20,7 +20,7 @@ function AddressItem({ address, isDefault, onSelect }) {
             {address.label}
           </span>
           {isDefault && (
-            <span className="px-[6px] py-[2px] rounded-sm text-[12px] bg-[var(--color-atomic-redOrange-95)] text-[var(--color-atomic-redOrange-80)]">
+            <span className="px-[6px] py-[2px] rounded-sm text-caption1 bg-[var(--color-atomic-redOrange-95)] text-[var(--color-atomic-redOrange-80)]">
               현재 설정된 주소
             </span>
           )}
@@ -57,13 +57,12 @@ export default function AddressSettingPage() {
   const debounceRef = useRef(null);
 
   useEffect(() => {
-    if (!query.trim()) {
-      setSearchResults([]);
-      return;
-    }
-
     clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
+      if (!query.trim()) {
+        setSearchResults([]);
+        return;
+      }
       loadKakaoMapSdk()
         .then((kakao) => {
           const geocoder = new kakao.maps.services.Geocoder();
@@ -143,11 +142,11 @@ export default function AddressSettingPage() {
                 onClick={() => handleSearchResultClick(item)}
                 className="w-full text-left py-4 border-b border-[var(--color-semantic-line-normal-normal)] last:border-b-0"
               >
-                <p className="text-[15px] font-medium text-[var(--color-semantic-label-normal)]">
+                <p className="text-body1 font-medium text-[var(--color-semantic-label-normal)]">
                   {item.road_address?.address_name ?? item.address_name}
                 </p>
                 {item.address?.address_name && (
-                  <p className="mt-0.5 text-[13px] text-[var(--color-semantic-label-alternative)]">
+                  <p className="mt-0.5 text-body3 text-[var(--color-semantic-label-alternative)]">
                     {item.address.address_name}
                   </p>
                 )}
