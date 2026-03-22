@@ -49,3 +49,37 @@ export async function withdrawRider() {
     fallback: () => mockApi.withdrawRider(),
   });
 }
+
+export async function changeUserPassword(payload) {
+  return requestWithMockFallback({
+    apiName: 'changeUserPassword',
+    request: () => api.patch('/api/auth/user/password', payload),
+    fallback: () => mockApi.changeUserPassword(payload),
+  });
+}
+
+export async function changeRiderPassword(payload) {
+  return requestWithMockFallback({
+    apiName: 'changeRiderPassword',
+    request: () => api.patch('/api/auth/rider/password', payload),
+    fallback: () => mockApi.changeRiderPassword(payload),
+  });
+}
+
+export async function checkUserEmailDuplicate(email) {
+  return requestWithMockFallback({
+    apiName: 'checkUserEmailDuplicate',
+    request: () =>
+      api.get('/api/auth/user/email/duplicate', { params: { email } }),
+    fallback: () => mockApi.checkUserEmailDuplicate(email),
+  });
+}
+
+export async function checkRiderEmailDuplicate(email) {
+  return requestWithMockFallback({
+    apiName: 'checkRiderEmailDuplicate',
+    request: () =>
+      api.get('/api/auth/rider/email/duplicate', { params: { email } }),
+    fallback: () => mockApi.checkRiderEmailDuplicate(email),
+  });
+}

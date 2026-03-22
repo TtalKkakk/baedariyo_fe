@@ -453,6 +453,17 @@ const mockState = {
     ),
   },
   myReviews: seedStoreReviews.map((review) => buildMyReview(review)),
+  userAddresses: [
+    {
+      alias: '집',
+      roadAddress: '서울특별시 관악구 관악로 1',
+      jibunAddress: '서울특별시 관악구 봉천동 1',
+      detailAddress: '101동 101호',
+      isDefault: true,
+    },
+  ],
+  recentKeywords: ['처갓집양념치킨', '메가커피', '춘', '마라탕', '치킨'],
+  deliveryLocations: {},
   payments: [
     buildPayment({
       paymentId: 6101,
@@ -951,6 +962,174 @@ function getMyPayments(status) {
   );
 }
 
+function changeUserPassword() {
+  return clone(null);
+}
+
+function changeRiderPassword() {
+  return clone(null);
+}
+
+function checkUserEmailDuplicate() {
+  return false;
+}
+
+function checkRiderEmailDuplicate() {
+  return false;
+}
+
+function updateUserNickname() {
+  return clone(null);
+}
+
+function updateUserPhoneNumber() {
+  return clone(null);
+}
+
+function getUserAddresses() {
+  return clone(mockState.userAddresses);
+}
+
+function addUserAddress(payload) {
+  const newAddress = {
+    alias: payload?.alias ?? '기타',
+    roadAddress: payload?.roadAddress ?? '',
+    jibunAddress: payload?.jibunAddress ?? '',
+    detailAddress: payload?.detailAddress ?? '',
+    isDefault: payload?.isDefault ?? false,
+  };
+
+  if (newAddress.isDefault) {
+    for (const addr of mockState.userAddresses) {
+      addr.isDefault = false;
+    }
+  }
+
+  mockState.userAddresses.push(newAddress);
+  return clone(null);
+}
+
+function deleteUserAddress(payload) {
+  mockState.userAddresses = mockState.userAddresses.filter(
+    (addr) => addr.alias !== payload?.addressAlias
+  );
+  return clone(null);
+}
+
+function setDefaultAddress(payload) {
+  for (const addr of mockState.userAddresses) {
+    addr.isDefault = addr.alias === payload?.addressAlias;
+  }
+  return clone(null);
+}
+
+function updateAddressAlias(payload) {
+  const target = mockState.userAddresses.find(
+    (addr) => addr.alias === payload?.addressAlias
+  );
+  if (target) {
+    target.alias = payload?.newAddressAlias ?? target.alias;
+  }
+  return clone(null);
+}
+
+function updateRiderNickname() {
+  return clone(null);
+}
+
+function updateRiderPhoneNumber() {
+  return clone(null);
+}
+
+function updateRiderVehicle() {
+  return clone(null);
+}
+
+function setRiderOnline() {
+  return clone(null);
+}
+
+function setRiderOffline() {
+  return clone(null);
+}
+
+function startRiderDelivery() {
+  return clone(null);
+}
+
+function completeRiderDelivery() {
+  return clone(null);
+}
+
+function assignRiderToDelivery(orderId) {
+  return clone({ orderId, riderId: MOCK_RIDER_ID, assigned: true });
+}
+
+function startDelivery(orderId) {
+  return clone({ orderId, started: true });
+}
+
+function completeDelivery(orderId) {
+  return clone({ orderId, completed: true });
+}
+
+function getDeliveryLocation(orderId) {
+  return clone(
+    mockState.deliveryLocations[orderId] ?? {
+      latitude: 37.5665,
+      longitude: 126.978,
+    }
+  );
+}
+
+function updateDeliveryLocation(orderId, payload) {
+  mockState.deliveryLocations[orderId] = {
+    latitude: payload?.latitude ?? 37.5665,
+    longitude: payload?.longitude ?? 126.978,
+  };
+  return clone(null);
+}
+
+const POPULAR_KEYWORDS = [
+  '두바이쫀득쿠키',
+  '치킨',
+  '피자',
+  '요거트아이스크림',
+  '국밥',
+  '닭강정',
+  '육회',
+  '마라탕',
+  '카페',
+  '떡볶이',
+];
+
+function getAutocompleteSuggestions(keyword) {
+  if (!keyword) return clone({ keywords: [] });
+  const q = keyword.toLowerCase();
+  const matched = POPULAR_KEYWORDS.filter((k) => k.toLowerCase().includes(q));
+  return clone({ keywords: matched });
+}
+
+function getPopularKeywords() {
+  return clone({ keywords: POPULAR_KEYWORDS });
+}
+
+function getRecentKeywords() {
+  return clone({ keywords: mockState.recentKeywords });
+}
+
+function deleteRecentKeyword(keyword) {
+  mockState.recentKeywords = mockState.recentKeywords.filter(
+    (k) => k !== keyword
+  );
+  return clone(null);
+}
+
+function deleteAllRecentKeywords() {
+  mockState.recentKeywords = [];
+  return clone(null);
+}
+
 export const mockApi = {
   signupUser,
   signupRider,
@@ -958,6 +1137,34 @@ export const mockApi = {
   loginRider,
   withdrawUser,
   withdrawRider,
+  changeUserPassword,
+  changeRiderPassword,
+  checkUserEmailDuplicate,
+  checkRiderEmailDuplicate,
+  updateUserNickname,
+  updateUserPhoneNumber,
+  getUserAddresses,
+  addUserAddress,
+  deleteUserAddress,
+  setDefaultAddress,
+  updateAddressAlias,
+  updateRiderNickname,
+  updateRiderPhoneNumber,
+  updateRiderVehicle,
+  setRiderOnline,
+  setRiderOffline,
+  startRiderDelivery,
+  completeRiderDelivery,
+  assignRiderToDelivery,
+  startDelivery,
+  completeDelivery,
+  getDeliveryLocation,
+  updateDeliveryLocation,
+  getAutocompleteSuggestions,
+  getPopularKeywords,
+  getRecentKeywords,
+  deleteRecentKeyword,
+  deleteAllRecentKeywords,
   createStore,
   getStoreDetail,
   getStoreMenus,

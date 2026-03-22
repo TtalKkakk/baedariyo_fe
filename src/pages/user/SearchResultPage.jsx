@@ -127,7 +127,7 @@ export default function SearchResultPage() {
     enabled: !!initialQuery,
   });
 
-  const rawStores = data?.stores ?? [];
+  const rawStores = data?.stores ?? data ?? [];
 
   let filteredStores = rawStores;
 

@@ -1,25 +1,80 @@
 export { api } from './instance';
-export { loginUser } from './auth';
-export { signupUser } from './auth';
-export { loginRider } from './auth';
-export { signupRider } from './auth';
-export { withdrawUser } from './auth';
-export { withdrawRider } from './auth';
-export { createOrder } from './order';
-export { assignRiderToOrder } from './order';
-export { createPayment } from './payment';
-export { approvePayment } from './payment';
-export { failPayment } from './payment';
-export { cancelPayment } from './payment';
-export { getPaymentDetail } from './payment';
-export { getMyPayments } from './payment';
-export { createStoreReview } from './review';
-export { deleteMyReview } from './review';
-export { getMyReviews } from './review';
-export { getReviewDetail } from './review';
-export { createStore } from './store';
-export { searchStores } from './store';
-export { getSearchHistory } from './store';
-export { getStoreDetail } from './store';
-export { getStoreMenus } from './store';
-export { getStoreReviews } from './store';
+
+// auth - user
+export { loginUser, signupUser, withdrawUser } from './auth';
+export { changeUserPassword, checkUserEmailDuplicate } from './auth';
+
+// auth - rider
+export { loginRider, signupRider, withdrawRider } from './auth';
+export { changeRiderPassword, checkRiderEmailDuplicate } from './auth';
+
+// user profile & address
+export {
+  updateUserNickname,
+  updateUserPhoneNumber,
+  getUserAddresses,
+  addUserAddress,
+  deleteUserAddress,
+  setDefaultAddress,
+  updateAddressAlias,
+} from './user';
+
+// rider profile & status
+export {
+  updateRiderNickname,
+  updateRiderPhoneNumber,
+  updateRiderVehicle,
+  setRiderOnline,
+  setRiderOffline,
+  startRiderDelivery,
+  completeRiderDelivery,
+} from './rider';
+
+// order
+export { createOrder, assignRiderToOrder } from './order';
+
+// delivery
+export {
+  assignRiderToDelivery,
+  startDelivery,
+  completeDelivery,
+  getDeliveryLocation,
+  updateDeliveryLocation,
+} from './delivery';
+
+// payment
+export {
+  createPayment,
+  approvePayment,
+  failPayment,
+  cancelPayment,
+  getPaymentDetail,
+  getMyPayments,
+} from './payment';
+
+// review
+export {
+  createStoreReview,
+  deleteMyReview,
+  getMyReviews,
+  getReviewDetail,
+} from './review';
+
+// store
+export {
+  createStore,
+  searchStores,
+  getStoreDetail,
+  getStoreMenus,
+  getStoreReviews,
+  getSearchHistory,
+} from './store';
+
+// search
+export {
+  getAutocompleteSuggestions,
+  getPopularKeywords,
+  getRecentKeywords,
+  deleteRecentKeyword,
+  deleteAllRecentKeywords,
+} from './search';

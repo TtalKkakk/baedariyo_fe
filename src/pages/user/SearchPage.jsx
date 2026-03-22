@@ -63,7 +63,9 @@ export default function SearchPage() {
   });
   const [removedKeys, setRemovedKeys] = useState(new Set());
 
-  const recentSearches = (historyData ?? []).filter((k) => !removedKeys.has(k));
+  const recentSearches = (historyData?.keywords ?? historyData ?? []).filter(
+    (k) => !removedKeys.has(k)
+  );
 
   useEffect(() => {
     inputRef.current?.focus();
