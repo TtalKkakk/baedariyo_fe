@@ -20,22 +20,27 @@ export async function getStoreDetail(storePublicId) {
 
 export async function searchStores({
   keyword,
-  categoryId,
+  storeCategory,
+  latitude,
+  longitude,
   page = 0,
   size = 20,
 } = {}) {
   return requestWithMockFallback({
     apiName: 'searchStores',
     request: () =>
-      api.get('/api/stores', { params: { keyword, categoryId, page, size } }),
-    fallback: () => mockApi.searchStores({ keyword, categoryId, page, size }),
+      api.get('/api/stores', {
+        params: { keyword, storeCategory, latitude, longitude, page, size },
+      }),
+    fallback: () =>
+      mockApi.searchStores({ keyword, storeCategory, page, size }),
   });
 }
 
 export async function getSearchHistory(limit = 5) {
   return requestWithMockFallback({
     apiName: 'getSearchHistory',
-    request: () => api.get('/api/search/history', { params: { limit } }),
+    request: () => api.get('/api/search/recent'),
     fallback: () => mockApi.getSearchHistory(limit),
   });
 }
