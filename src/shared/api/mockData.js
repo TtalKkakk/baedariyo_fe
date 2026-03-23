@@ -3,7 +3,7 @@ const DEFAULT_STORE_PUBLIC_ID = '11111111-1111-4111-8111-111111111111';
 const SEARCH_RESULT_STORES = [
   {
     storePublicId: 'aa000001-0000-4000-8000-000000000001',
-    storeName: '마라탕전문점 상츠마라 신도림점',
+    storeName: '마라탕전문 상츠마라 신도림점',
     description:
       'Self 마라탕 1인분, 꿔바로우 미니, 마라샹궈, 마라 로제 샹궈, 온면, 2~3인분 마라탕',
     storeCategory: 'CHINESE',
@@ -283,22 +283,33 @@ function buildMenuGroupsFromMenus(menus) {
       id: 'set',
       groupTabName: '세트메뉴',
       groupName: '세트 메뉴',
-      groupDescription: '',
-      menus: [],
+      groupDescription: '메인 메뉴와 사이드를 함께 즐기세요',
+      menus: [
+        { id: 901, menuName: '후라이드+감자튀김 세트', menuDescription: '후라이드 치킨과 감자튀김 세트', price: { amount: 21000 }, reviewCount: 15, rank: null },
+        { id: 902, menuName: '양념+콜라 세트', menuDescription: '양념 치킨과 콜라 세트', price: { amount: 22000 }, reviewCount: 7, rank: null },
+      ],
     },
     {
       id: 'side',
       groupTabName: '사이드 메뉴',
       groupName: '사이드 메뉴',
-      groupDescription: '',
-      menus: [],
+      groupDescription: '메인 메뉴와 함께 곁들이기 좋은 사이드',
+      menus: [
+        { id: 911, menuName: '감자튀김', menuDescription: '바삭한 황금빛 감자튀김', price: { amount: 4000 }, reviewCount: 32, rank: null },
+        { id: 912, menuName: '코울슬로', menuDescription: '신선한 채소로 만든 코울슬로', price: { amount: 3000 }, reviewCount: 12, rank: null },
+        { id: 913, menuName: '치즈볼', menuDescription: '쫄깃한 치즈볼 5개', price: { amount: 3500 }, reviewCount: 45, rank: null },
+      ],
     },
     {
       id: 'drink',
       groupTabName: '음료',
       groupName: '음료',
-      groupDescription: '',
-      menus: [],
+      groupDescription: '치킨과 함께하는 음료',
+      menus: [
+        { id: 921, menuName: '콜라 500ml', menuDescription: '시원한 콜라', price: { amount: 2000 }, reviewCount: 5, rank: null },
+        { id: 922, menuName: '사이다 500ml', menuDescription: '청량한 사이다', price: { amount: 2000 }, reviewCount: 3, rank: null },
+        { id: 923, menuName: '맥주 500ml', menuDescription: '시원한 맥주', price: { amount: 4000 }, reviewCount: 18, rank: null },
+      ],
     },
   ];
 }
