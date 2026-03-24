@@ -1130,6 +1130,39 @@ function deleteAllRecentKeywords() {
   return clone(null);
 }
 
+function getUserProfile() {
+  return clone({
+    name: '홍길동',
+    nickname: '망고가 말랑',
+    email: 'email@email.com',
+    phoneNumber: '010-6659-5866',
+    birthDate: '2001.05.22',
+  });
+}
+
+function getPaymentMethods() {
+  return clone(mockState.paymentMethods ?? []);
+}
+
+function addPaymentMethod(payload) {
+  const method = {
+    id: `pm-${Date.now()}`,
+    cardName: payload?.cardName ?? '새 카드',
+    cardNumber: payload?.cardNumber ?? '0000-0000-0000-0000',
+    isDefault: (mockState.paymentMethods ?? []).length === 0,
+  };
+  mockState.paymentMethods = mockState.paymentMethods ?? [];
+  mockState.paymentMethods.push(method);
+  return clone(method);
+}
+
+function deletePaymentMethod(paymentMethodId) {
+  mockState.paymentMethods = (mockState.paymentMethods ?? []).filter(
+    (m) => m.id !== paymentMethodId
+  );
+  return clone({ deleted: true });
+}
+
 export const mockApi = {
   signupUser,
   signupRider,
@@ -1183,4 +1216,8 @@ export const mockApi = {
   getMyPayments,
   searchStores,
   getSearchHistory,
+  getUserProfile,
+  getPaymentMethods,
+  addPaymentMethod,
+  deletePaymentMethod,
 };

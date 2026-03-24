@@ -10,6 +10,7 @@ export { changeRiderPassword, checkRiderEmailDuplicate } from './auth';
 
 // user profile & address
 export {
+  getUserProfile,
   updateUserNickname,
   updateUserPhoneNumber,
   getUserAddresses,
@@ -18,6 +19,13 @@ export {
   setDefaultAddress,
   updateAddressAlias,
 } from './user';
+
+// payment methods
+export {
+  getPaymentMethods,
+  addPaymentMethod,
+  deletePaymentMethod,
+} from './paymentMethod';
 
 // rider profile & status
 export {
