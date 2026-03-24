@@ -38,6 +38,8 @@ import SecurityPage from '../pages/user/SecurityPage';
 import NotificationSettingsPage from '../pages/user/NotificationSettingsPage';
 import WithdrawPage from '../pages/user/WithdrawPage';
 import ReviewDetailPage from '../pages/user/ReviewDetailPage';
+import PaymentMethodsPage from '../pages/user/PaymentMethodsPage';
+import PaymentMethodRegisterPage from '../pages/user/PaymentMethodRegisterPage';
 import NotFoundPage from '../pages/NotFoundPage';
 
 import RiderLoginPage from '../pages/rider/RiderLoginPage';
@@ -117,6 +119,14 @@ const router = createBrowserRouter(
             { path: '/mypage/profile', element: <ProfilePage /> },
             { path: '/mypage/addresses', element: <AddressPage /> },
             { path: '/mypage/payment', element: <PaymentPage /> },
+            {
+              path: '/mypage/payment-methods',
+              element: <PaymentMethodsPage />,
+            },
+            {
+              path: '/mypage/payment-methods/register',
+              element: <PaymentMethodRegisterPage />,
+            },
             { path: '/mypage/reviews', element: <MyReviewsPage /> },
             { path: '/mypage/coupons', element: <CouponsPage /> },
             { path: '/mypage/terms', element: <TermsPage /> },

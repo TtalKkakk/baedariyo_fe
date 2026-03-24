@@ -1,74 +1,174 @@
-import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
+import { getUserProfile } from '@/shared/api';
 import { useProfileStore } from '@/shared/store';
 
+function InfoRow({ icon, label, value, action }) {
+  return (
+    <div className="flex items-center py-3.5">
+      <span className="mr-3 text-[var(--color-semantic-label-alternative)]">
+        {icon}
+      </span>
+      <span className="text-body2 font-medium text-[var(--color-semantic-label-normal)]">
+        {label}
+      </span>
+      <div className="ml-auto flex items-center gap-2">
+        <span className="text-body2 text-[var(--color-semantic-label-alternative)]">
+          {value}
+        </span>
+        {action ?? null}
+      </div>
+    </div>
+  );
+}
+
+function NameIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <text
+        x="4"
+        y="17"
+        fontSize="14"
+        fontWeight="500"
+        fill="currentColor"
+        fontFamily="sans-serif"
+      >
+        Aa
+      </text>
+    </svg>
+  );
+}
+
+function NicknameIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M12 20h9M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function BirthIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <rect
+        x="3"
+        y="8"
+        width="18"
+        height="13"
+        rx="2"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M12 3v3M8 8V6M16 8V6"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function EmailIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <rect
+        x="3"
+        y="5"
+        width="18"
+        height="14"
+        rx="2"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M3 7l9 6 9-6"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function PhoneIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export default function ProfilePage() {
-  const profile = useProfileStore((state) => state.profile);
-  const saveProfile = useProfileStore((state) => state.saveProfile);
+  const localProfile = useProfileStore((state) => state.profile);
 
-  const [email, setEmail] = useState(profile.email);
-  const [name, setName] = useState(profile.name);
-  const [nickname, setNickname] = useState(profile.nickname);
-  const [phoneNumber, setPhoneNumber] = useState(profile.phoneNumber);
-  const [isSaved, setIsSaved] = useState(false);
+  const { data: serverProfile } = useQuery({
+    queryKey: ['user-profile'],
+    queryFn: getUserProfile,
+  });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    saveProfile({
-      email,
-      name,
-      nickname,
-      phoneNumber,
-    });
-    setIsSaved(true);
-  };
+  const profile = serverProfile ?? localProfile;
 
   return (
-    <div className="min-h-full bg-white py-6">
-      <form onSubmit={handleSubmit} className="mt-5 space-y-3">
-        <input
-          type="email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          placeholder="이메일"
-          className="w-full h-11 px-3 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body2 outline-none"
-        />
-        <input
-          type="text"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          placeholder="이름"
-          className="w-full h-11 px-3 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body2 outline-none"
-        />
-        <input
-          type="text"
-          value={nickname}
-          onChange={(event) => setNickname(event.target.value)}
-          placeholder="닉네임"
-          className="w-full h-11 px-3 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body2 outline-none"
-        />
-        <input
-          type="tel"
-          value={phoneNumber}
-          onChange={(event) => setPhoneNumber(event.target.value)}
-          placeholder="연락처"
-          className="w-full h-11 px-3 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body2 outline-none"
-          autoComplete="tel"
-        />
-        <button
-          type="submit"
-          className="w-full h-11 rounded-lg bg-[var(--color-atomic-redOrange-80)] text-white text-body1 font-semibold"
-        >
-          프로필 저장
-        </button>
-      </form>
+    <div className="min-h-full bg-white pb-8">
+      <p className="py-3 text-caption1 font-semibold text-[var(--color-semantic-label-alternative)]">
+        기본 정보
+      </p>
 
-      {isSaved ? (
-        <p className="mt-3 text-body3 text-[var(--color-semantic-label-normal)]">
-          프로필이 저장되었습니다.
-        </p>
-      ) : null}
+      <InfoRow icon={<NameIcon />} label="이름" value={profile.name || '-'} />
+
+      <InfoRow
+        icon={<NicknameIcon />}
+        label="닉네임"
+        value={profile.nickname || '-'}
+        action={
+          <button
+            type="button"
+            className="rounded-md border border-[var(--color-semantic-line-normal-normal)] px-2.5 py-1 text-caption1 text-[var(--color-semantic-label-normal)]"
+          >
+            변경
+          </button>
+        }
+      />
+
+      <InfoRow
+        icon={<BirthIcon />}
+        label="생년월일"
+        value={profile.birthDate || '-'}
+      />
+
+      <InfoRow
+        icon={<EmailIcon />}
+        label="이메일"
+        value={profile.email || '-'}
+      />
+
+      <InfoRow
+        icon={<PhoneIcon />}
+        label="전화번호"
+        value={profile.phoneNumber || '-'}
+      />
+
+      <button
+        type="button"
+        className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--color-semantic-line-normal-normal)] py-3 text-body2 text-[var(--color-semantic-label-alternative)]"
+      >
+        <NicknameIcon />
+        본인인증으로 변경
+      </button>
     </div>
   );
 }
