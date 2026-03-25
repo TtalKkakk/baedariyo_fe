@@ -1,6 +1,6 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 import BackIcon from '@/shared/assets/icons/header/back.svg?react';
 import SearchIcon from '@/shared/assets/icons/header/search.svg?react';
@@ -121,13 +121,38 @@ export default function SearchResultPage() {
   const [ratingOpen, setRatingOpen] = useState(false);
   const [minOrderOpen, setMinOrderOpen] = useState(false);
 
-  const { data, isLoading } = useQuery({
+  const sentinelRef = useRef(null);
+
+  const {
+    data,
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery({
     queryKey: ['search-stores', initialQuery],
-    queryFn: () => searchStores({ keyword: initialQuery }),
+    queryFn: ({ pageParam = 0 }) =>
+      searchStores({ keyword: initialQuery, page: pageParam, size: 20 }),
+    getNextPageParam: (lastPage, allPages) => {
+      const total = lastPage?.totalCount ?? 0;
+      const fetched = allPages.flatMap((p) => p?.stores ?? p ?? []).length;
+      return fetched < total ? allPages.length : undefined;
+    },
+    initialPageParam: 0,
     enabled: !!initialQuery,
   });
 
-  const rawStores = data?.stores ?? data ?? [];
+  useEffect(() => {
+    if (!sentinelRef.current || !hasNextPage) return;
+    const observer = new IntersectionObserver(
+      (entries) => { if (entries[0].isIntersecting) fetchNextPage(); },
+      { threshold: 0.1 }
+    );
+    observer.observe(sentinelRef.current);
+    return () => observer.disconnect();
+  }, [hasNextPage, fetchNextPage]);
+
+  const rawStores = data?.pages.flatMap((p) => p?.stores ?? p ?? []) ?? [];
 
   let filteredStores = rawStores;
 
@@ -388,6 +413,12 @@ export default function SearchResultPage() {
                     )}
                   </div>
                 ))}
+                <div ref={sentinelRef} className="h-4" />
+                {isFetchingNextPage && (
+                  <div className="flex justify-center py-4">
+                    <p className="text-body2 text-[var(--color-semantic-label-alternative)]">불러오는 중...</p>
+                  </div>
+                )}
               </div>
             )}
           </>

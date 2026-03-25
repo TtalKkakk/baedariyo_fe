@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react';
 import { useNavigate, useLocation, useMatch } from 'react-router-dom';
 
 import ArrowIcon from '@/shared/assets/icons/header/arrow.svg?react';
@@ -6,6 +7,7 @@ import CartIcon from '@/shared/assets/icons/header/cart.svg?react';
 import EditIcon from '@/shared/assets/icons/header/edit.svg?react';
 import LocationIcon from '@/shared/assets/icons/header/location.svg?react';
 import SearchIcon from '@/shared/assets/icons/header/search.svg?react';
+import XCircleIcon from '@/shared/assets/icons/header/x-circle.svg?react';
 import { useAddressBookStore } from '@/shared/store';
 
 const TITLE_ROUTES = {
@@ -36,6 +38,10 @@ const BACK_TITLE_ROUTES = {
 export default function Header() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const [searchInput, setSearchInput] = useState('');
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const searchInputRef = useRef(null);
+  const categoryMatch = useMatch('/category/:categoryId');
   const title = TITLE_ROUTES[pathname];
   const backTitle = BACK_TITLE_ROUTES[pathname];
   const addresses = useAddressBookStore((state) => state.addresses);
@@ -61,6 +67,52 @@ export default function Header() {
             : null;
 
   const activeBackTitle = backTitle || dynamicBackTitle;
+
+  if (categoryMatch) {
+    return (
+      <header className="flex items-center gap-3 h-14 px-4 bg-white sticky top-0 z-10">
+        <button onClick={() => navigate(-1)} className="shrink-0">
+          <BackIcon className="size-5" />
+        </button>
+        <div
+          className={`flex-1 h-10 flex items-center gap-2 px-3 bg-[var(--color-semantic-background-normal-normal)] border rounded-lg transition-colors ${
+            isSearchFocused
+              ? 'border-[var(--color-atomic-redOrange-90)]'
+              : 'border-[var(--color-semantic-line-normal-normal)]'
+          }`}
+        >
+          <SearchIcon className="size-5 shrink-0 [&_path]:fill-[var(--color-atomic-redOrange-80)]" />
+          <input
+            ref={searchInputRef}
+            type="text"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onFocus={() => setIsSearchFocused(true)}
+            onBlur={() => setIsSearchFocused(false)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && searchInput.trim()) {
+                navigate(`/search/result?q=${encodeURIComponent(searchInput.trim())}`);
+              }
+            }}
+            placeholder="퇴근 하고 나서 치킨에 맥주?"
+            className="flex-1 bg-transparent text-body1 font-normal text-[var(--color-semantic-label-normal)] placeholder:text-[var(--color-semantic-label-alternative)] outline-none"
+          />
+          {searchInput && (
+            <button
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => setSearchInput('')}
+              className="shrink-0"
+            >
+              <XCircleIcon className="size-5" />
+            </button>
+          )}
+        </div>
+        <button onClick={() => navigate('/cart')} className="shrink-0">
+          <CartIcon className="size-5 [&_path]:fill-[var(--color-semantic-label-neutral)]" />
+        </button>
+      </header>
+    );
+  }
 
   if (activeBackTitle) {
     return (

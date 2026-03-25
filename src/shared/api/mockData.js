@@ -2,6 +2,54 @@ const DEFAULT_STORE_PUBLIC_ID = '11111111-1111-4111-8111-111111111111';
 
 const SEARCH_RESULT_STORES = [
   {
+    storePublicId: 'bb000001-0000-4000-8000-000000000001',
+    storeName: '백억커피 구로고척점',
+    description: '아메리카노, 백억 김치볶음밥, 블루베리 요거트, 카페라떼',
+    storeCategory: 'CAFE_DESSERT',
+    thumbnailUrl: '/maratang1.png',
+    totalRating: 4.8,
+    reviewCount: 222,
+    deliveryFee: { amount: 1300 },
+    minimumOrderAmount: { amount: 11000 },
+    deliveryTimeMin: 21,
+  },
+  {
+    storePublicId: 'bb000002-0000-4000-8000-000000000002',
+    storeName: '백다방 동양미래대점',
+    description: '바닐라라떼(ICED), 아이스티샷추가(아...',
+    storeCategory: 'CAFE_DESSERT',
+    thumbnailUrl: '/maratang2.png',
+    totalRating: 5.0,
+    reviewCount: 820,
+    deliveryFee: { amount: 500 },
+    minimumOrderAmount: { amount: 10000 },
+    deliveryTimeMin: 18,
+  },
+  {
+    storePublicId: 'bb000003-0000-4000-8000-000000000003',
+    storeName: '카페인중독 목동점',
+    description: '[시그니처] 햅쌀 와플, 로제 컵떡볶이',
+    storeCategory: 'CAFE_DESSERT',
+    thumbnailUrl: '/maratang3.png',
+    totalRating: 4.7,
+    reviewCount: 252,
+    deliveryFee: { amount: 4800 },
+    minimumOrderAmount: { amount: 17900 },
+    deliveryTimeMin: 43,
+  },
+  {
+    storePublicId: 'bb000004-0000-4000-8000-000000000004',
+    storeName: '설빙 오류동역점',
+    description: '생딸기 설빙, 순수요거생딸기설빙',
+    storeCategory: 'CAFE_DESSERT',
+    thumbnailUrl: '/maratang4.png',
+    totalRating: 5.0,
+    reviewCount: 942,
+    deliveryFee: { amount: 3700 },
+    minimumOrderAmount: { amount: 10800 },
+    deliveryTimeMin: 12,
+  },
+  {
     storePublicId: 'aa000001-0000-4000-8000-000000000001',
     storeName: '마라탕전문 상츠마라 신도림점',
     description:
@@ -104,15 +152,19 @@ const SEARCH_RESULT_STORES = [
   },
 ];
 
-function searchStores({ keyword, page = 0, size = 20 } = {}) {
+function searchStores({ keyword, storeCategory, page = 0, size = 20 } = {}) {
   const q = (keyword ?? '').trim().toLowerCase();
-  const filtered = q
-    ? SEARCH_RESULT_STORES.filter(
-        (s) =>
-          s.storeName.toLowerCase().includes(q) ||
-          s.description.toLowerCase().includes(q)
-      )
-    : SEARCH_RESULT_STORES;
+  let filtered = SEARCH_RESULT_STORES;
+  if (storeCategory) {
+    filtered = filtered.filter((s) => s.storeCategory === storeCategory);
+  }
+  if (q) {
+    filtered = filtered.filter(
+      (s) =>
+        s.storeName.toLowerCase().includes(q) ||
+        s.description.toLowerCase().includes(q)
+    );
+  }
   const start = page * size;
   const paged = filtered.slice(start, start + size);
   return clone({ stores: paged, totalCount: filtered.length });

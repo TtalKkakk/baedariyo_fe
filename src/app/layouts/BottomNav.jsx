@@ -10,7 +10,7 @@ const NAV_ITEMS = [
   { to: '/mypage', label: '마이페이지', Icon: MyPageIcon },
 ];
 
-const HIDDEN_PATHS = ['/stores/'];
+const HIDDEN_PATHS = ['/stores/', '/category/'];
 
 export default function BottomNav() {
   const { pathname } = useLocation();
