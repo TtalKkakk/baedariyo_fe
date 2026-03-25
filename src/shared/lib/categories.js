@@ -10,13 +10,23 @@ import sushiIcon from '@/shared/assets/icons/category/sushi.png';
 import westernIcon from '@/shared/assets/icons/category/western.png';
 
 export const CATEGORIES = [
-  { id: 'cafe_dessert', label: '카페·디저트', apiValue: 'CAFE_DESSERT', icon: cafeDessertIcon },
+  {
+    id: 'cafe_dessert',
+    label: '카페·디저트',
+    apiValue: 'CAFE_DESSERT',
+    icon: cafeDessertIcon,
+  },
   { id: 'western', label: '양식', apiValue: 'WESTERN', icon: westernIcon },
   { id: 'chinese', label: '중식', apiValue: 'CHINESE', icon: chineseIcon },
   { id: 'korean', label: '한식', apiValue: 'KOREAN', icon: koreanIcon },
   { id: 'japanese', label: '일식', apiValue: 'JAPANESE', icon: japaneseIcon },
   { id: 'bunsik', label: '분식', apiValue: 'SNACK', icon: bunsikIcon },
-  { id: 'fastfood', label: '패스트 푸드', apiValue: 'FAST_FOOD', icon: fastfoodIcon },
+  {
+    id: 'fastfood',
+    label: '패스트 푸드',
+    apiValue: 'FAST_FOOD',
+    icon: fastfoodIcon,
+  },
   { id: 'chicken', label: '치킨', apiValue: 'CHICKEN', icon: chickenIcon },
   { id: 'meat', label: '고기·돈까스', apiValue: 'MEAT', icon: meatIcon },
   { id: 'sushi', label: '회', apiValue: 'PORK_FISH', icon: sushiIcon },

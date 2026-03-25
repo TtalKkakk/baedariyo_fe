@@ -123,29 +123,26 @@ export default function SearchResultPage() {
 
   const sentinelRef = useRef(null);
 
-  const {
-    data,
-    isLoading,
-    isFetchingNextPage,
-    hasNextPage,
-    fetchNextPage,
-  } = useInfiniteQuery({
-    queryKey: ['search-stores', initialQuery],
-    queryFn: ({ pageParam = 0 }) =>
-      searchStores({ keyword: initialQuery, page: pageParam, size: 20 }),
-    getNextPageParam: (lastPage, allPages) => {
-      const total = lastPage?.totalCount ?? 0;
-      const fetched = allPages.flatMap((p) => p?.stores ?? p ?? []).length;
-      return fetched < total ? allPages.length : undefined;
-    },
-    initialPageParam: 0,
-    enabled: !!initialQuery,
-  });
+  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
+    useInfiniteQuery({
+      queryKey: ['search-stores', initialQuery],
+      queryFn: ({ pageParam = 0 }) =>
+        searchStores({ keyword: initialQuery, page: pageParam, size: 20 }),
+      getNextPageParam: (lastPage, allPages) => {
+        const total = lastPage?.totalCount ?? 0;
+        const fetched = allPages.flatMap((p) => p?.stores ?? p ?? []).length;
+        return fetched < total ? allPages.length : undefined;
+      },
+      initialPageParam: 0,
+      enabled: !!initialQuery,
+    });
 
   useEffect(() => {
     if (!sentinelRef.current || !hasNextPage) return;
     const observer = new IntersectionObserver(
-      (entries) => { if (entries[0].isIntersecting) fetchNextPage(); },
+      (entries) => {
+        if (entries[0].isIntersecting) fetchNextPage();
+      },
       { threshold: 0.1 }
     );
     observer.observe(sentinelRef.current);
@@ -416,7 +413,9 @@ export default function SearchResultPage() {
                 <div ref={sentinelRef} className="h-4" />
                 {isFetchingNextPage && (
                   <div className="flex justify-center py-4">
-                    <p className="text-body2 text-[var(--color-semantic-label-alternative)]">불러오는 중...</p>
+                    <p className="text-body2 text-[var(--color-semantic-label-alternative)]">
+                      불러오는 중...
+                    </p>
                   </div>
                 )}
               </div>

@@ -51,6 +51,7 @@ export default function Header() {
 
   const orderTrackingMatch = useMatch('/orders/:orderId/tracking');
   const orderDetailMatch = useMatch('/orders/:orderId');
+  const menuDetailMatch = useMatch('/stores/:storeId/menu/:menuId');
   const storeDetailMatch = useMatch('/stores/:storeId');
   const storeReviewsMatch = useMatch('/stores/:storeId/reviews');
   const storeInfoMatch = useMatch('/stores/:storeId/info');
@@ -68,10 +69,12 @@ export default function Header() {
 
   const activeBackTitle = backTitle || dynamicBackTitle;
 
+  if (menuDetailMatch || storeDetailMatch) return null;
+
   if (categoryMatch) {
     return (
       <header className="flex items-center gap-3 h-14 px-4 bg-white sticky top-0 z-10">
-        <button onClick={() => navigate(-1)} className="shrink-0">
+        <button onClick={() => navigate('/')} className="shrink-0">
           <BackIcon className="size-5" />
         </button>
         <div
@@ -91,7 +94,9 @@ export default function Header() {
             onBlur={() => setIsSearchFocused(false)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && searchInput.trim()) {
-                navigate(`/search/result?q=${encodeURIComponent(searchInput.trim())}`);
+                navigate(
+                  `/search/result?q=${encodeURIComponent(searchInput.trim())}`
+                );
               }
             }}
             placeholder="퇴근 하고 나서 치킨에 맥주?"

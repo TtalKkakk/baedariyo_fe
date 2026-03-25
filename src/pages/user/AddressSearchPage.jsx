@@ -26,7 +26,7 @@ export default function AddressSearchPage() {
 
   return (
     <div className="min-h-full bg-white pt-2">
-      <p className="text-h3 font-bold text-[var(--color-semantic-label-normal)]">
+      <p className="text-h4 font-bold text-[var(--color-semantic-label-normal)]">
         배달 받을 주소를 검색해주세요
       </p>
 

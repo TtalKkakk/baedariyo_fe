@@ -1,6 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 
 import { useCartStore } from '@/shared/store';
+import ArrowIcon from '@/shared/assets/icons/header/arrow.svg?react';
+import MinusIcon from '@/shared/assets/icons/header/minus.svg?react';
+import PlusIcon from '@/shared/assets/icons/header/plus.svg?react';
+import DeleteIcon from '@/shared/assets/icons/cart/delete.svg?react';
+import MenuPlusIcon from '@/shared/assets/icons/cart/menuplus.svg?react';
+
+const DELIVERY_FEE = 3000;
 
 function formatAmount(amount) {
   if (typeof amount !== 'number') return '-';
@@ -12,110 +19,8 @@ function getItemUnitAmount(item) {
     typeof item?.basePriceAmount === 'number' ? item.basePriceAmount : 0;
   const optionSum = (
     Array.isArray(item?.selectedOptions) ? item.selectedOptions : []
-  ).reduce((acc, option) => acc + (option?.optionPriceAmount ?? 0), 0);
+  ).reduce((acc, o) => acc + (o?.optionPriceAmount ?? 0), 0);
   return base + optionSum;
-}
-
-function getItemTotalAmount(item) {
-  return getItemUnitAmount(item) * (item?.quantity ?? 0);
-}
-
-function CartItem({
-  item,
-  onIncrease,
-  onDecrease,
-  onRemove,
-  onOpenMenu,
-  onOpenStore,
-}) {
-  const selectedOptions = Array.isArray(item?.selectedOptions)
-    ? item.selectedOptions
-    : [];
-  const unitAmount = getItemUnitAmount(item);
-  const totalAmount = getItemTotalAmount(item);
-
-  return (
-    <li className="rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-white p-4">
-      <div className="flex items-start justify-between gap-2">
-        <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
-          {item?.menuName ?? '메뉴명 없음'}
-        </p>
-        <button
-          type="button"
-          onClick={() => onRemove(item.itemKey)}
-          className="text-caption1 text-[var(--color-semantic-status-cautionary)]"
-        >
-          삭제
-        </button>
-      </div>
-
-      <p className="mt-1 text-body3 text-[var(--color-semantic-label-alternative)]">
-        {item?.storeName ?? '가게명 없음'}
-      </p>
-
-      {selectedOptions.length > 0 ? (
-        <ul className="mt-2 space-y-1">
-          {selectedOptions.map((option, index) => (
-            <li
-              key={`${option?.groupId ?? index}-${option?.optionId ?? index}`}
-              className="text-caption1 text-[var(--color-semantic-label-alternative)]"
-            >
-              {option?.groupName}: {option?.optionName} (
-              {formatAmount(option?.optionPriceAmount ?? 0)})
-            </li>
-          ))}
-        </ul>
-      ) : null}
-
-      <div className="mt-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => onDecrease(item.itemKey)}
-            className="h-8 w-8 rounded-md border border-[var(--color-semantic-line-normal-normal)]"
-          >
-            -
-          </button>
-          <span className="w-6 text-center text-body2 font-medium">
-            {item?.quantity ?? 0}
-          </span>
-          <button
-            type="button"
-            onClick={() => onIncrease(item.itemKey)}
-            className="h-8 w-8 rounded-md border border-[var(--color-semantic-line-normal-normal)]"
-          >
-            +
-          </button>
-        </div>
-
-        <div className="text-right">
-          <p className="text-caption1 text-[var(--color-semantic-label-alternative)]">
-            단가 {formatAmount(unitAmount)}
-          </p>
-          <p className="text-body2 font-semibold text-[var(--color-semantic-label-normal)]">
-            {formatAmount(totalAmount)}
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-3 flex gap-2">
-        <button
-          type="button"
-          onClick={() => onOpenStore(item?.storePublicId)}
-          className="h-8 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-caption1"
-        >
-          가게로 이동
-        </button>
-        <button
-          type="button"
-          onClick={() => onOpenMenu(item?.storePublicId, item?.menuId)}
-          className="h-8 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-caption1"
-        >
-          메뉴 상세
-        </button>
-      </div>
-    </li>
-  );
 }
 
 export default function CartPage() {
@@ -124,94 +29,207 @@ export default function CartPage() {
   const incrementItem = useCartStore((state) => state.incrementItem);
   const decrementItem = useCartStore((state) => state.decrementItem);
   const removeItem = useCartStore((state) => state.removeItem);
-  const clearCart = useCartStore((state) => state.clearCart);
 
-  const totalAmount = items.reduce(
-    (acc, item) => acc + getItemTotalAmount(item),
+  const storePublicId = items[0]?.storePublicId ?? '';
+  const storeName = items[0]?.storeName ?? '가게명 없음';
+
+  const orderAmount = items.reduce(
+    (acc, item) => acc + getItemUnitAmount(item) * (item?.quantity ?? 0),
     0
   );
-  const totalCount = items.reduce(
-    (acc, item) => acc + (item?.quantity ?? 0),
-    0
-  );
-
-  const openStore = (storePublicId) => {
-    if (!storePublicId) return;
-    navigate(`/stores/${storePublicId}`);
-  };
-
-  const openMenu = (storePublicId, menuId) => {
-    if (!storePublicId || !menuId) return;
-    navigate(`/stores/${storePublicId}/menu/${menuId}`);
-  };
+  const totalAmount = orderAmount + DELIVERY_FEE;
 
   if (items.length === 0) {
     return (
-      <div className="min-h-full bg-white py-4 pb-8">
-        <div className="rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-[var(--color-semantic-background-normal-normal)] p-6 text-center">
-          <p className="text-body1 font-medium text-[var(--color-semantic-label-normal)]">
-            담긴 메뉴가 없습니다.
-          </p>
-          <button
-            type="button"
-            onClick={() => navigate('/')}
-            className="mt-3 h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body2 font-medium"
-          >
-            홈으로 이동
-          </button>
-        </div>
+      <div className="-mx-4 -mt-2 -mb-2 bg-white h-full flex flex-col items-center justify-center gap-3">
+        <p className="text-[16px] font-medium text-[var(--color-semantic-label-alternative)]">
+          담긴 메뉴가 없습니다.
+        </p>
+        <button
+          type="button"
+          onClick={() => navigate('/')}
+          className="h-10 px-5 rounded-xl bg-[var(--color-atomic-redOrange-80)] text-white text-[14px] font-bold"
+        >
+          홈으로 이동
+        </button>
       </div>
     );
   }
 
   return (
-    <div className="min-h-full bg-white py-4 pb-8">
-      <div className="flex items-center justify-end">
-        <button
-          type="button"
-          onClick={clearCart}
-          className="text-caption1 text-[var(--color-semantic-status-cautionary)]"
-        >
-          전체 비우기
-        </button>
+    <div className="-mx-4 -mt-2 -mb-2 bg-white h-full flex flex-col min-h-0">
+      <div className="flex-1 overflow-y-auto">
+        <div className="min-h-full flex flex-col">
+          {/* Store info */}
+          <div className="bg-white px-4 py-4 flex items-center gap-3">
+            <img
+              src={`https://picsum.photos/seed/store-${encodeURIComponent(storePublicId)}/80/80`}
+              alt={storeName}
+              className="w-10 h-10 rounded-lg object-cover shrink-0"
+            />
+            <p className="flex-1 min-w-0 text-[20px] font-bold text-[var(--color-semantic-label-normal)] truncate">
+              {storeName}
+            </p>
+            <button
+              type="button"
+              onClick={() => navigate(`/stores/${storePublicId}`)}
+            >
+              <ArrowIcon className="size-5 -rotate-90 [&_path]:fill-[var(--color-semantic-label-normal)]" />
+            </button>
+          </div>
+
+          {/* Menu items */}
+          <div className="mx-4 border-t border-[var(--color-semantic-line-normal-normal)]" />
+          <div className="bg-white">
+            {items.map((item, index) => {
+              const unitAmount = getItemUnitAmount(item);
+              const itemTotal = unitAmount * (item?.quantity ?? 0);
+
+              return (
+                <div key={item.itemKey}>
+                  {index > 0 && (
+                    <div className="mx-4 border-t border-[var(--color-semantic-line-normal-normal)]" />
+                  )}
+                  <div className="px-4 pt-4 pb-[16px]">
+                    {/* Name + 옵션변경 */}
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-[18px] font-bold text-[var(--color-semantic-label-normal)] leading-tight">
+                        {item.menuName}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          navigate(
+                            `/stores/${storePublicId}/menu/${item.menuId}`,
+                            { state: { editItemKey: item.itemKey } }
+                          )
+                        }
+                        className="shrink-0 px-3 h-7 rounded-full bg-[var(--color-atomic-coolNeutral-97)] text-[12px] font-medium text-[var(--color-semantic-label-alternative)] whitespace-nowrap"
+                      >
+                        옵션변경
+                      </button>
+                    </div>
+
+                    {/* Option text */}
+                    {item.selectedOptions?.length > 0 && (
+                      <div className="mt-[6.5px] space-y-[2px]">
+                        {item.selectedOptions.map((o, i) => (
+                          <p
+                            key={i}
+                            className="text-[13px] text-[var(--color-semantic-label-alternative)]"
+                          >
+                            {o.groupName} : {o.optionName}
+                          </p>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Price + quantity */}
+                    <div className="flex items-center justify-between mt-5">
+                      <p className="text-[18px] font-bold text-[var(--color-semantic-label-normal)]">
+                        {formatAmount(itemTotal)}
+                      </p>
+                      <div className="flex items-center gap-[8px]">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if ((item?.quantity ?? 0) <= 1)
+                              removeItem(item.itemKey);
+                            else decrementItem(item.itemKey);
+                          }}
+                          className="w-8 h-8 border-[0.5px] border-[var(--color-atomic-coolNeutral-80)] rounded-[6px] flex items-center justify-center"
+                        >
+                          {(item?.quantity ?? 0) <= 1 ? (
+                            <DeleteIcon className="size-4 [&_path]:fill-[var(--color-semantic-label-normal)]" />
+                          ) : (
+                            <MinusIcon className="size-4 [&_path]:fill-[var(--color-semantic-label-normal)]" />
+                          )}
+                        </button>
+                        <span className="text-[18px] font-bold text-[var(--color-semantic-label-normal)] min-w-[20px] text-center">
+                          {item?.quantity ?? 0}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => incrementItem(item.itemKey)}
+                          className="w-8 h-8 border-[0.5px] border-[var(--color-atomic-coolNeutral-80)] rounded-[6px] flex items-center justify-center"
+                        >
+                          <PlusIcon className="size-4 [&_path]:fill-[var(--color-semantic-label-normal)]" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Order summary */}
+          <div className="mx-4 border-t border-[var(--color-semantic-line-normal-normal)]" />
+          <div className="bg-white px-4 pt-[16px] pb-5 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-[14px] text-[var(--color-semantic-label-alternative)]">
+                주문 금액
+              </span>
+              <span className="text-[14px] text-[var(--color-semantic-label-normal)]">
+                {formatAmount(orderAmount)}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-[14px] text-[var(--color-semantic-label-alternative)]">
+                배달비
+              </span>
+              <span className="text-[14px] text-[var(--color-semantic-label-normal)]">
+                {formatAmount(DELIVERY_FEE)}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-[14px] font-medium text-[var(--color-semantic-label-normal)]">
+                결제 금액
+              </span>
+              <span className="text-[14px] font-bold text-[var(--color-atomic-redOrange-80)]">
+                {formatAmount(totalAmount)}
+              </span>
+            </div>
+          </div>
+
+          {/* 메뉴추가 */}
+          <div className="mt-8 mx-4 border-t border-[var(--color-semantic-line-normal-normal)]" />
+          <div className="bg-white pt-5 pb-8 flex items-center justify-center gap-2">
+            <button
+              type="button"
+              onClick={() => navigate(`/stores/${storePublicId}`)}
+              className="flex items-center gap-2 text-[18px] font-medium text-[var(--color-semantic-label-normal)]"
+            >
+              <MenuPlusIcon className="size-6" />
+              메뉴추가
+            </button>
+          </div>
+
+          <div className="flex-1 bg-[var(--color-atomic-coolNeutral-97)]" />
+        </div>
       </div>
 
-      <p className="mt-1 text-body3 text-[var(--color-semantic-label-alternative)]">
-        총 {totalCount}개
-      </p>
-
-      <ul className="mt-4 space-y-3">
-        {items.map((item) => (
-          <CartItem
-            key={item.itemKey}
-            item={item}
-            onIncrease={incrementItem}
-            onDecrease={decrementItem}
-            onRemove={removeItem}
-            onOpenMenu={openMenu}
-            onOpenStore={openStore}
-          />
-        ))}
-      </ul>
-
-      <section className="mt-5 rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-[var(--color-semantic-background-normal-normal)] p-4">
-        <div className="flex items-center justify-between">
-          <p className="text-body2 text-[var(--color-semantic-label-alternative)]">
-            총 결제 예상금액
-          </p>
-          <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
+      {/* Bottom CTA */}
+      <div className="shrink-0 bg-white px-4 pt-2 pb-4 rounded-t-2xl shadow-[0_-4px_8px_rgba(0,0,0,0.06)] [clip-path:inset(-12px_0_0_0)]">
+        <div className="flex justify-center mb-3">
+          <div className="w-12 h-[4px] rounded-full bg-[var(--color-atomic-coolNeutral-95)]" />
+        </div>
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-[13px] font-medium text-[var(--color-semantic-label-alternative)]">
+            결제예정금액
+          </span>
+          <p className="text-[22px] font-bold text-[var(--color-semantic-label-normal)]">
             {formatAmount(totalAmount)}
           </p>
         </div>
-
         <button
           type="button"
           onClick={() => navigate('/checkout')}
-          className="mt-3 w-full h-10 rounded-lg bg-[var(--color-atomic-redOrange-80)] text-white text-body2 font-semibold"
+          className="w-full h-[52px] rounded-2xl bg-[var(--color-atomic-redOrange-80)] text-white text-[18px] font-bold"
         >
-          주문하기로 이동
+          주문하기
         </button>
-      </section>
+      </div>
     </div>
   );
 }

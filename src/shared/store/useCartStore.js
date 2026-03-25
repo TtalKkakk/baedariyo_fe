@@ -115,6 +115,38 @@ export const useCartStore = create(
             items: state.items.filter((item) => item.itemKey !== itemKey),
           })),
 
+        replaceItem: (oldItemKey, newItemData) =>
+          set((state) => {
+            const safeQuantity = Math.max(1, newItemData.quantity ?? 1);
+            const normalizedOptions = (newItemData.selectedOptions ?? []).map(
+              (option) => ({
+                groupId: option.groupId,
+                groupName: option.groupName,
+                optionId: option.optionId,
+                optionName: option.optionName,
+                optionPriceAmount: toSafeNumber(option.optionPriceAmount),
+              })
+            );
+            const optionSignature = buildOptionSignature(normalizedOptions);
+            const newItemKey = `${newItemData.storePublicId}:${newItemData.menuId}:${optionSignature}`;
+            return {
+              items: state.items.map((item) =>
+                item.itemKey === oldItemKey
+                  ? {
+                      ...item,
+                      ...newItemData,
+                      itemKey: newItemKey,
+                      selectedOptions: normalizedOptions,
+                      quantity: safeQuantity,
+                      basePriceAmount: toSafeNumber(
+                        newItemData.basePriceAmount
+                      ),
+                    }
+                  : item
+              ),
+            };
+          }),
+
         clearCart: () => set({ items: [] }),
       }),
       {
