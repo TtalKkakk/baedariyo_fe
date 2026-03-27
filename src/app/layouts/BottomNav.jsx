@@ -10,8 +10,12 @@ const NAV_ITEMS = [
   { to: '/mypage', label: '마이페이지', Icon: MyPageIcon },
 ];
 
+const HIDDEN_PATHS = ['/stores/', '/category/', '/cart', '/checkout'];
+
 export default function BottomNav() {
   const { pathname } = useLocation();
+
+  if (HIDDEN_PATHS.some((p) => pathname.startsWith(p))) return null;
 
   return (
     <nav className="flex items-center h-16 bg-surface border-t border-divider">

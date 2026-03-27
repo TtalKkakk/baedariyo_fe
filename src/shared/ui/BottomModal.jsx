@@ -1,4 +1,10 @@
-export function BottomModal({ isOpen, onClose, title, children }) {
+export function BottomModal({
+  isOpen,
+  onClose,
+  title,
+  children,
+  showClose = true,
+}) {
   return (
     <div
       className={`absolute inset-0 z-50 ${isOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}
@@ -17,12 +23,14 @@ export function BottomModal({ isOpen, onClose, title, children }) {
           {title}
         </p>
         <div>{children}</div>
-        <button
-          className="w-full py-4 text-body1 font-medium text-[var(--color-semantic-label-normal)]"
-          onClick={onClose}
-        >
-          닫기
-        </button>
+        {showClose && (
+          <button
+            className="w-full py-4 text-body1 font-medium text-[var(--color-semantic-label-normal)]"
+            onClick={onClose}
+          >
+            닫기
+          </button>
+        )}
       </div>
     </div>
   );
