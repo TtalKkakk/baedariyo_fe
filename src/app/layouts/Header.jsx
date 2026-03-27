@@ -17,6 +17,7 @@ const TITLE_ROUTES = {
 
 const BACK_TITLE_ROUTES = {
   '/cart': '장바구니',
+  '/checkout': '주문하기',
   '/address/search': '주소 검색',
   '/address/setting': '주소 설정',
   '/address/location': '위치 확인',
