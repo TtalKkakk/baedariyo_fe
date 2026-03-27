@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { getStoreDetail } from '@/shared/api';
 import { useCartStore } from '@/shared/store';
+import { BottomSheet } from '@/shared/ui';
 import ArrowIcon from '@/shared/assets/icons/header/arrow.svg?react';
 import BackIcon from '@/shared/assets/icons/header/back.svg?react';
 import HeartIcon from '@/shared/assets/icons/store/heart.svg?react';
@@ -431,10 +432,7 @@ export default function StoreDetailPage() {
       </div>
 
       {storeCartItems.length > 0 && (
-        <div className="shrink-0 bg-white px-4 pt-2 pb-3 flex flex-col rounded-t-2xl shadow-[0_-4px_8px_rgba(0,0,0,0.06)] [clip-path:inset(-12px_0_0_0)]">
-          <div className="flex justify-center mb-3">
-            <div className="w-12 h-[4px] rounded-full bg-[var(--color-atomic-coolNeutral-95)]" />
-          </div>
+        <BottomSheet className="pb-3 flex flex-col">
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="text-[20px] font-bold text-[var(--color-semantic-label-normal)]">
@@ -461,7 +459,7 @@ export default function StoreDetailPage() {
               장바구니 보기
             </button>
           </div>
-        </div>
+        </BottomSheet>
       )}
     </div>
   );

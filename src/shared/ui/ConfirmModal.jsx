@@ -14,11 +14,11 @@ export function ConfirmModal({
     <div className="absolute inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
       <div className="relative mx-4 w-full max-w-[328px] rounded-2xl bg-white px-6 py-6">
-        <p className="text-center text-body1 font-bold text-[var(--color-semantic-label-normal)]">
+        <p className="text-center text-h6 font-bold text-[var(--color-semantic-label-normal)]">
           {title}
         </p>
         {description ? (
-          <p className="mt-2 text-center text-body3 text-[var(--color-semantic-label-alternative)]">
+          <p className="mt-2 text-center text-body2 text-[var(--color-semantic-label-alternative)]">
             {description}
           </p>
         ) : null}

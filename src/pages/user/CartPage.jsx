@@ -1,13 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 
 import { useCartStore } from '@/shared/store';
+import { BottomSheet } from '@/shared/ui';
 import ArrowIcon from '@/shared/assets/icons/header/arrow.svg?react';
 import MinusIcon from '@/shared/assets/icons/header/minus.svg?react';
 import PlusIcon from '@/shared/assets/icons/header/plus.svg?react';
 import DeleteIcon from '@/shared/assets/icons/cart/delete.svg?react';
 import MenuPlusIcon from '@/shared/assets/icons/cart/menuplus.svg?react';
-
-const DELIVERY_FEE = 3000;
 
 function formatAmount(amount) {
   if (typeof amount !== 'number') return '-';
@@ -26,6 +25,8 @@ function getItemUnitAmount(item) {
 export default function CartPage() {
   const navigate = useNavigate();
   const items = useCartStore((state) => state.items);
+  const deliveryFee = useCartStore((state) => state.deliveryFee);
+  const minimumOrderAmount = useCartStore((state) => state.minimumOrderAmount);
   const incrementItem = useCartStore((state) => state.incrementItem);
   const decrementItem = useCartStore((state) => state.decrementItem);
   const removeItem = useCartStore((state) => state.removeItem);
@@ -37,7 +38,7 @@ export default function CartPage() {
     (acc, item) => acc + getItemUnitAmount(item) * (item?.quantity ?? 0),
     0
   );
-  const totalAmount = orderAmount + DELIVERY_FEE;
+  const totalAmount = orderAmount + deliveryFee;
 
   if (items.length === 0) {
     return (
@@ -165,7 +166,7 @@ export default function CartPage() {
 
           {/* Order summary */}
           <div className="mx-4 border-t border-[var(--color-semantic-line-normal-normal)]" />
-          <div className="bg-white px-4 pt-[16px] pb-5 space-y-3">
+          <div className="bg-white px-4 pt-[16px] pb-5 space-y-[6px]">
             <div className="flex items-center justify-between">
               <span className="text-[14px] text-[var(--color-semantic-label-alternative)]">
                 주문 금액
@@ -179,7 +180,7 @@ export default function CartPage() {
                 배달비
               </span>
               <span className="text-[14px] text-[var(--color-semantic-label-normal)]">
-                {formatAmount(DELIVERY_FEE)}
+                {formatAmount(deliveryFee)}
               </span>
             </div>
             <div className="flex items-center justify-between">
@@ -194,7 +195,7 @@ export default function CartPage() {
 
           {/* 메뉴추가 */}
           <div className="mt-8 mx-4 border-t border-[var(--color-semantic-line-normal-normal)]" />
-          <div className="bg-white pt-5 pb-8 flex items-center justify-center gap-2">
+          <div className="bg-white py-[30px] flex items-center justify-center gap-2">
             <button
               type="button"
               onClick={() => navigate(`/stores/${storePublicId}`)}
@@ -210,26 +211,32 @@ export default function CartPage() {
       </div>
 
       {/* Bottom CTA */}
-      <div className="shrink-0 bg-white px-4 pt-2 pb-4 rounded-t-2xl shadow-[0_-4px_8px_rgba(0,0,0,0.06)] [clip-path:inset(-12px_0_0_0)]">
-        <div className="flex justify-center mb-3">
-          <div className="w-12 h-[4px] rounded-full bg-[var(--color-atomic-coolNeutral-95)]" />
-        </div>
+      <BottomSheet className="pb-4">
         <div className="flex items-center justify-between mb-3">
           <span className="text-[13px] font-medium text-[var(--color-semantic-label-alternative)]">
             결제예정금액
           </span>
-          <p className="text-[22px] font-bold text-[var(--color-semantic-label-normal)]">
+          <p className="text-[24px] font-bold text-[var(--color-semantic-label-normal)]">
             {formatAmount(totalAmount)}
           </p>
         </div>
+        {minimumOrderAmount > 0 && orderAmount < minimumOrderAmount && (
+          <p className="text-[13px] text-center text-[var(--color-semantic-status-negative)] mb-2">
+            <span className="font-bold">
+              {formatAmount(minimumOrderAmount - orderAmount)}
+            </span>{' '}
+            더 담으면 주문 가능해요
+          </p>
+        )}
         <button
           type="button"
           onClick={() => navigate('/checkout')}
-          className="w-full h-[52px] rounded-2xl bg-[var(--color-atomic-redOrange-80)] text-white text-[18px] font-bold"
+          disabled={minimumOrderAmount > 0 && orderAmount < minimumOrderAmount}
+          className="w-[328px] h-[48px] rounded-[10px] text-white text-[18px] font-bold disabled:bg-[var(--color-atomic-coolNeutral-80)] bg-[var(--color-atomic-redOrange-80)]"
         >
           주문하기
         </button>
-      </div>
+      </BottomSheet>
     </div>
   );
 }

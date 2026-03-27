@@ -12,7 +12,7 @@ function buildOptionSignature(selectedOptions) {
 }
 
 function toSafeNumber(value) {
-  return typeof value === 'number' ? value : 0;
+  return typeof value === 'number' && Number.isFinite(value) ? value : 0;
 }
 
 export const useCartStore = create(
@@ -20,6 +20,8 @@ export const useCartStore = create(
     persist(
       (set) => ({
         items: [],
+        deliveryFee: 0,
+        minimumOrderAmount: 0,
 
         addItem: ({
           storePublicId,
@@ -32,6 +34,8 @@ export const useCartStore = create(
           basePriceAmount,
           selectedOptions = [],
           quantity = 1,
+          deliveryFee = 0,
+          minimumOrderAmount = 0,
         }) =>
           set((state) => {
             const safeQuantity = Math.max(1, quantity);
@@ -46,26 +50,31 @@ export const useCartStore = create(
             const optionSignature = buildOptionSignature(normalizedOptions);
             const itemKey = `${storePublicId}:${menuId}:${optionSignature}`;
 
-            const existingItem = state.items.find(
+            // 다른 가게면 장바구니 초기화
+            const isDifferentStore =
+              state.items.length > 0 &&
+              state.items[0].storePublicId !== storePublicId;
+            const baseItems = isDifferentStore ? [] : state.items;
+
+            const existingItem = baseItems.find(
               (item) => item.itemKey === itemKey
             );
 
             if (existingItem) {
               return {
-                items: state.items.map((item) =>
+                items: baseItems.map((item) =>
                   item.itemKey === itemKey
-                    ? {
-                        ...item,
-                        quantity: item.quantity + safeQuantity,
-                      }
+                    ? { ...item, quantity: item.quantity + safeQuantity }
                     : item
                 ),
+                deliveryFee: toSafeNumber(deliveryFee),
+                minimumOrderAmount: toSafeNumber(minimumOrderAmount),
               };
             }
 
             return {
               items: [
-                ...state.items,
+                ...baseItems,
                 {
                   itemKey,
                   storePublicId,
@@ -87,6 +96,8 @@ export const useCartStore = create(
                   quantity: safeQuantity,
                 },
               ],
+              deliveryFee: toSafeNumber(deliveryFee),
+              minimumOrderAmount: toSafeNumber(minimumOrderAmount),
             };
           }),
 
@@ -129,6 +140,24 @@ export const useCartStore = create(
             );
             const optionSignature = buildOptionSignature(normalizedOptions);
             const newItemKey = `${newItemData.storePublicId}:${newItemData.menuId}:${optionSignature}`;
+
+            // 변경된 옵션이 이미 다른 아이템과 key 충돌 → 수량 합산 후 기존 제거
+            const isDuplicate =
+              newItemKey !== oldItemKey &&
+              state.items.some((item) => item.itemKey === newItemKey);
+
+            if (isDuplicate) {
+              return {
+                items: state.items
+                  .filter((item) => item.itemKey !== oldItemKey)
+                  .map((item) =>
+                    item.itemKey === newItemKey
+                      ? { ...item, quantity: item.quantity + safeQuantity }
+                      : item
+                  ),
+              };
+            }
+
             return {
               items: state.items.map((item) =>
                 item.itemKey === oldItemKey
@@ -141,16 +170,24 @@ export const useCartStore = create(
                       basePriceAmount: toSafeNumber(
                         newItemData.basePriceAmount
                       ),
+                      storeId:
+                        typeof newItemData.storeId === 'number' &&
+                        Number.isFinite(newItemData.storeId)
+                          ? newItemData.storeId
+                          : item.storeId,
                     }
                   : item
               ),
             };
           }),
 
-        clearCart: () => set({ items: [] }),
+        clearCart: () =>
+          set({ items: [], deliveryFee: 0, minimumOrderAmount: 0 }),
       }),
       {
         name: 'cart-storage',
+        version: 1,
+        migrate: () => ({ items: [], deliveryFee: 0, minimumOrderAmount: 0 }),
       }
     ),
     { name: 'CartStore' }

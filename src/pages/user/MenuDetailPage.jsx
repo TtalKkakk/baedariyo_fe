@@ -9,6 +9,7 @@ import CheckIcon from '@/shared/assets/icons/header/check.svg?react';
 import MinusIcon from '@/shared/assets/icons/header/minus.svg?react';
 import PlusIcon from '@/shared/assets/icons/header/plus.svg?react';
 import { useCartStore } from '@/shared/store';
+import { BottomSheet, ConfirmModal } from '@/shared/ui';
 
 const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -98,6 +99,7 @@ export default function MenuDetailPage() {
   const addItem = useCartStore((state) => state.addItem);
   const replaceItem = useCartStore((state) => state.replaceItem);
   const cartItems = useCartStore((state) => state.items);
+  const [pendingItemData, setPendingItemData] = useState(null);
   const existingItem = editItemKey
     ? cartItems.find((i) => i.itemKey === editItemKey)
     : null;
@@ -266,12 +268,24 @@ export default function MenuDetailPage() {
       basePriceAmount,
       selectedOptions,
       quantity,
+      deliveryFee: data?.store?.deliveryFee?.amount ?? 0,
+      minimumOrderAmount: data?.store?.minimumOrderAmount?.amount ?? 0,
     };
     if (editItemKey) {
       replaceItem(editItemKey, itemData);
-    } else {
-      addItem(itemData);
+      navigate(-1);
+      return;
     }
+
+    const isDifferentStore =
+      cartItems.length > 0 && cartItems[0].storePublicId !== trimmedStoreId;
+
+    if (isDifferentStore) {
+      setPendingItemData(itemData);
+      return;
+    }
+
+    addItem(itemData);
     navigate(-1);
   };
 
@@ -535,10 +549,7 @@ export default function MenuDetailPage() {
         </div>
       </div>
       {/* Bottom CTA */}
-      <div className="shrink-0 bg-white px-4 pt-2 pb-3 rounded-t-2xl shadow-[0_-4px_8px_rgba(0,0,0,0.06)] [clip-path:inset(-12px_0_0_0)]">
-        <div className="flex justify-center mb-3">
-          <div className="w-12 h-[4px] rounded-full bg-[var(--color-atomic-coolNeutral-95)]" />
-        </div>
+      <BottomSheet className="pb-3">
         <button
           type="button"
           onClick={addToCart}
@@ -546,7 +557,20 @@ export default function MenuDetailPage() {
         >
           {formatAmount(totalAmount)} 담기
         </button>
-      </div>
+      </BottomSheet>
+      <ConfirmModal
+        isOpen={!!pendingItemData}
+        title="장바구니를 비울까요?"
+        description="다른 가게 메뉴가 담겨있어요"
+        confirmLabel="새로 담기"
+        cancelLabel="취소"
+        onConfirm={() => {
+          addItem(pendingItemData);
+          setPendingItemData(null);
+          navigate(-1);
+        }}
+        onCancel={() => setPendingItemData(null)}
+      />
     </div>
   );
 }
