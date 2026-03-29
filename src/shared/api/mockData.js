@@ -2,8 +2,56 @@ const DEFAULT_STORE_PUBLIC_ID = '11111111-1111-4111-8111-111111111111';
 
 const SEARCH_RESULT_STORES = [
   {
+    storePublicId: 'bb000001-0000-4000-8000-000000000001',
+    storeName: '백억커피 구로고척점',
+    description: '아메리카노, 백억 김치볶음밥, 블루베리 요거트, 카페라떼',
+    storeCategory: 'CAFE_DESSERT',
+    thumbnailUrl: '/maratang1.png',
+    totalRating: 4.8,
+    reviewCount: 222,
+    deliveryFee: { amount: 1300 },
+    minimumOrderAmount: { amount: 11000 },
+    deliveryTimeMin: 21,
+  },
+  {
+    storePublicId: 'bb000002-0000-4000-8000-000000000002',
+    storeName: '백다방 동양미래대점',
+    description: '바닐라라떼(ICED), 아이스티샷추가(아...',
+    storeCategory: 'CAFE_DESSERT',
+    thumbnailUrl: '/maratang2.png',
+    totalRating: 5.0,
+    reviewCount: 820,
+    deliveryFee: { amount: 500 },
+    minimumOrderAmount: { amount: 10000 },
+    deliveryTimeMin: 18,
+  },
+  {
+    storePublicId: 'bb000003-0000-4000-8000-000000000003',
+    storeName: '카페인중독 목동점',
+    description: '[시그니처] 햅쌀 와플, 로제 컵떡볶이',
+    storeCategory: 'CAFE_DESSERT',
+    thumbnailUrl: '/maratang3.png',
+    totalRating: 4.7,
+    reviewCount: 252,
+    deliveryFee: { amount: 4800 },
+    minimumOrderAmount: { amount: 17900 },
+    deliveryTimeMin: 43,
+  },
+  {
+    storePublicId: 'bb000004-0000-4000-8000-000000000004',
+    storeName: '설빙 오류동역점',
+    description: '생딸기 설빙, 순수요거생딸기설빙',
+    storeCategory: 'CAFE_DESSERT',
+    thumbnailUrl: '/maratang4.png',
+    totalRating: 5.0,
+    reviewCount: 942,
+    deliveryFee: { amount: 3700 },
+    minimumOrderAmount: { amount: 10800 },
+    deliveryTimeMin: 12,
+  },
+  {
     storePublicId: 'aa000001-0000-4000-8000-000000000001',
-    storeName: '마라탕전문점 상츠마라 신도림점',
+    storeName: '마라탕전문 상츠마라 신도림점',
     description:
       'Self 마라탕 1인분, 꿔바로우 미니, 마라샹궈, 마라 로제 샹궈, 온면, 2~3인분 마라탕',
     storeCategory: 'CHINESE',
@@ -104,15 +152,19 @@ const SEARCH_RESULT_STORES = [
   },
 ];
 
-function searchStores({ keyword, page = 0, size = 20 } = {}) {
+function searchStores({ keyword, storeCategory, page = 0, size = 20 } = {}) {
   const q = (keyword ?? '').trim().toLowerCase();
-  const filtered = q
-    ? SEARCH_RESULT_STORES.filter(
-        (s) =>
-          s.storeName.toLowerCase().includes(q) ||
-          s.description.toLowerCase().includes(q)
-      )
-    : SEARCH_RESULT_STORES;
+  let filtered = SEARCH_RESULT_STORES;
+  if (storeCategory) {
+    filtered = filtered.filter((s) => s.storeCategory === storeCategory);
+  }
+  if (q) {
+    filtered = filtered.filter(
+      (s) =>
+        s.storeName.toLowerCase().includes(q) ||
+        s.description.toLowerCase().includes(q)
+    );
+  }
   const start = page * size;
   const paged = filtered.slice(start, start + size);
   return clone({ stores: paged, totalCount: filtered.length });
@@ -191,18 +243,67 @@ function buildDefaultMenus(storeId, startMenuId) {
       storeId,
       store: { id: storeId },
       menuName: '후라이드 치킨',
-      menuDescription: '겉바속촉 기본 후라이드',
-      price: { amount: 18000 },
+      menuDescription: '겉바속촉 기본 후라이드. 저희 가게 대표 메뉴입니다.',
+      price: { amount: 0 },
       reviewCount: 107,
       menuOptionGroups: [
         {
           id: `${startMenuId}-g1`,
-          groupName: '추가 선택',
-          maxSelectableCount: 2,
+          groupName: '가격',
+          maxSelectableCount: 1,
+          absolutePrice: true,
           options: [
-            { name: '콜라 500ml', optionPrice: { amount: 2000 } },
-            { name: '치즈볼 5개', optionPrice: { amount: 3500 } },
-            { name: '소스 추가', optionPrice: { amount: 500 } },
+            {
+              name: '미니 6조각',
+              optionPrice: { amount: 9900 },
+              isPopular: false,
+            },
+            {
+              name: '중 10조각',
+              optionPrice: { amount: 13900 },
+              isPopular: true,
+            },
+            {
+              name: '대 16조각',
+              optionPrice: { amount: 18900 },
+              isPopular: false,
+            },
+          ],
+        },
+        {
+          id: `${startMenuId}-g1b`,
+          groupName: '맵기 선택',
+          maxSelectableCount: 1,
+          absolutePrice: false,
+          options: [
+            { name: '기본', optionPrice: { amount: 0 }, isPopular: false },
+            { name: '매운맛', optionPrice: { amount: 500 }, isPopular: false },
+          ],
+        },
+        {
+          id: `${startMenuId}-g2`,
+          groupName: '음료 추가',
+          maxSelectableCount: 3,
+          absolutePrice: false,
+          options: [
+            {
+              name: '코카콜라',
+              optionPrice: { amount: 2000 },
+              isPopular: true,
+            },
+            {
+              name: '코카콜라 제로',
+              optionPrice: { amount: 2000 },
+              isPopular: false,
+            },
+            { name: '사이다', optionPrice: { amount: 2000 }, isPopular: false },
+            {
+              name: '환타 오렌지맛',
+              optionPrice: { amount: 2000 },
+              isPopular: false,
+            },
+            { name: '차이티', optionPrice: { amount: 3000 }, isPopular: false },
+            { name: '뻥홍차', optionPrice: { amount: 3000 }, isPopular: false },
           ],
         },
       ],
@@ -213,16 +314,35 @@ function buildDefaultMenus(storeId, startMenuId) {
       store: { id: storeId },
       menuName: '양념 치킨',
       menuDescription: '달콤한 특제 양념소스',
-      price: { amount: 20000 },
+      price: { amount: 0 },
       reviewCount: 1,
       menuOptionGroups: [
         {
           id: `${startMenuId + 1}-g1`,
+          groupName: '가격',
+          maxSelectableCount: 1,
+          absolutePrice: true,
+          options: [
+            {
+              name: '미니 6조각',
+              optionPrice: { amount: 10900 },
+              isPopular: false,
+            },
+            {
+              name: '중 10조각',
+              optionPrice: { amount: 15900 },
+              isPopular: true,
+            },
+          ],
+        },
+        {
+          id: `${startMenuId + 1}-g2`,
           groupName: '맵기 선택',
           maxSelectableCount: 1,
+          absolutePrice: false,
           options: [
-            { name: '기본', optionPrice: { amount: 0 } },
-            { name: '매운맛', optionPrice: { amount: 500 } },
+            { name: '기본', optionPrice: { amount: 0 }, isPopular: false },
+            { name: '매운맛', optionPrice: { amount: 500 }, isPopular: false },
           ],
         },
       ],
@@ -232,10 +352,36 @@ function buildDefaultMenus(storeId, startMenuId) {
       storeId,
       store: { id: storeId },
       menuName: '감자튀김',
-      menuDescription: '사이드 메뉴',
-      price: { amount: 4000 },
+      menuDescription: '바삭하게 튀긴 황금빛 감자튀김',
+      price: { amount: 0 },
       reviewCount: 3,
-      menuOptionGroups: [],
+      menuOptionGroups: [
+        {
+          id: `${startMenuId + 2}-g1`,
+          groupName: '가격',
+          maxSelectableCount: 1,
+          absolutePrice: true,
+          options: [
+            { name: '보통', optionPrice: { amount: 4000 }, isPopular: true },
+            { name: '대', optionPrice: { amount: 5500 }, isPopular: false },
+          ],
+        },
+        {
+          id: `${startMenuId + 2}-g2`,
+          groupName: '음료 추가',
+          maxSelectableCount: 3,
+          absolutePrice: false,
+          options: [
+            {
+              name: '코카콜라',
+              optionPrice: { amount: 2000 },
+              isPopular: true,
+            },
+            { name: '사이다', optionPrice: { amount: 2000 }, isPopular: false },
+            { name: '맥주', optionPrice: { amount: 4000 }, isPopular: false },
+          ],
+        },
+      ],
     },
     {
       id: startMenuId + 3,
@@ -243,9 +389,45 @@ function buildDefaultMenus(storeId, startMenuId) {
       store: { id: storeId },
       menuName: '메인 메뉴 1',
       menuDescription: '메인 메뉴 1에 대한 설명이 어쩌고 저쩌고',
-      price: { amount: 10000 },
+      price: { amount: 0 },
       reviewCount: 22,
-      menuOptionGroups: [],
+      menuOptionGroups: [
+        {
+          id: `${startMenuId + 3}-g1`,
+          groupName: '가격',
+          maxSelectableCount: 1,
+          absolutePrice: true,
+          options: [
+            { name: '기본', optionPrice: { amount: 10000 }, isPopular: true },
+            { name: '대', optionPrice: { amount: 13000 }, isPopular: false },
+          ],
+        },
+        {
+          id: `${startMenuId + 3}-g1b`,
+          groupName: '맵기 선택',
+          maxSelectableCount: 1,
+          absolutePrice: false,
+          options: [
+            { name: '기본', optionPrice: { amount: 0 }, isPopular: false },
+            { name: '매운맛', optionPrice: { amount: 500 }, isPopular: false },
+          ],
+        },
+        {
+          id: `${startMenuId + 3}-g2`,
+          groupName: '음료 추가',
+          maxSelectableCount: 3,
+          absolutePrice: false,
+          options: [
+            {
+              name: '코카콜라',
+              optionPrice: { amount: 2000 },
+              isPopular: true,
+            },
+            { name: '사이다', optionPrice: { amount: 2000 }, isPopular: false },
+            { name: '맥주', optionPrice: { amount: 4000 }, isPopular: false },
+          ],
+        },
+      ],
     },
     {
       id: startMenuId + 4,
@@ -253,12 +435,280 @@ function buildDefaultMenus(storeId, startMenuId) {
       store: { id: storeId },
       menuName: '메인 메뉴 2',
       menuDescription: '메인 메뉴 2에 대한 설명이 어쩌고 저쩌고',
-      price: { amount: 12000 },
+      price: { amount: 0 },
       reviewCount: 8,
-      menuOptionGroups: [],
+      menuOptionGroups: [
+        {
+          id: `${startMenuId + 4}-g1`,
+          groupName: '가격',
+          maxSelectableCount: 1,
+          absolutePrice: true,
+          options: [
+            { name: '기본', optionPrice: { amount: 12000 }, isPopular: true },
+            { name: '대', optionPrice: { amount: 15000 }, isPopular: false },
+          ],
+        },
+        {
+          id: `${startMenuId + 4}-g1b`,
+          groupName: '맵기 선택',
+          maxSelectableCount: 1,
+          absolutePrice: false,
+          options: [
+            { name: '기본', optionPrice: { amount: 0 }, isPopular: false },
+            { name: '매운맛', optionPrice: { amount: 500 }, isPopular: false },
+          ],
+        },
+        {
+          id: `${startMenuId + 4}-g2`,
+          groupName: '음료 추가',
+          maxSelectableCount: 3,
+          absolutePrice: false,
+          options: [
+            {
+              name: '코카콜라',
+              optionPrice: { amount: 2000 },
+              isPopular: true,
+            },
+            { name: '사이다', optionPrice: { amount: 2000 }, isPopular: false },
+            { name: '맥주', optionPrice: { amount: 4000 }, isPopular: false },
+          ],
+        },
+      ],
     },
   ];
 }
+
+const EXTRA_MENUS = [
+  {
+    id: 901,
+    menuName: '후라이드+감자튀김 세트',
+    menuDescription: '후라이드 치킨과 감자튀김 세트',
+    price: { amount: 0 },
+    reviewCount: 15,
+    rank: null,
+    menuOptionGroups: [
+      {
+        id: '901-g1',
+        groupName: '가격',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '기본', optionPrice: { amount: 21000 }, isPopular: true },
+          { name: '대', optionPrice: { amount: 25000 }, isPopular: false },
+        ],
+      },
+      {
+        id: '901-g1b',
+        groupName: '맵기 선택',
+        maxSelectableCount: 1,
+        absolutePrice: false,
+        options: [
+          { name: '기본', optionPrice: { amount: 0 }, isPopular: false },
+          { name: '매운맛', optionPrice: { amount: 500 }, isPopular: false },
+        ],
+      },
+      {
+        id: '901-g2',
+        groupName: '음료 추가',
+        maxSelectableCount: 3,
+        absolutePrice: false,
+        options: [
+          { name: '코카콜라', optionPrice: { amount: 2000 }, isPopular: true },
+          { name: '사이다', optionPrice: { amount: 2000 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 902,
+    menuName: '양념+콜라 세트',
+    menuDescription: '양념 치킨과 콜라 세트',
+    price: { amount: 0 },
+    reviewCount: 7,
+    rank: null,
+    menuOptionGroups: [
+      {
+        id: '902-g1',
+        groupName: '가격',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '기본', optionPrice: { amount: 22000 }, isPopular: true },
+          { name: '대', optionPrice: { amount: 26000 }, isPopular: false },
+        ],
+      },
+      {
+        id: '902-g1b',
+        groupName: '맵기 선택',
+        maxSelectableCount: 1,
+        absolutePrice: false,
+        options: [
+          { name: '기본', optionPrice: { amount: 0 }, isPopular: false },
+          { name: '매운맛', optionPrice: { amount: 500 }, isPopular: false },
+        ],
+      },
+      {
+        id: '902-g2',
+        groupName: '음료 추가',
+        maxSelectableCount: 3,
+        absolutePrice: false,
+        options: [
+          { name: '코카콜라', optionPrice: { amount: 2000 }, isPopular: true },
+          { name: '사이다', optionPrice: { amount: 2000 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 911,
+    menuName: '감자튀김',
+    menuDescription: '바삭한 황금빛 감자튀김',
+    price: { amount: 0 },
+    reviewCount: 32,
+    rank: null,
+    menuOptionGroups: [
+      {
+        id: '911-g1',
+        groupName: '가격',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '보통', optionPrice: { amount: 4000 }, isPopular: true },
+          { name: '대', optionPrice: { amount: 5500 }, isPopular: false },
+        ],
+      },
+      {
+        id: '911-g2',
+        groupName: '음료 추가',
+        maxSelectableCount: 3,
+        absolutePrice: false,
+        options: [
+          { name: '코카콜라', optionPrice: { amount: 2000 }, isPopular: true },
+          { name: '사이다', optionPrice: { amount: 2000 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 912,
+    menuName: '코울슬로',
+    menuDescription: '신선한 채소로 만든 코울슬로',
+    price: { amount: 0 },
+    reviewCount: 12,
+    rank: null,
+    menuOptionGroups: [
+      {
+        id: '912-g1',
+        groupName: '가격',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '기본', optionPrice: { amount: 3000 }, isPopular: true },
+        ],
+      },
+      {
+        id: '912-g2',
+        groupName: '음료 추가',
+        maxSelectableCount: 3,
+        absolutePrice: false,
+        options: [
+          { name: '코카콜라', optionPrice: { amount: 2000 }, isPopular: true },
+          { name: '사이다', optionPrice: { amount: 2000 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 913,
+    menuName: '치즈볼',
+    menuDescription: '쫄깃한 치즈볼 5개',
+    price: { amount: 0 },
+    reviewCount: 45,
+    rank: null,
+    menuOptionGroups: [
+      {
+        id: '913-g1',
+        groupName: '가격',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '기본', optionPrice: { amount: 3500 }, isPopular: true },
+          { name: '10개', optionPrice: { amount: 6000 }, isPopular: false },
+        ],
+      },
+      {
+        id: '913-g2',
+        groupName: '음료 추가',
+        maxSelectableCount: 3,
+        absolutePrice: false,
+        options: [
+          { name: '코카콜라', optionPrice: { amount: 2000 }, isPopular: true },
+          { name: '사이다', optionPrice: { amount: 2000 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 921,
+    menuName: '콜라 500ml',
+    menuDescription: '시원한 콜라',
+    price: { amount: 2000 },
+    reviewCount: 5,
+    rank: null,
+    menuOptionGroups: [
+      {
+        id: '921-g1',
+        groupName: '가격',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '500ml', optionPrice: { amount: 2000 }, isPopular: true },
+          { name: '1.5L', optionPrice: { amount: 3500 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 922,
+    menuName: '사이다 500ml',
+    menuDescription: '청량한 사이다',
+    price: { amount: 2000 },
+    reviewCount: 3,
+    rank: null,
+    menuOptionGroups: [
+      {
+        id: '922-g1',
+        groupName: '가격',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '500ml', optionPrice: { amount: 2000 }, isPopular: true },
+          { name: '1.5L', optionPrice: { amount: 3500 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 923,
+    menuName: '맥주 500ml',
+    menuDescription: '시원한 맥주',
+    price: { amount: 4000 },
+    reviewCount: 18,
+    rank: null,
+    menuOptionGroups: [
+      {
+        id: '923-g1',
+        groupName: '가격',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '500ml', optionPrice: { amount: 4000 }, isPopular: true },
+          { name: '1L', optionPrice: { amount: 7000 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+];
 
 function buildMenuGroupsFromMenus(menus) {
   const popularMenus = menus.slice(0, 3).map((m, i) => ({ ...m, rank: i + 1 }));
@@ -283,22 +733,22 @@ function buildMenuGroupsFromMenus(menus) {
       id: 'set',
       groupTabName: '세트메뉴',
       groupName: '세트 메뉴',
-      groupDescription: '',
-      menus: [],
+      groupDescription: '메인 메뉴와 사이드를 함께 즐기세요',
+      menus: EXTRA_MENUS.filter((m) => [901, 902].includes(m.id)),
     },
     {
       id: 'side',
       groupTabName: '사이드 메뉴',
       groupName: '사이드 메뉴',
-      groupDescription: '',
-      menus: [],
+      groupDescription: '메인 메뉴와 함께 곁들이기 좋은 사이드',
+      menus: EXTRA_MENUS.filter((m) => [911, 912, 913].includes(m.id)),
     },
     {
       id: 'drink',
       groupTabName: '음료',
       groupName: '음료',
-      groupDescription: '',
-      menus: [],
+      groupDescription: '치킨과 함께하는 음료',
+      menus: EXTRA_MENUS.filter((m) => [921, 922, 923].includes(m.id)),
     },
   ];
 }
@@ -314,6 +764,7 @@ function buildStore({
   menus,
 }) {
   const resolvedMenus = Array.isArray(menus) ? menus : buildDefaultMenus(id, 1);
+  const allMenus = [...resolvedMenus, ...EXTRA_MENUS];
   return {
     id,
     storePublicId,
@@ -326,7 +777,7 @@ function buildStore({
     deliveryFee,
     totalRating: 0,
     reviewCount: 0,
-    menus: resolvedMenus,
+    menus: allMenus,
     menuGroups: buildMenuGroupsFromMenus(resolvedMenus),
     recentPhotoReviews: [],
   };
