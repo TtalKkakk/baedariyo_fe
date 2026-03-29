@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -83,6 +83,7 @@ function getOrderErrorMessage(error) {
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const items = useCartStore((state) => state.items);
   const deliveryFee = useCartStore((state) => state.deliveryFee);
   const clearCart = useCartStore((state) => state.clearCart);
@@ -202,12 +203,24 @@ export default function CheckoutPage() {
     },
     onSuccess: () => {
       clearCart();
+      queryClient.invalidateQueries({ queryKey: ['my-payments'] });
       pushNotification({
         type: 'ORDER',
         title: '주문이 생성되었습니다.',
         description: '주문 내역에서 진행 상태를 확인해 주세요.',
       });
-      navigate('/orders');
+      navigate('/order-complete', {
+        state: {
+          items,
+          address: defaultAddress
+            ? `${defaultAddress.roadAddress}${defaultAddress.detailAddress ? ` ${defaultAddress.detailAddress}` : ''}`
+            : '',
+          riderRequest,
+          orderAmount,
+          deliveryFee,
+          totalAmount,
+        },
+      });
     },
   });
 
@@ -421,15 +434,11 @@ export default function CheckoutPage() {
           </p>
           <div className="flex items-center justify-between">
             <span className="text-[14px] text-[var(--color-semantic-label-normal)]">
+              신한카드 1234
+            </span>
+            <span className="text-[12px] text-[var(--color-semantic-label-alternative)]">
               신용/체크카드
             </span>
-            <button
-              type="button"
-              onClick={() => navigate('/mypage/payment-methods/register')}
-              className="h-8 px-3 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-[12px] font-medium text-[var(--color-semantic-label-normal)]"
-            >
-              카드 등록하기
-            </button>
           </div>
         </div>
 
@@ -437,7 +446,7 @@ export default function CheckoutPage() {
         <div className="h-3 bg-[var(--color-atomic-coolNeutral-97)]" />
 
         {/* 주문 금액 요약 */}
-        <div className="bg-white px-4 pt-5 pb-2">
+        <div className="bg-white px-4 pt-5 pb-4">
           <div className="space-y-[6px]">
             <div className="flex items-center justify-between">
               <span className="text-[14px] text-[var(--color-semantic-label-alternative)]">

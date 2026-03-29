@@ -11,6 +11,7 @@ import StoreDetailPage from '../pages/user/StoreDetailPage';
 import MenuDetailPage from '../pages/user/MenuDetailPage';
 import CartPage from '../pages/user/CartPage';
 import CheckoutPage from '../pages/user/CheckoutPage';
+import OrderCompletePage from '../pages/user/OrderCompletePage';
 import OrderListPage from '../pages/user/OrderListPage';
 import OrderDetailPage from '../pages/user/OrderDetailPage';
 import OrderTrackingPage from '../pages/user/OrderTrackingPage';
@@ -89,6 +90,7 @@ const router = createBrowserRouter(
             { path: '/address/setting', element: <AddressSettingPage /> },
 
             // 가게/메뉴
+            { path: '/stores/create', element: <StoreCreatePage /> },
             { path: '/stores/:storeId', element: <StoreDetailPage /> },
             {
               path: '/stores/:storeId/menu/:menuId',
@@ -99,12 +101,12 @@ const router = createBrowserRouter(
               element: <StoreReviewsPage />,
             },
             { path: '/stores/:storeId/info', element: <StoreInfoPage /> },
-            { path: '/stores/create', element: <StoreCreatePage /> },
             { path: '/reviews/:reviewId', element: <ReviewDetailPage /> },
 
             // 장바구니/주문
             { path: '/cart', element: <CartPage /> },
             { path: '/checkout', element: <CheckoutPage /> },
+            { path: '/order-complete', element: <OrderCompletePage /> },
 
             // 주문내역
             { path: '/orders', element: <OrderListPage /> },
