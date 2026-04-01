@@ -710,10 +710,581 @@ const EXTRA_MENUS = [
   },
 ];
 
-function buildMenuGroupsFromMenus(menus) {
+const BAEKDABANG_MENUS_TEMPLATE = [
+  {
+    id: 201,
+    menuName: '아메리카노',
+    menuDescription: '빽다방의 기본 아메리카노. 진한 에스프레소와 물의 조화.',
+    price: { amount: 0 },
+    reviewCount: 1240,
+    menuOptionGroups: [
+      {
+        id: '201-g1',
+        groupName: '사이즈 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: 'ICE 기본 (473ml)', optionPrice: { amount: 1500 }, isPopular: true },
+          { name: 'HOT 기본 (355ml)', optionPrice: { amount: 1500 }, isPopular: false },
+          { name: 'ICE 빽사이즈 (887ml)', optionPrice: { amount: 2000 }, isPopular: false },
+        ],
+      },
+      {
+        id: '201-g2',
+        groupName: '추가 옵션',
+        maxSelectableCount: 3,
+        absolutePrice: false,
+        options: [
+          { name: '에스프레소 샷 추가', optionPrice: { amount: 500 }, isPopular: true },
+          { name: '바닐라 시럽 추가', optionPrice: { amount: 300 }, isPopular: false },
+          { name: '헤이즐넛 시럽 추가', optionPrice: { amount: 300 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 202,
+    menuName: '원조커피',
+    menuDescription: '빽다방 시그니처! 달달하고 진한 원조커피. 설탕이 들어간 달달한 커피.',
+    price: { amount: 0 },
+    reviewCount: 2100,
+    menuOptionGroups: [
+      {
+        id: '202-g1',
+        groupName: '사이즈 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: 'ICE 기본 (473ml)', optionPrice: { amount: 1500 }, isPopular: true },
+          { name: 'ICE 빽사이즈 (887ml)', optionPrice: { amount: 2000 }, isPopular: false },
+        ],
+      },
+      {
+        id: '202-g2',
+        groupName: '추가 옵션',
+        maxSelectableCount: 2,
+        absolutePrice: false,
+        options: [
+          { name: '에스프레소 샷 추가', optionPrice: { amount: 500 }, isPopular: false },
+          { name: '설탕 시럽 추가', optionPrice: { amount: 300 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 203,
+    menuName: '카페라떼',
+    menuDescription: '부드러운 우유와 에스프레소의 조화.',
+    price: { amount: 0 },
+    reviewCount: 890,
+    menuOptionGroups: [
+      {
+        id: '203-g1',
+        groupName: '사이즈 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: 'ICE 기본 (473ml)', optionPrice: { amount: 2000 }, isPopular: true },
+          { name: 'HOT 기본 (355ml)', optionPrice: { amount: 2000 }, isPopular: false },
+          { name: 'ICE 빽사이즈 (887ml)', optionPrice: { amount: 2500 }, isPopular: false },
+        ],
+      },
+      {
+        id: '203-g2',
+        groupName: '추가 옵션',
+        maxSelectableCount: 3,
+        absolutePrice: false,
+        options: [
+          { name: '에스프레소 샷 추가', optionPrice: { amount: 500 }, isPopular: false },
+          { name: '바닐라 시럽 추가', optionPrice: { amount: 300 }, isPopular: true },
+        ],
+      },
+    ],
+  },
+  {
+    id: 204,
+    menuName: '바닐라라떼',
+    menuDescription: '달콤한 바닐라 향이 가득한 라떼.',
+    price: { amount: 0 },
+    reviewCount: 1050,
+    menuOptionGroups: [
+      {
+        id: '204-g1',
+        groupName: '사이즈 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: 'ICE 기본 (473ml)', optionPrice: { amount: 2500 }, isPopular: true },
+          { name: 'HOT 기본 (355ml)', optionPrice: { amount: 2500 }, isPopular: false },
+          { name: 'ICE 빽사이즈 (887ml)', optionPrice: { amount: 3000 }, isPopular: false },
+        ],
+      },
+      {
+        id: '204-g2',
+        groupName: '추가 옵션',
+        maxSelectableCount: 2,
+        absolutePrice: false,
+        options: [
+          { name: '에스프레소 샷 추가', optionPrice: { amount: 500 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 205,
+    menuName: '크림커피',
+    menuDescription: '달달한 원조커피 위에 크림을 얹은 빽다방 대표 메뉴.',
+    price: { amount: 0 },
+    reviewCount: 1830,
+    menuOptionGroups: [
+      {
+        id: '205-g1',
+        groupName: '사이즈 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: 'ICE 기본 (473ml)', optionPrice: { amount: 2500 }, isPopular: true },
+          { name: 'ICE 빽사이즈 (887ml)', optionPrice: { amount: 3000 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 206,
+    menuName: '빽스치노',
+    menuDescription: '달콤 진한 커피에 크림과 초코 드리즐로 마무리한 시그니처 음료.',
+    price: { amount: 0 },
+    reviewCount: 740,
+    menuOptionGroups: [
+      {
+        id: '206-g1',
+        groupName: '사이즈 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: 'ICE 기본 (473ml)', optionPrice: { amount: 3000 }, isPopular: true },
+          { name: 'ICE 빽사이즈 (887ml)', optionPrice: { amount: 3500 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 207,
+    menuName: '딸기라떼',
+    menuDescription: '새콤달콤 딸기와 우유의 조화, 빽다방 딸기라떼.',
+    price: { amount: 0 },
+    reviewCount: 560,
+    menuOptionGroups: [
+      {
+        id: '207-g1',
+        groupName: '사이즈 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: 'ICE 기본 (473ml)', optionPrice: { amount: 3000 }, isPopular: true },
+          { name: 'ICE 빽사이즈 (887ml)', optionPrice: { amount: 3500 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 208,
+    menuName: '딸기에이드',
+    menuDescription: '상큼한 딸기와 탄산의 조화.',
+    price: { amount: 0 },
+    reviewCount: 320,
+    menuOptionGroups: [
+      {
+        id: '208-g1',
+        groupName: '사이즈 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: 'ICE 기본 (473ml)', optionPrice: { amount: 2500 }, isPopular: true },
+          { name: 'ICE 빽사이즈 (887ml)', optionPrice: { amount: 3000 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 209,
+    menuName: '청포도에이드',
+    menuDescription: '달콤 상큼한 청포도 에이드.',
+    price: { amount: 0 },
+    reviewCount: 210,
+    menuOptionGroups: [
+      {
+        id: '209-g1',
+        groupName: '사이즈 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: 'ICE 기본 (473ml)', optionPrice: { amount: 2500 }, isPopular: true },
+          { name: 'ICE 빽사이즈 (887ml)', optionPrice: { amount: 3000 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 210,
+    menuName: '복숭아아이스티',
+    menuDescription: '시원하고 달콤한 복숭아 아이스티.',
+    price: { amount: 0 },
+    reviewCount: 180,
+    menuOptionGroups: [
+      {
+        id: '210-g1',
+        groupName: '사이즈 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: 'ICE 기본 (473ml)', optionPrice: { amount: 2000 }, isPopular: true },
+          { name: 'ICE 빽사이즈 (887ml)', optionPrice: { amount: 2500 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+];
+
+const SHANGTZ_MENUS_TEMPLATE = [
+  {
+    id: 301,
+    menuName: 'Self 마라탕 1인분',
+    menuDescription:
+      '직접 재료를 담아 끓여드리는 셀프 마라탕 1인분. 기본 채소+육류 재료 포함.',
+    price: { amount: 0 },
+    reviewCount: 4200,
+    menuOptionGroups: [
+      {
+        id: '301-g1',
+        groupName: '맵기 선택',
+        maxSelectableCount: 1,
+        absolutePrice: false,
+        options: [
+          { name: '순한맛', optionPrice: { amount: 0 }, isPopular: false },
+          { name: '보통', optionPrice: { amount: 0 }, isPopular: true },
+          { name: '중간매운맛', optionPrice: { amount: 0 }, isPopular: false },
+          { name: '매운맛', optionPrice: { amount: 0 }, isPopular: false },
+          { name: '아주매운맛', optionPrice: { amount: 0 }, isPopular: false },
+        ],
+      },
+      {
+        id: '301-g2',
+        groupName: '가격',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '기본 1인분', optionPrice: { amount: 9800 }, isPopular: true },
+          { name: '프리미엄 1인분 (재료 업그레이드)', optionPrice: { amount: 12800 }, isPopular: false },
+        ],
+      },
+      {
+        id: '301-g3',
+        groupName: '면 추가 (선택)',
+        maxSelectableCount: 2,
+        absolutePrice: false,
+        options: [
+          { name: '당면 추가', optionPrice: { amount: 1000 }, isPopular: true },
+          { name: '우동면 추가', optionPrice: { amount: 1000 }, isPopular: false },
+          { name: '라면사리 추가', optionPrice: { amount: 1000 }, isPopular: false },
+          { name: '쌀국수면 추가', optionPrice: { amount: 1000 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 302,
+    menuName: '2~3인분 마라탕 세트',
+    menuDescription:
+      '두 명 이상이 함께 즐기는 마라탕 세트. 푸짐한 재료와 함께.',
+    price: { amount: 0 },
+    reviewCount: 1800,
+    menuOptionGroups: [
+      {
+        id: '302-g1',
+        groupName: '맵기 선택',
+        maxSelectableCount: 1,
+        absolutePrice: false,
+        options: [
+          { name: '순한맛', optionPrice: { amount: 0 }, isPopular: false },
+          { name: '보통', optionPrice: { amount: 0 }, isPopular: true },
+          { name: '중간매운맛', optionPrice: { amount: 0 }, isPopular: false },
+          { name: '매운맛', optionPrice: { amount: 0 }, isPopular: false },
+          { name: '아주매운맛', optionPrice: { amount: 0 }, isPopular: false },
+        ],
+      },
+      {
+        id: '302-g2',
+        groupName: '인원 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '2인분', optionPrice: { amount: 19600 }, isPopular: true },
+          { name: '3인분', optionPrice: { amount: 28000 }, isPopular: false },
+        ],
+      },
+      {
+        id: '302-g3',
+        groupName: '면 추가 (선택)',
+        maxSelectableCount: 3,
+        absolutePrice: false,
+        options: [
+          { name: '당면 추가', optionPrice: { amount: 1000 }, isPopular: true },
+          { name: '우동면 추가', optionPrice: { amount: 1000 }, isPopular: false },
+          { name: '라면사리 추가', optionPrice: { amount: 1000 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 303,
+    menuName: '마라샹궈 1인분',
+    menuDescription:
+      '볶음식 마라 요리. 강한 마라향이 재료에 깊게 배어 있는 볶음 요리.',
+    price: { amount: 0 },
+    reviewCount: 3100,
+    menuOptionGroups: [
+      {
+        id: '303-g1',
+        groupName: '맵기 선택',
+        maxSelectableCount: 1,
+        absolutePrice: false,
+        options: [
+          { name: '순한맛', optionPrice: { amount: 0 }, isPopular: false },
+          { name: '보통', optionPrice: { amount: 0 }, isPopular: true },
+          { name: '중간매운맛', optionPrice: { amount: 0 }, isPopular: false },
+          { name: '매운맛', optionPrice: { amount: 0 }, isPopular: false },
+          { name: '아주매운맛', optionPrice: { amount: 0 }, isPopular: false },
+        ],
+      },
+      {
+        id: '303-g2',
+        groupName: '가격',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '기본 1인분', optionPrice: { amount: 12900 }, isPopular: true },
+          { name: '프리미엄 1인분', optionPrice: { amount: 15900 }, isPopular: false },
+        ],
+      },
+      {
+        id: '303-g3',
+        groupName: '면 추가 (선택)',
+        maxSelectableCount: 2,
+        absolutePrice: false,
+        options: [
+          { name: '당면 추가', optionPrice: { amount: 1000 }, isPopular: true },
+          { name: '우동면 추가', optionPrice: { amount: 1000 }, isPopular: false },
+          { name: '볶음면으로 변경', optionPrice: { amount: 1500 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 304,
+    menuName: '마라샹궈 2인분',
+    menuDescription: '두 명이 함께 즐기는 마라샹궈. 푸짐한 양과 진한 마라향.',
+    price: { amount: 0 },
+    reviewCount: 980,
+    menuOptionGroups: [
+      {
+        id: '304-g1',
+        groupName: '맵기 선택',
+        maxSelectableCount: 1,
+        absolutePrice: false,
+        options: [
+          { name: '순한맛', optionPrice: { amount: 0 }, isPopular: false },
+          { name: '보통', optionPrice: { amount: 0 }, isPopular: true },
+          { name: '중간매운맛', optionPrice: { amount: 0 }, isPopular: false },
+          { name: '매운맛', optionPrice: { amount: 0 }, isPopular: false },
+          { name: '아주매운맛', optionPrice: { amount: 0 }, isPopular: false },
+        ],
+      },
+      {
+        id: '304-g2',
+        groupName: '가격',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '기본 2인분', optionPrice: { amount: 24900 }, isPopular: true },
+          { name: '프리미엄 2인분', optionPrice: { amount: 29900 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 305,
+    menuName: '마라 로제 샹궈',
+    menuDescription:
+      '마라 특유의 얼얼함에 부드러운 로제 크림소스를 더한 퓨전 샹궈.',
+    price: { amount: 0 },
+    reviewCount: 2400,
+    menuOptionGroups: [
+      {
+        id: '305-g1',
+        groupName: '맵기 선택',
+        maxSelectableCount: 1,
+        absolutePrice: false,
+        options: [
+          { name: '순한맛', optionPrice: { amount: 0 }, isPopular: true },
+          { name: '보통', optionPrice: { amount: 0 }, isPopular: false },
+          { name: '매운맛', optionPrice: { amount: 0 }, isPopular: false },
+        ],
+      },
+      {
+        id: '305-g2',
+        groupName: '인원 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '1인분', optionPrice: { amount: 13900 }, isPopular: true },
+          { name: '2인분', optionPrice: { amount: 25900 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 306,
+    menuName: '꿔바로우 미니',
+    menuDescription: '바삭한 튀김옷에 새콤달콤 소스를 곁들인 꿔바로우 소자.',
+    price: { amount: 0 },
+    reviewCount: 5600,
+    menuOptionGroups: [
+      {
+        id: '306-g1',
+        groupName: '가격',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '미니 (200g)', optionPrice: { amount: 8900 }, isPopular: true },
+        ],
+      },
+      {
+        id: '306-g2',
+        groupName: '소스 선택',
+        maxSelectableCount: 1,
+        absolutePrice: false,
+        options: [
+          { name: '기본 새콤달콤 소스', optionPrice: { amount: 0 }, isPopular: true },
+          { name: '마라 소스', optionPrice: { amount: 500 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 307,
+    menuName: '꿔바로우',
+    menuDescription: '바삭한 튀김옷에 새콤달콤 소스를 곁들인 꿔바로우 정자.',
+    price: { amount: 0 },
+    reviewCount: 3200,
+    menuOptionGroups: [
+      {
+        id: '307-g1',
+        groupName: '가격',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '정 (350g)', optionPrice: { amount: 12900 }, isPopular: true },
+          { name: '대 (500g)', optionPrice: { amount: 16900 }, isPopular: false },
+        ],
+      },
+      {
+        id: '307-g2',
+        groupName: '소스 선택',
+        maxSelectableCount: 1,
+        absolutePrice: false,
+        options: [
+          { name: '기본 새콤달콤 소스', optionPrice: { amount: 0 }, isPopular: true },
+          { name: '마라 소스', optionPrice: { amount: 500 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 308,
+    menuName: '온면',
+    menuDescription: '따뜻한 마라 국물에 담긴 온면. 마라탕과 함께 즐기기 좋은 사이드.',
+    price: { amount: 0 },
+    reviewCount: 870,
+    menuOptionGroups: [
+      {
+        id: '308-g1',
+        groupName: '맵기 선택',
+        maxSelectableCount: 1,
+        absolutePrice: false,
+        options: [
+          { name: '순한맛', optionPrice: { amount: 0 }, isPopular: false },
+          { name: '보통', optionPrice: { amount: 0 }, isPopular: true },
+          { name: '매운맛', optionPrice: { amount: 0 }, isPopular: false },
+        ],
+      },
+      {
+        id: '308-g2',
+        groupName: '가격',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '기본', optionPrice: { amount: 6900 }, isPopular: true },
+        ],
+      },
+    ],
+  },
+  {
+    id: 309,
+    menuName: '볶음면',
+    menuDescription: '마라 소스로 볶아낸 탱탱한 볶음면.',
+    price: { amount: 0 },
+    reviewCount: 540,
+    menuOptionGroups: [
+      {
+        id: '309-g1',
+        groupName: '맵기 선택',
+        maxSelectableCount: 1,
+        absolutePrice: false,
+        options: [
+          { name: '순한맛', optionPrice: { amount: 0 }, isPopular: false },
+          { name: '보통', optionPrice: { amount: 0 }, isPopular: true },
+          { name: '매운맛', optionPrice: { amount: 0 }, isPopular: false },
+        ],
+      },
+      {
+        id: '309-g2',
+        groupName: '가격',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '기본', optionPrice: { amount: 7900 }, isPopular: true },
+        ],
+      },
+    ],
+  },
+  {
+    id: 310,
+    menuName: '계란볶음밥',
+    menuDescription: '고슬고슬하게 볶아낸 중식 계란볶음밥.',
+    price: { amount: 4900 },
+    reviewCount: 310,
+    menuOptionGroups: [],
+  },
+  {
+    id: 311,
+    menuName: '고수 군만두 (8개)',
+    menuDescription: '고소하고 바삭한 군만두. 고수 향이 살짝 가미된 중식 스타일.',
+    price: { amount: 5900 },
+    reviewCount: 420,
+    menuOptionGroups: [],
+  },
+];
+
+const CUSTOM_STORE_MENUS_MAP = {
+  'bb000002-0000-4000-8000-000000000002': BAEKDABANG_MENUS_TEMPLATE,
+  'aa000001-0000-4000-8000-000000000001': SHANGTZ_MENUS_TEMPLATE,
+};
+
+function buildMenuGroupsFromMenus(menus, { includeExtraGroups = true } = {}) {
   const popularMenus = menus.slice(0, 3).map((m, i) => ({ ...m, rank: i + 1 }));
   const mainMenus = menus.map((m) => ({ ...m, rank: null }));
-  return [
+  const baseGroups = [
     {
       id: 'popular',
       groupTabName: '인기메뉴',
@@ -729,6 +1300,10 @@ function buildMenuGroupsFromMenus(menus) {
         '메뉴 그룹의 설명이 여기에 나옵니다 이렇게 저렇게 어쩌고 저쩌고',
       menus: mainMenus,
     },
+  ];
+  if (!includeExtraGroups) return baseGroups;
+  return [
+    ...baseGroups,
     {
       id: 'set',
       groupTabName: '세트메뉴',
@@ -763,8 +1338,9 @@ function buildStore({
   deliveryFee = { amount: 3000 },
   menus,
 }) {
-  const resolvedMenus = Array.isArray(menus) ? menus : buildDefaultMenus(id, 1);
-  const allMenus = [...resolvedMenus, ...EXTRA_MENUS];
+  const hasCustomMenus = Array.isArray(menus);
+  const resolvedMenus = hasCustomMenus ? menus : buildDefaultMenus(id, 1);
+  const allMenus = hasCustomMenus ? resolvedMenus : [...resolvedMenus, ...EXTRA_MENUS];
   return {
     id,
     storePublicId,
@@ -778,7 +1354,7 @@ function buildStore({
     totalRating: 0,
     reviewCount: 0,
     menus: allMenus,
-    menuGroups: buildMenuGroupsFromMenus(resolvedMenus),
+    menuGroups: buildMenuGroupsFromMenus(resolvedMenus, { includeExtraGroups: !hasCustomMenus }),
     recentPhotoReviews: [],
   };
 }
@@ -876,14 +1452,22 @@ const seedStoreReviews = [
 ];
 
 const searchResultSeedStores = SEARCH_RESULT_STORES.map((s, i) => {
+  const storeId = 2 + i;
+  const customMenuTemplate = CUSTOM_STORE_MENUS_MAP[s.storePublicId];
+  const customMenus = customMenuTemplate?.map((m) => ({
+    ...m,
+    storeId,
+    store: { id: storeId },
+  }));
   const store = buildStore({
-    id: 2 + i,
+    id: storeId,
     storePublicId: s.storePublicId,
     storeName: s.storeName,
     storeCategory: s.storeCategory,
     thumbnailUrl: s.thumbnailUrl,
     minimumOrderAmount: s.minimumOrderAmount,
     deliveryFee: s.deliveryFee,
+    menus: customMenus,
   });
   store.totalRating = s.totalRating;
   store.reviewCount = s.reviewCount;
@@ -1413,6 +1997,12 @@ function getMyPayments(status) {
   );
 }
 
+function deleteMyPayment(paymentId) {
+  const idx = mockState.payments.findIndex((p) => p.paymentId === paymentId);
+  if (idx !== -1) mockState.payments.splice(idx, 1);
+  return clone({ deleted: true, paymentId });
+}
+
 function changeUserPassword() {
   return clone(null);
 }
@@ -1665,6 +2255,7 @@ export const mockApi = {
   cancelPayment,
   getPaymentDetail,
   getMyPayments,
+  deleteMyPayment,
   searchStores,
   getSearchHistory,
   getUserProfile,

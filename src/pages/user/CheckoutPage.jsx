@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { createOrder, getStoreMenus } from '@/shared/api';
 import {
+  useActiveOrderStore,
   useAddressBookStore,
   useCartStore,
   useNotificationStore,
@@ -87,6 +88,7 @@ export default function CheckoutPage() {
   const items = useCartStore((state) => state.items);
   const deliveryFee = useCartStore((state) => state.deliveryFee);
   const clearCart = useCartStore((state) => state.clearCart);
+  const addActiveOrder = useActiveOrderStore((state) => state.addActiveOrder);
   const pushNotification = useNotificationStore(
     (state) => state.pushNotification
   );
@@ -201,7 +203,21 @@ export default function CheckoutPage() {
         paymentMethod: 'CARD',
       });
     },
-    onSuccess: () => {
+    onSuccess: (result) => {
+      addActiveOrder({
+        paymentId: result?.paymentId ?? Date.now(),
+        orderId: result?.orderId ?? null,
+        storeName: items[0]?.storeName ?? '주문',
+        orderMenus: items.map((item) => ({
+          menuName: item.menuName,
+          quantity: item.quantity ?? 1,
+          price: getItemUnitAmount(item),
+        })),
+        amount: totalAmount,
+        createdAt: new Date().toISOString(),
+        storePublicId: items[0]?.storePublicId ?? null,
+        deliveryRoadAddress: defaultAddress?.roadAddress ?? '',
+      });
       clearCart();
       queryClient.invalidateQueries({ queryKey: ['my-payments'] });
       pushNotification({

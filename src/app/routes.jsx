@@ -177,7 +177,7 @@ const router = createBrowserRouter(
     },
   ],
   {
-    basename: '/baedariyo_fe',
+    basename: '/baedaliyo_fe',
   }
 );
 

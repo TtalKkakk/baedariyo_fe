@@ -16,6 +16,7 @@ const HIDDEN_PATHS = [
   '/cart',
   '/checkout',
   '/order-complete',
+  '/orders/',
 ];
 
 export default function BottomNav() {

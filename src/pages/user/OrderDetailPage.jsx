@@ -1,20 +1,34 @@
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { createPortal } from 'react-dom';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-import { getMyPayments } from '@/shared/api';
+import { getMyPayments, deleteMyPayment } from '@/shared/api';
+import { useAddressBookStore, useCartStore, useProfileStore } from '@/shared/store';
+import { ConfirmModal } from '@/shared/ui';
 import {
   formatPaymentAmount,
-  formatPaymentDateTime,
   getPaymentErrorMessage,
   getPaymentRouteId,
-  getPaymentStatusClassName,
-  getPaymentStatusLabel,
 } from '@/shared/lib/paymentView';
 
 function findPaymentByRouteId(payments, routeId) {
-  if (!Array.isArray(payments) || !routeId) return null;
+  return (Array.isArray(payments) ? payments : []).find(
+    (p) => getPaymentRouteId(p) === routeId
+  ) ?? null;
+}
 
-  return payments.find((item) => getPaymentRouteId(item) === routeId) ?? null;
+function SectionDivider() {
+  return <div className="h-3 bg-[var(--color-atomic-coolNeutral-97)]" />;
+}
+
+function InfoRow({ label, value }) {
+  return (
+    <div className="mb-4">
+      <p className="text-[14px] font-bold text-[var(--color-semantic-label-normal)]">{label}</p>
+      <p className="text-[14px] text-[var(--color-semantic-label-alternative)] mt-[4px]">{value || '-'}</p>
+    </div>
+  );
 }
 
 export default function OrderDetailPage() {
@@ -22,55 +36,38 @@ export default function OrderDetailPage() {
   const location = useLocation();
   const { orderId = '' } = useParams();
 
-  const routeId = orderId.trim();
-  const searchParams = new URLSearchParams(location.search);
-  const selectedStatus = searchParams.get('status') || 'ALL';
-  const queryStatus = selectedStatus === 'ALL' ? undefined : selectedStatus;
+  const profile = useProfileStore((s) => s.profile);
+  const defaultAddress = useAddressBookStore((s) =>
+    s.addresses.find((a) => a.id === s.defaultAddressId)
+  );
+  const { clearCart, addItem } = useCartStore();
+  const queryClient = useQueryClient();
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const routeId = orderId.trim();
   const statePayment = location.state?.payment ?? null;
-  const isStatePaymentMatch =
-    statePayment && getPaymentRouteId(statePayment) === routeId;
-  const shouldFetch = Boolean(routeId) && !isStatePaymentMatch;
+  const isMatch = statePayment && getPaymentRouteId(statePayment) === routeId;
+  const shouldFetch = Boolean(routeId) && !isMatch;
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ['order-detail', routeId, queryStatus ?? 'ALL'],
-    queryFn: () => getMyPayments(queryStatus),
+    queryKey: ['order-detail', routeId],
+    queryFn: () => getMyPayments(),
     enabled: shouldFetch,
     retry: 1,
   });
 
-  const payments = Array.isArray(data) ? data : [];
-  const payment = isStatePaymentMatch
-    ? statePayment
-    : findPaymentByRouteId(payments, routeId);
+  const payment = isMatch ? statePayment : findPaymentByRouteId(data, routeId);
 
-  const moveToOrderList = () => {
-    const nextSearch =
-      selectedStatus === 'ALL' ? '' : `?status=${selectedStatus}`;
-    navigate(`/orders${nextSearch}`);
-  };
-
-  const moveToTracking = () => {
-    if (!payment) return;
-
-    const nextSearch =
-      selectedStatus === 'ALL' ? '' : `?status=${selectedStatus}`;
-    navigate(`/orders/${routeId}/tracking${nextSearch}`, {
-      state: { payment, routeId },
-    });
-  };
+  // ── 에러 / 로딩 / 없음 상태 ─────────────────────────────
 
   if (!routeId) {
     return (
-      <div className="py-6">
-        <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
-          잘못된 주문 경로입니다.
-        </p>
-        <button
-          type="button"
-          onClick={() => navigate('/orders')}
-          className="mt-3 h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body2 font-medium text-[var(--color-semantic-label-normal)]"
-        >
+      <div className="py-8 text-center">
+        <p className="text-[15px] font-semibold text-[var(--color-semantic-label-normal)]">잘못된 주문 경로입니다.</p>
+        <button type="button" onClick={() => navigate('/orders')}
+          className="mt-4 h-10 px-5 rounded-xl border border-[var(--color-semantic-line-normal-normal)] text-[14px] text-[var(--color-semantic-label-normal)]">
           주문 내역으로 이동
         </button>
       </div>
@@ -78,184 +75,213 @@ export default function OrderDetailPage() {
   }
 
   if (shouldFetch && isLoading) {
-    return (
-      <div className="py-6">
-        <p className="text-body1 text-[var(--color-semantic-label-normal)]">
-          주문 상세를 불러오는 중입니다...
-        </p>
-      </div>
-    );
+    return <p className="py-8 text-center text-[14px] text-[var(--color-semantic-label-alternative)]">불러오는 중...</p>;
   }
 
   if (shouldFetch && isError) {
-    const isUnauthorized = error?.response?.status === 401;
-
     return (
-      <div className="py-6">
-        <p className="text-body1 font-semibold text-[var(--color-semantic-status-cautionary)]">
+      <div className="py-8 text-center">
+        <p className="text-[14px] text-[var(--color-semantic-status-cautionary)]">
           {getPaymentErrorMessage(error, '주문 상세를 불러오지 못했습니다.')}
         </p>
-        <div className="mt-3 flex gap-2">
-          <button
-            type="button"
-            onClick={() => refetch()}
-            className="h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body2 font-medium text-[var(--color-semantic-label-normal)]"
-          >
-            다시 시도
-          </button>
-          {isUnauthorized ? (
-            <button
-              type="button"
-              onClick={() => navigate('/login')}
-              className="h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body2 font-medium text-[var(--color-semantic-label-normal)]"
-            >
-              로그인하러 가기
-            </button>
-          ) : null}
-        </div>
+        <button type="button" onClick={() => refetch()}
+          className="mt-3 h-9 px-4 rounded-xl border border-[var(--color-semantic-line-normal-normal)] text-[13px] text-[var(--color-semantic-label-normal)]">
+          다시 시도
+        </button>
       </div>
     );
   }
 
   if (!payment) {
     return (
-      <div className="py-6">
-        <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
-          주문 정보를 찾을 수 없습니다.
-        </p>
-        <p className="mt-1 text-body3 text-[var(--color-semantic-label-alternative)]">
-          목록에서 다시 선택해 주세요.
-        </p>
-        <button
-          type="button"
-          onClick={moveToOrderList}
-          className="mt-3 h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body2 font-medium text-[var(--color-semantic-label-normal)]"
-        >
+      <div className="py-8 text-center">
+        <p className="text-[15px] font-semibold text-[var(--color-semantic-label-normal)]">주문 정보를 찾을 수 없습니다.</p>
+        <button type="button" onClick={() => navigate('/orders')}
+          className="mt-4 h-10 px-5 rounded-xl border border-[var(--color-semantic-line-normal-normal)] text-[14px] text-[var(--color-semantic-label-normal)]">
           주문 내역으로 이동
         </button>
       </div>
     );
   }
 
-  const orderMenus = Array.isArray(payment?.orderMenus)
-    ? payment.orderMenus
-    : [];
-  const storeImages = Array.isArray(payment?.storeImages)
-    ? payment.storeImages
-    : [];
-  const statusClassName = getPaymentStatusClassName(payment?.paymentStatus);
+  // ── 데이터 계산 ─────────────────────────────────────────
+
+  const orderMenus = Array.isArray(payment?.orderMenus) ? payment.orderMenus : [];
+  const menuTotal = orderMenus.reduce((s, m) => s + (m.price ?? 0) * (m.quantity ?? 1), 0);
+  const deliveryFee = Math.max(0, (payment?.amount ?? 0) - menuTotal);
+
+  const phone = profile?.phoneNumber || '010-6659-5866';
+  const addressText = defaultAddress
+    ? `${defaultAddress.roadAddress}${defaultAddress.detailAddress ? ' ' + defaultAddress.detailAddress : ''}`
+    : '-';
+
+  // ── 재주문 ──────────────────────────────────────────────
+
+  function handleReorder() {
+    clearCart();
+    const storePublicId = payment?.storePublicId ?? 'unknown';
+    const storeName = payment?.storeName ?? '';
+
+    orderMenus.forEach((menu) => {
+      const selectedOptions = Array.isArray(menu.options)
+        ? menu.options.map((opt, i) => ({
+            groupId: i,
+            groupName: opt.groupName ?? '',
+            optionId: i,
+            optionName: opt.optionName ?? '',
+            optionPriceAmount: 0,
+          }))
+        : [];
+
+      addItem({
+        storePublicId,
+        storeName,
+        menuId: menu.menuName ?? `menu-${Math.random()}`,
+        menuName: menu.menuName ?? '메뉴',
+        menuDescription: '',
+        basePriceAmount: menu.price ?? 0,
+        selectedOptions,
+        quantity: menu.quantity ?? 1,
+        deliveryFee: deliveryFee,
+        minimumOrderAmount: 0,
+      });
+    });
+
+    navigate('/cart');
+  }
+
+  // ── 주문 내역 삭제 ───────────────────────────────────────
+
+  async function handleDelete() {
+    setIsDeleting(true);
+    try {
+      await deleteMyPayment(payment.paymentId);
+      queryClient.invalidateQueries({ queryKey: ['my-payments'] });
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteModal(false);
+      navigate('/orders', { state: { showDeleteToast: true } });
+    }
+  }
+
+  // ── UI ─────────────────────────────────────────────────
 
   return (
-    <div className="min-h-full bg-white py-4 pb-8">
-      <div className="flex justify-end">
+    <div className="relative -mx-4 -mt-2 -mb-2 bg-white min-h-full overflow-y-auto">
+
+      {/* ── 주문 메뉴 ── */}
+      <div className="bg-white px-4 pt-5 pb-4">
+        <p className="text-[18px] font-bold text-[var(--color-semantic-label-normal)] mb-4">주문 메뉴</p>
+
+        <div className="space-y-5">
+          {orderMenus.length === 0 ? (
+            <p className="text-[14px] text-[var(--color-semantic-label-alternative)]">메뉴 정보가 없습니다.</p>
+          ) : (
+            orderMenus.map((menu, i) => (
+              <div key={`${menu?.menuName}-${i}`} className="flex gap-3">
+                <img
+                  src={`https://picsum.photos/seed/menu-${encodeURIComponent(menu?.menuName ?? i)}/120/120`}
+                  alt={menu?.menuName}
+                  className="w-[64px] h-[64px] rounded-xl object-cover shrink-0"
+                />
+                <div className="min-w-0">
+                  <p className="text-[15px] font-bold text-[var(--color-semantic-label-normal)] leading-snug">
+                    {menu?.menuName ?? '메뉴'}
+                  </p>
+                  <p className="text-[15px] font-bold text-[var(--color-semantic-label-normal)] mt-[2px]">
+                    {formatPaymentAmount((menu?.price ?? 0) * (menu?.quantity ?? 1))}
+                  </p>
+                  <p className="text-[13px] text-[var(--color-semantic-label-alternative)] mt-[2px]">
+                    가격 : {formatPaymentAmount(menu?.price ?? 0)}
+                  </p>
+                  {Array.isArray(menu?.options) && menu.options.map((opt, oi) => (
+                    <p key={oi} className="text-[13px] text-[var(--color-semantic-label-alternative)]">
+                      {opt.groupName} : {opt.optionName}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
         <button
           type="button"
-          onClick={moveToOrderList}
-          className="h-8 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body3 font-medium text-[var(--color-semantic-label-normal)]"
+          onClick={handleReorder}
+          className="w-full h-[44px] mt-5 rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-white text-[15px] font-medium text-[var(--color-semantic-label-normal)]"
         >
-          목록으로
+          재주문
         </button>
       </div>
 
-      <section className="mt-3 rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-white p-4">
-        <div className="flex items-start justify-between gap-2">
-          <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
-            {payment?.storeName ?? '가게명 없음'}
-          </p>
-          <span
-            className={`rounded-full px-2 py-0.5 text-caption1 ${statusClassName}`}
-          >
-            {getPaymentStatusLabel(payment?.paymentStatus)}
-          </span>
-        </div>
-        <p className="mt-1 text-body3 text-[var(--color-semantic-label-alternative)]">
-          주문일시: {formatPaymentDateTime(payment?.createdAt)}
-        </p>
-      </section>
+      <SectionDivider />
 
-      <section className="mt-4 rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-white p-4">
-        <h2 className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
-          주문 메뉴
-        </h2>
-        {orderMenus.length === 0 ? (
-          <p className="mt-2 text-body3 text-[var(--color-semantic-label-alternative)]">
-            메뉴 정보가 없습니다.
-          </p>
-        ) : (
-          <ul className="mt-2 space-y-2">
-            {orderMenus.map((menu, index) => (
-              <li
-                key={`${menu?.menuName ?? 'menu'}-${index}`}
-                className="flex items-center justify-between text-body3"
-              >
-                <span className="text-[var(--color-semantic-label-normal)]">
-                  {menu?.menuName ?? '메뉴'} x{menu?.quantity ?? 0}
-                </span>
-                <span className="text-[var(--color-semantic-label-alternative)]">
-                  {formatPaymentAmount(menu?.price)}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+      {/* ── 결제 정보 ── */}
+      <div className="bg-white px-4 pt-5 pb-4">
+        <p className="text-[18px] font-bold text-[var(--color-semantic-label-normal)] mb-4">결제 정보</p>
 
-      <section className="mt-4 rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-white p-4">
-        <div className="flex items-center justify-between">
-          <span className="text-body2 text-[var(--color-semantic-label-alternative)]">
-            결제금액
-          </span>
-          <span className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
-            {formatPaymentAmount(payment?.amount)}
-          </span>
-        </div>
-      </section>
-
-      {typeof payment?.rating === 'number' || payment?.storeReviewComment ? (
-        <section className="mt-4 rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-white p-4">
-          <h2 className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
-            리뷰 정보
-          </h2>
-          {typeof payment?.rating === 'number' ? (
-            <p className="mt-2 text-body3 text-[var(--color-semantic-label-normal)]">
-              평점: {payment.rating}
-            </p>
-          ) : null}
-          {payment?.storeReviewComment ? (
-            <p className="mt-1 text-body3 text-[var(--color-semantic-label-normal)]">
-              {payment.storeReviewComment}
-            </p>
-          ) : null}
-        </section>
-      ) : null}
-
-      {storeImages.length > 0 ? (
-        <section className="mt-4 rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-white p-4">
-          <h2 className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
-            가게 이미지
-          </h2>
-          <div className="mt-2 flex gap-2 overflow-x-auto scrollbar-none">
-            {storeImages.map((imageUrl, index) => (
-              <img
-                key={`${imageUrl}-${index}`}
-                src={imageUrl}
-                alt="가게 이미지"
-                className="w-24 h-24 rounded-lg object-cover shrink-0 border border-[var(--color-semantic-line-normal-normal)]"
-              />
-            ))}
+        <div className="space-y-[10px]">
+          <div className="flex items-center justify-between">
+            <span className="text-[14px] text-[var(--color-semantic-label-alternative)]">주문 금액</span>
+            <span className="text-[14px] text-[var(--color-semantic-label-normal)]">{formatPaymentAmount(menuTotal)}</span>
           </div>
-        </section>
-      ) : null}
+          <div className="flex items-center justify-between">
+            <span className="text-[14px] text-[var(--color-semantic-label-alternative)]">배달비</span>
+            <span className="text-[14px] text-[var(--color-semantic-label-normal)]">{formatPaymentAmount(deliveryFee)}</span>
+          </div>
+        </div>
 
-      <div className="mt-4">
+        <div className="mt-4 pt-4 border-t border-[var(--color-semantic-line-normal-normal)]">
+          <div className="flex items-center justify-between">
+            <span className="text-[16px] font-bold text-[var(--color-semantic-label-normal)]">결제금액</span>
+            <span className="text-[18px] font-bold text-[var(--color-semantic-label-normal)]">
+              {formatPaymentAmount(payment?.amount ?? 0)}
+            </span>
+          </div>
+          <div className="flex items-center justify-between mt-[6px]">
+            <span className="text-[14px] text-[var(--color-semantic-label-alternative)]">결제수단</span>
+            <span className="text-[14px] text-[var(--color-semantic-label-normal)]">신용카드 (삼성카드)</span>
+          </div>
+        </div>
+      </div>
+
+      <SectionDivider />
+
+      {/* ── 배달 정보 ── */}
+      <div className="bg-white px-4 pt-5 pb-2">
+        <p className="text-[18px] font-bold text-[var(--color-semantic-label-normal)] mb-4">배달 정보</p>
+        <InfoRow label="전화번호" value={phone} />
+        <InfoRow label="배달 주소" value={addressText} />
+        <InfoRow label="라이더 요청사항" value={payment?.riderRequest || '없음'} />
+        <InfoRow label="가게 요청사항" value={payment?.storeRequest || '없음'} />
+      </div>
+
+      {/* ── 주문 내역 삭제 ── */}
+      <div className="bg-white px-4 py-4">
         <button
           type="button"
-          onClick={moveToTracking}
-          className="w-full h-10 rounded-lg bg-[var(--color-atomic-redOrange-80)] text-white text-body2 font-semibold"
+          onClick={() => setShowDeleteModal(true)}
+          className="w-full h-[44px] rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-white text-[15px] font-medium text-[var(--color-semantic-label-alternative)]"
         >
-          주문 추적 보기
+          주문 내역 삭제
         </button>
       </div>
+
     </div>
+
+    {/* ── 삭제 확인 모달 (layout-frame 기준 absolute) ── */}
+    {showDeleteModal && createPortal(
+      <ConfirmModal
+        isOpen={showDeleteModal}
+        title="주문 내역을 삭제할까요?"
+        description="삭제한 후에는 복구할 수 없습니다."
+        confirmLabel={isDeleting ? '삭제 중...' : '삭제'}
+        cancelLabel="취소"
+        isDestructive
+        onConfirm={handleDelete}
+        onCancel={() => setShowDeleteModal(false)}
+      />,
+      document.getElementById('user-layout-root') ?? document.body
+    )}
   );
 }

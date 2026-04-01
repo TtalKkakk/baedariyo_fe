@@ -58,7 +58,7 @@ export default function Header() {
   const storeReviewsMatch = useMatch('/stores/:storeId/reviews');
   const storeInfoMatch = useMatch('/stores/:storeId/info');
   const dynamicBackTitle = orderTrackingMatch
-    ? '실시간 주문 추적'
+    ? '실시간 현황'
     : orderDetailMatch
       ? '주문 상세'
       : storeDetailMatch

@@ -1,16 +1,23 @@
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { getMyPayments } from '@/shared/api';
+import {
+  DELIVERY_STATUSES,
+  DELIVERY_STATUS_LABELS,
+  useActiveOrderStore,
+} from '@/shared/store';
 import {
   formatPaymentAmount,
   getPaymentRouteId,
 } from '@/shared/lib/paymentView';
-import { BottomModal } from '@/shared/ui';
+import { BottomModal, Toast } from '@/shared/ui';
 import ArrowIcon from '@/shared/assets/icons/header/arrow.svg?react';
 import CheckIcon from '@/shared/assets/icons/header/check.svg?react';
 import SearchIcon from '@/shared/assets/icons/header/search.svg?react';
+import OrderIcon from '@/shared/assets/icons/order-status/order.svg?react';
+import RiderIcon from '@/shared/assets/icons/order-status/rider.svg?react';
 
 const PERIOD_OPTIONS = [
   { label: '전체', months: null },
@@ -28,6 +35,79 @@ function formatDateOnly(value) {
   const m = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()).padStart(2, '0');
   return `${y}.${m}.${day}`;
+}
+
+const STATUS_ICONS = {
+  CONFIRMED: OrderIcon,
+  PREPARING: OrderIcon,
+  DELIVERING: RiderIcon,
+  DELIVERED: RiderIcon,
+};
+
+function ActiveOrderCard({ order }) {
+  const navigate = useNavigate();
+  const stepIndex = DELIVERY_STATUSES.indexOf(order.deliveryStatus);
+  const progressPercent = stepIndex === 0 ? 8 : (stepIndex / (DELIVERY_STATUSES.length - 1)) * 100;
+
+  const storeImage = order.storeImage
+    ?? `https://picsum.photos/seed/active-${order.paymentId}/120/120`;
+
+  const StatusIcon = STATUS_ICONS[order.deliveryStatus] ?? OrderIcon;
+  const isDelivered = order.deliveryStatus === 'DELIVERED';
+
+  return (
+    <div className="rounded-2xl border-2 border-[var(--color-atomic-redOrange-80)] bg-[#fff8f5] p-3">
+      {/* 상태 헤더 */}
+      <div className="flex items-center justify-between mb-[10px]">
+        <div className="flex items-center gap-[8px] text-[var(--color-atomic-redOrange-80)]">
+          <StatusIcon />
+          <p className="text-[18px] font-bold text-[var(--color-atomic-redOrange-80)]">
+            {DELIVERY_STATUS_LABELS[order.deliveryStatus]}
+          </p>
+        </div>
+        {!isDelivered && (
+          <button
+            type="button"
+            onClick={() =>
+              navigate(`/orders/${order.paymentId}/tracking`, {
+                state: { payment: order },
+              })
+            }
+            className="h-8 px-4 rounded-full bg-[var(--color-atomic-redOrange-80)] text-white text-[13px] font-medium shrink-0"
+          >
+            현황 보기
+          </button>
+        )}
+      </div>
+
+      {/* 진행 바 */}
+      <div className="h-[5px] bg-[var(--color-semantic-line-normal-normal)] rounded-full mb-3 overflow-hidden">
+        <div
+          className="h-full bg-[var(--color-atomic-redOrange-80)] rounded-full transition-all duration-700"
+          style={{ width: `${progressPercent}%` }}
+        />
+      </div>
+
+      {/* 가게 정보 */}
+      <div className="flex items-center gap-3">
+        <img
+          src={storeImage}
+          alt={order.storeName}
+          className="w-[60px] h-[60px] rounded-xl object-cover shrink-0"
+        />
+        <div className="min-w-0">
+          <p className="text-[15px] font-bold text-[var(--color-semantic-label-normal)] truncate">
+            {order.storeName}
+          </p>
+          <p className="text-[13px] text-[var(--color-semantic-label-alternative)] mt-[4px]">
+            {formatDateOnly(order.createdAt)}
+            <span className="mx-[6px]">|</span>
+            {formatPaymentAmount(order.amount)}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function OrderCard({ payment, onOpenDetail }) {
@@ -115,9 +195,20 @@ function OrderCard({ payment, onOpenDetail }) {
 
 export default function OrderListPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPeriod, setSelectedPeriod] = useState(PERIOD_OPTIONS[0]);
   const [isPeriodModalOpen, setIsPeriodModalOpen] = useState(false);
+  const [showDeleteToast, setShowDeleteToast] = useState(false);
+
+  const activeOrders = useActiveOrderStore((state) => state.activeOrders);
+
+  useEffect(() => {
+    if (location.state?.showDeleteToast) {
+      setShowDeleteToast(true);
+      window.history.replaceState({}, '');
+    }
+  }, [location.state]);
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['my-payments', 'ALL'],
@@ -188,6 +279,11 @@ export default function OrderListPage() {
 
       {/* 주문 목록 */}
       <div className="pt-4 pb-3 space-y-4">
+        {/* 진행 중인 주문 (실시간) */}
+        {activeOrders.map((order) => (
+          <ActiveOrderCard key={order.paymentId} order={order} />
+        ))}
+
         {isLoading && (
           <p className="text-[14px] text-[var(--color-semantic-label-alternative)] py-6 text-center">
             주문 내역을 불러오는 중입니다...
@@ -218,7 +314,7 @@ export default function OrderListPage() {
           </div>
         )}
 
-        {!isLoading && !isError && filteredPayments.length === 0 && (
+        {!isLoading && !isError && filteredPayments.length === 0 && activeOrders.length === 0 && (
           <p className="text-[14px] text-[var(--color-semantic-label-alternative)] py-10 text-center">
             {searchQuery.trim()
               ? '검색 결과가 없습니다.'
@@ -271,6 +367,12 @@ export default function OrderListPage() {
           })}
         </div>
       </BottomModal>
+
+      <Toast
+        message="주문내역이 삭제되었습니다."
+        isVisible={showDeleteToast}
+        onClose={() => setShowDeleteToast(false)}
+      />
     </div>
   );
 }
