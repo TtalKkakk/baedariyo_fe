@@ -85,7 +85,10 @@ export default function RiderDeliveryPage() {
         <div className="flex items-start">
           {STATUSES.map((s, i) => (
             <>
-              <div key={s} className="flex flex-col items-center shrink-0 w-[48px]">
+              <div
+                key={s}
+                className="flex flex-col items-center shrink-0 w-[48px]"
+              >
                 <div
                   className={`size-6 rounded-full flex items-center justify-center text-[11px] font-bold ${
                     i <= currentStepIndex
