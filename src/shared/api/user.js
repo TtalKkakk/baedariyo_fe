@@ -50,13 +50,13 @@ export async function setDefaultAddress(payload) {
   });
 }
 
-export async function getUserProfile() {
-  return requestWithMockFallback({
-    apiName: 'getUserProfile',
-    request: () => api.get('/api/user/profile'),
-    fallback: () => mockApi.getUserProfile(),
-  });
-}
+// export async function getUserProfile() {
+//   return requestWithMockFallback({
+//     apiName: 'getUserProfile',
+//     request: () => api.get('/api/user/profile'),
+//     fallback: () => mockApi.getUserProfile(),
+//   });
+// }
 
 export async function updateAddressAlias(payload) {
   return requestWithMockFallback({

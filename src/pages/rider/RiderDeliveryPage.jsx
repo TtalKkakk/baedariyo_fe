@@ -2,7 +2,8 @@ import { Fragment, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 
-import { startRiderDelivery, completeRiderDelivery } from '@/shared/api';
+// import { createStompClient } from '@/shared/socket/client';
+// import { startRiderDelivery, completeRiderDelivery } from '@/shared/api';
 import { RiderDeliveryMap } from '@/features/map';
 import BackIcon from '@/shared/assets/icons/header/back.svg?react';
 import LocationIcon from '@/shared/assets/icons/header/location.svg?react';
@@ -39,20 +40,54 @@ const MOCK_ORDER = {
 export default function RiderDeliveryPage() {
   const { orderId } = useParams();
   const navigate = useNavigate();
+
   const [status, setStatus] = useState('ACCEPTED');
   const [showMap, setShowMap] = useState(false);
+  const [riderLocation, setRiderLocation] = useState(null);
 
   const startMutation = useMutation({
-    mutationFn: startRiderDelivery,
+    // mutationFn: startRiderDelivery,
     onSuccess: () => setStatus('DELIVERING'),
   });
 
   const completeMutation = useMutation({
-    mutationFn: completeRiderDelivery,
+    // mutationFn: completeRiderDelivery,
     onSuccess: () => setStatus('DELIVERED'),
   });
 
+  // useEffect(() => {
+  //   if (!orderId) return undefined;
+
+  //   const client = createStompClient((message) => {
+  //     if (!message) return;
+
+  //     if (message.orderId && String(message.orderId) !== String(orderId)) {
+  //       return;
+  //     }
+
+  //     if (
+  //       typeof message.latitude === 'number' &&
+  //       typeof message.longitude === 'number'
+  //     ) {
+  //       setRiderLocation({
+  //         latitude: message.latitude,
+  //         longitude: message.longitude,
+  //       });
+  //     }
+
+  //     if (message.status && STATUSES.includes(message.status)) {
+  //       setStatus(message.status);
+  //     }
+  //   });
+
+  //   return () => {
+  //     client.deactivate();
+  //   };
+  // }, [orderId]);
+
   const handleNext = () => {
+    if (!orderId) return;
+
     if (status === 'ACCEPTED') {
       setStatus('PICKUP_READY');
       return;
@@ -139,6 +174,17 @@ export default function RiderDeliveryPage() {
           customerAddress={MOCK_ORDER.customerAddress}
           onClose={() => setShowMap(false)}
         />
+      )}
+
+      {riderLocation && (
+        <div className="bg-white mx-4 mt-3 rounded-xl p-4">
+          <p className="text-body2 font-semibold text-[var(--color-semantic-label-normal)]">
+            실시간 위치
+          </p>
+          <p className="mt-1 text-body3 text-[var(--color-semantic-label-alternative)]">
+            위도 {riderLocation.latitude} / 경도 {riderLocation.longitude}
+          </p>
+        </div>
       )}
 
       <div className="bg-white mx-4 mt-3 rounded-xl p-4 space-y-3">
@@ -237,7 +283,7 @@ export default function RiderDeliveryPage() {
           <button
             type="button"
             onClick={handleNext}
-            disabled={isPending}
+            disabled={isPending || !orderId}
             className="w-full h-11 rounded-lg bg-[var(--color-atomic-redOrange-80)] text-white text-body1 font-semibold disabled:opacity-40"
           >
             {isPending ? '처리 중...' : STATUS_BUTTON_LABELS[status]}

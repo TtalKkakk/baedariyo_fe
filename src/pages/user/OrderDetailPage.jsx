@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-import { getMyPayments, deleteMyPayment } from '@/shared/api';
+import { getMyPayments } from '@/shared/api';
 import {
   useAddressBookStore,
   useCartStore,
@@ -187,7 +187,7 @@ export default function OrderDetailPage() {
   async function handleDelete() {
     setIsDeleting(true);
     try {
-      await deleteMyPayment(payment.paymentId);
+      // await deleteMyPayment(payment.paymentId);
       queryClient.invalidateQueries({ queryKey: ['my-payments'] });
     } finally {
       setIsDeleting(false);

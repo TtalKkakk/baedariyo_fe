@@ -10,7 +10,6 @@ export { changeRiderPassword, checkRiderEmailDuplicate } from './auth';
 
 // user profile & address
 export {
-  getUserProfile,
   updateUserNickname,
   updateUserPhoneNumber,
   getUserAddresses,
@@ -34,8 +33,6 @@ export {
   updateRiderVehicle,
   setRiderOnline,
   setRiderOffline,
-  startRiderDelivery,
-  completeRiderDelivery,
 } from './rider';
 
 // order
@@ -58,7 +55,6 @@ export {
   cancelPayment,
   getPaymentDetail,
   getMyPayments,
-  deleteMyPayment,
 } from './payment';
 
 // review

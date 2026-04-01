@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getUserProfile } from '@/shared/api';
+// import { getUserProfile } from '@/shared/api';
 import { useProfileStore } from '@/shared/store';
 
 function InfoRow({ icon, label, value, action }) {
@@ -117,7 +117,7 @@ export default function ProfilePage() {
 
   const { data: serverProfile } = useQuery({
     queryKey: ['user-profile'],
-    queryFn: getUserProfile,
+    // queryFn: getUserProfile,
   });
 
   const profile = serverProfile ?? localProfile;

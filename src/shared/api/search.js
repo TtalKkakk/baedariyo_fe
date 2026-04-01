@@ -18,14 +18,16 @@ export async function getPopularKeywords() {
   });
 }
 
-export async function getRecentKeywords() {
+export async function getRecentKeywords(userId) {
   return requestWithMockFallback({
     apiName: 'getRecentKeywords',
-    request: () => api.get('/api/search/recent'),
+    request: () =>
+      api.get('/api/search/recent', {
+        params: { userId },
+      }),
     fallback: () => mockApi.getRecentKeywords(),
   });
 }
-
 export async function deleteRecentKeyword(keyword) {
   return requestWithMockFallback({
     apiName: 'deleteRecentKeyword',

@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 
-import { getUserProfile } from '@/shared/api';
+// import { getUserProfile } from '@/shared/api';
 import { useProfileStore } from '@/shared/store';
 import { BottomModal } from '@/shared/ui/BottomModal';
 import { ConfirmModal } from '@/shared/ui/ConfirmModal';
@@ -161,7 +161,7 @@ export default function MyPage() {
 
   const { data: serverProfile } = useQuery({
     queryKey: ['user-profile'],
-    queryFn: getUserProfile,
+    // queryFn: getUserProfile,
     enabled: isLoggedIn,
   });
 
