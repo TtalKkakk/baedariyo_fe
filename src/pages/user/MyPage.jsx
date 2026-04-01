@@ -278,6 +278,14 @@ export default function MyPage() {
             isLoggedIn ? setShowLogoutModal(true) : setShowLoginModal(true)
           }
         />
+        <MenuItem
+          icon={
+            <MotorcycleIcon className="size-5 [&_path]:fill-[var(--color-semantic-label-alternative)]" />
+          }
+          label="라이더로 전환"
+          onClick={() => navigate('/rider/login')}
+          hasArrow={false}
+        />
       </section>
 
       {/* Login Bottom Modal */}
@@ -289,7 +297,7 @@ export default function MyPage() {
         <div className="px-6 pb-4">
           <div className="flex flex-col items-center gap-2 py-4">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--color-atomic-redOrange-80)]">
-              <MotorcycleIcon className="size-9 [&_path]:stroke-white" />
+              <MotorcycleIcon className="size-9 [&_path]:fill-white" />
             </div>
             <p className="text-body1 font-bold text-[var(--color-semantic-label-normal)]">
               배달이요

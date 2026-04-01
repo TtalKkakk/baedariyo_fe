@@ -86,7 +86,7 @@ export default function RiderHomePage() {
     <div className="bg-[var(--color-atomic-coolNeutral-97)] min-h-full pb-6">
       <div className="bg-white px-4 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <MotorcycleIcon className="size-5 [&_path]:stroke-[var(--color-semantic-label-normal)]" />
+          <MotorcycleIcon className="size-5 [&_path]:fill-[var(--color-semantic-label-normal)]" />
           <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
             라이더 홈
           </p>
@@ -136,7 +136,7 @@ export default function RiderHomePage() {
         {!isOnline ? (
           <div className="rounded-xl bg-white p-6 flex flex-col items-center gap-3">
             <div className="size-12 rounded-full bg-[var(--color-atomic-coolNeutral-97)] flex items-center justify-center">
-              <MotorcycleIcon className="size-6 [&_path]:stroke-[var(--color-semantic-label-alternative)]" />
+              <MotorcycleIcon className="size-6 [&_path]:fill-[var(--color-semantic-label-alternative)]" />
             </div>
             <p className="text-body2 text-[var(--color-semantic-label-alternative)] text-center">
               온라인 상태로 전환하면

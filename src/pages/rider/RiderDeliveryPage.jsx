@@ -1,9 +1,9 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 
-// import { createStompClient } from '@/shared/socket/client';
-// import { startRiderDelivery, completeRiderDelivery } from '@/shared/api';
+import { createStompClient } from '@/shared/socket/client';
+import { startRiderDelivery, completeRiderDelivery } from '@/shared/api';
 import { RiderDeliveryMap } from '@/features/map';
 import BackIcon from '@/shared/assets/icons/header/back.svg?react';
 import LocationIcon from '@/shared/assets/icons/header/location.svg?react';
@@ -46,44 +46,43 @@ export default function RiderDeliveryPage() {
   const [riderLocation, setRiderLocation] = useState(null);
 
   const startMutation = useMutation({
-    // mutationFn: startRiderDelivery,
+    mutationFn: startRiderDelivery,
     onSuccess: () => setStatus('DELIVERING'),
   });
 
   const completeMutation = useMutation({
-    // mutationFn: completeRiderDelivery,
+    mutationFn: completeRiderDelivery,
     onSuccess: () => setStatus('DELIVERED'),
   });
 
-  // useEffect(() => {
-  //   if (!orderId) return undefined;
+  useEffect(() => {
+    if (!orderId) return undefined;
 
-  //   const client = createStompClient((message) => {
-  //     if (!message) return;
+    const client = createStompClient({
+      orderId,
+      onMessage: (message) => {
+        if (!message) return;
 
-  //     if (message.orderId && String(message.orderId) !== String(orderId)) {
-  //       return;
-  //     }
+        if (
+          typeof message.latitude === 'number' &&
+          typeof message.longitude === 'number'
+        ) {
+          setRiderLocation({
+            latitude: message.latitude,
+            longitude: message.longitude,
+          });
+        }
 
-  //     if (
-  //       typeof message.latitude === 'number' &&
-  //       typeof message.longitude === 'number'
-  //     ) {
-  //       setRiderLocation({
-  //         latitude: message.latitude,
-  //         longitude: message.longitude,
-  //       });
-  //     }
+        if (message.status && STATUSES.includes(message.status)) {
+          setStatus(message.status);
+        }
+      },
+    });
 
-  //     if (message.status && STATUSES.includes(message.status)) {
-  //       setStatus(message.status);
-  //     }
-  //   });
-
-  //   return () => {
-  //     client.deactivate();
-  //   };
-  // }, [orderId]);
+    return () => {
+      client.deactivate();
+    };
+  }, [orderId]);
 
   const handleNext = () => {
     if (!orderId) return;
@@ -114,7 +113,7 @@ export default function RiderDeliveryPage() {
           <BackIcon className="size-5" />
         </button>
         <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
-          배달 #{orderId ?? '-'}
+          배달 현황
         </p>
       </div>
 
@@ -206,7 +205,7 @@ export default function RiderDeliveryPage() {
         </div>
 
         <div className="ml-4 border-l-2 border-dashed border-[var(--color-atomic-coolNeutral-90)] pl-4 py-1 flex items-center gap-2">
-          <MotorcycleIcon className="size-4 [&_path]:stroke-[var(--color-semantic-label-alternative)]" />
+          <MotorcycleIcon className="size-4 [&_path]:fill-[var(--color-semantic-label-alternative)]" />
           <p className="text-body3 text-[var(--color-semantic-label-alternative)]">
             {MOCK_ORDER.distance} · 약 {MOCK_ORDER.estimatedMinutes}분
           </p>

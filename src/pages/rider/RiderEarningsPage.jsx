@@ -1,3 +1,5 @@
+import CoinIcon from '@/shared/assets/icons/coin.svg?react';
+
 const TODAY_EARNINGS = 28500;
 const TODAY_COUNT = 6;
 const WEEK_EARNINGS = 142000;
@@ -19,7 +21,8 @@ export default function RiderEarningsPage() {
 
   return (
     <div className="bg-[var(--color-atomic-coolNeutral-97)] min-h-full pb-6">
-      <div className="bg-white px-4 py-4">
+      <div className="bg-white px-4 py-4 flex items-center gap-2">
+        <CoinIcon className="size-5 [&_path]:fill-[var(--color-semantic-label-normal)]" />
         <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
           수익
         </p>

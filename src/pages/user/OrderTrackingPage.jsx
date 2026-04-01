@@ -48,10 +48,14 @@ function getArrivalTime() {
 
 // 가게 마커 (핀 아이콘 - 주황)
 const STORE_MARKER_HTML = `
-  <div style="display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 3px 6px rgba(0,0,0,0.25));pointer-events:none;user-select:none;">
-    <svg width="44" height="44" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M16 17C18.2091 17 20 15.2091 20 13C20 10.7909 18.2091 9 16 9C13.7909 9 12 10.7909 12 13C12 15.2091 13.7909 17 16 17Z" stroke="#FF6B35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M26 13C26 22 16 29 16 29C16 29 6 22 6 13C6 10.3478 7.05357 7.8043 8.92893 5.92893C10.8043 4.05357 13.3478 3 16 3C18.6522 3 21.1957 4.05357 23.0711 5.92893C24.9464 7.8043 26 10.3478 26 13Z" stroke="#FF6B35" stroke-width="2" fill="#FFF0EB" stroke-linecap="round" stroke-linejoin="round"/>
+  <div style="
+    width:44px;height:44px;background:#FF6B35;border-radius:50%;
+    border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.28);
+    display:flex;align-items:center;justify-content:center;
+    pointer-events:none;user-select:none;
+  ">
+    <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3.2775 11.8013C3.25947 11.866 3.25022 11.9328 3.25 12V14C3.24968 14.7587 3.43109 15.5064 3.77905 16.1806C4.12701 16.8547 4.6314 17.4358 5.25 17.875V27C5.25 27.1989 5.32902 27.3897 5.46967 27.5303C5.61032 27.671 5.80109 27.75 6 27.75H26C26.1989 27.75 26.3897 27.671 26.5303 27.5303C26.671 27.3897 26.75 27.1989 26.75 27V17.875C27.3686 17.4358 27.873 16.8547 28.2209 16.1806C28.5689 15.5064 28.7503 14.7587 28.75 14V12C28.7501 11.9307 28.7404 11.8616 28.7213 11.795L26.9287 5.51875C26.8231 5.15455 26.6026 4.83426 26.3001 4.60562C25.9975 4.37697 25.6292 4.25224 25.25 4.25H6.75C6.3708 4.25224 6.00247 4.37697 5.69995 4.60562C5.39742 4.83426 5.17689 5.15455 5.07125 5.51875L3.2775 11.8013ZM6.51375 5.92625C6.52938 5.87563 6.56068 5.83128 6.60314 5.79961C6.6456 5.76793 6.69703 5.75056 6.75 5.75H25.25C25.3043 5.75008 25.357 5.7678 25.4003 5.8005C25.4436 5.8332 25.4751 5.87909 25.49 5.93125L27.0063 11.25H5L6.51375 5.92625ZM12.75 12.75H19.25V14C19.25 14.862 18.9076 15.6886 18.2981 16.2981C17.6886 16.9076 16.862 17.25 16 17.25C15.138 17.25 14.3114 16.9076 13.7019 16.2981C13.0924 15.6886 12.75 14.862 12.75 14V12.75ZM4.75 12.75H11.25V14C11.2506 14.5609 11.1061 15.1124 10.8305 15.6008C10.5548 16.0893 10.1575 16.4981 9.67704 16.7876C9.19661 17.077 8.64945 17.2371 8.08878 17.2525C7.52811 17.2678 6.97303 17.1377 6.4775 16.875C6.41594 16.8225 6.34629 16.7803 6.27125 16.75C5.80584 16.4576 5.42217 16.052 5.15613 15.5711C4.89008 15.0902 4.75035 14.5496 4.75 14V12.75ZM25.25 26.25H6.75V18.5825C7.7268 18.8483 8.76296 18.795 9.70736 18.4305C10.6518 18.066 11.455 17.4093 12 16.5562C12.4286 17.2286 13.0199 17.7821 13.719 18.1655C14.4181 18.5489 15.2026 18.7499 16 18.7499C16.7974 18.7499 17.5819 18.5489 18.281 18.1655C18.9801 17.7821 19.5714 17.2286 20 16.5562C20.545 17.4093 21.3482 18.066 22.2926 18.4305C23.237 18.795 24.2732 18.8483 25.25 18.5825V26.25ZM25.7288 16.75C25.6537 16.7803 25.5841 16.8225 25.5225 16.875C25.027 17.1377 24.4719 17.2678 23.9112 17.2525C23.3506 17.2371 22.8034 17.077 22.323 16.7876C21.8425 16.4981 21.4452 16.0893 21.1695 15.6008C20.8939 15.1124 20.7494 14.5609 20.75 14V12.75H27.25V14C27.2496 14.5496 27.1099 15.0902 26.8439 15.5711C26.5778 16.052 26.1942 16.4576 25.7288 16.75Z" fill="white"/>
     </svg>
   </div>
 `;
@@ -396,6 +400,68 @@ function DeliveredView({ order }) {
   );
 }
 
+function WaitingForRiderView() {
+  return (
+    <div className="-mx-4 -mt-2 -mb-2 h-full flex flex-col items-center justify-center bg-white px-8">
+      <div className="size-16 rounded-full bg-[var(--color-atomic-redOrange-99)] flex items-center justify-center mb-5">
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 32 32"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M5 24C7.20914 24 9 22.2091 9 20C9 17.7909 7.20914 16 5 16C2.79086 16 1 17.7909 1 20C1 22.2091 2.79086 24 5 24Z"
+            stroke="var(--color-atomic-redOrange-80)"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M27 24C29.2091 24 31 22.2091 31 20C31 17.7909 29.2091 16 27 16C24.7909 16 23 17.7909 23 20C23 22.2091 24.7909 24 27 24Z"
+            stroke="var(--color-atomic-redOrange-80)"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M18 7H22L27 20"
+            stroke="var(--color-atomic-redOrange-80)"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M2 10C2 10 7.91375 12.2925 11.07 13.7262C11.579 13.9603 12.1435 14.0471 12.6993 13.9768C13.2551 13.9066 13.7802 13.6821 14.215 13.3287C15.205 12.5112 16.8 12 19 12H27C25.2537 11.9995 23.5553 12.5704 22.1638 13.6255C20.7724 14.6807 19.7644 16.1621 19.2938 17.8438C19.1147 18.4672 18.737 19.0151 18.2181 19.4043C17.6991 19.7935 17.0674 20.0026 16.4188 20H5"
+            stroke="var(--color-atomic-redOrange-80)"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </div>
+      <p className="text-[22px] font-bold text-[var(--color-semantic-label-normal)] text-center">
+        라이더를 배정 중이에요
+      </p>
+      <p className="text-[15px] text-[var(--color-semantic-label-alternative)] text-center mt-3 leading-relaxed">
+        주문이 완료됐어요.
+        <br />
+        가까운 라이더를 찾고 있어요
+      </p>
+      <div className="flex gap-1.5 mt-8">
+        {[0, 1, 2].map((i) => (
+          <div
+            key={i}
+            className="size-2 rounded-full bg-[var(--color-atomic-redOrange-80)] animate-bounce"
+            style={{ animationDelay: `${i * 0.15}s` }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── 기존 결제 상태 추적 (active order가 아닌 경우) ──────────
 
 const TRACKING_STEPS = [
@@ -553,14 +619,16 @@ export default function OrderTrackingPage() {
   const location = useLocation();
   const { orderId = '' } = useParams();
 
-  // active order에서 paymentId로 조회
   const activeOrders = useActiveOrderStore((state) => state.activeOrders);
   const paymentId = Number(orderId);
   const activeOrder =
     activeOrders.find((o) => o.paymentId === paymentId) ?? null;
 
-  // active order가 있으면 실시간 지도 뷰
+  // active order가 있으면 실시간 추적 뷰
   if (activeOrder) {
+    if (activeOrder.deliveryStatus === 'WAITING') {
+      return <WaitingForRiderView />;
+    }
     return <RealtimeTrackingView order={activeOrder} />;
   }
 

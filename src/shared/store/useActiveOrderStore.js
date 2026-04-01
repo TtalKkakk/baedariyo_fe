@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 export const DELIVERY_STATUSES = [
+  'WAITING',
   'CONFIRMED',
   'PREPARING',
   'DELIVERING',
@@ -8,14 +9,15 @@ export const DELIVERY_STATUSES = [
 ];
 
 export const DELIVERY_STATUS_LABELS = {
+  WAITING: '라이더 배정 중',
   CONFIRMED: '주문 접수',
   PREPARING: '메뉴 준비중',
   DELIVERING: '배달 중',
   DELIVERED: '배달 완료',
 };
 
-// Demo-friendly durations (ms)
-const STEP_DURATIONS = [15000, 35000, 50000]; // CONFIRMED→PREPARING, PREPARING→DELIVERING, DELIVERING→DELIVERED
+// WAITING→CONFIRMED, CONFIRMED→PREPARING, PREPARING→DELIVERING, DELIVERING→DELIVERED
+const STEP_DURATIONS = [8000, 15000, 35000, 50000];
 
 export const useActiveOrderStore = create((set, get) => ({
   activeOrders: [],
@@ -27,7 +29,7 @@ export const useActiveOrderStore = create((set, get) => ({
 
     const order = {
       ...orderInfo,
-      deliveryStatus: 'CONFIRMED',
+      deliveryStatus: 'WAITING',
     };
 
     set((state) => ({ activeOrders: [order, ...state.activeOrders] }));

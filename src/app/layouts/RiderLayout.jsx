@@ -2,6 +2,7 @@ import { Outlet, NavLink } from 'react-router-dom';
 import MotorcycleIcon from '@/shared/assets/icons/order-status/motocycle.svg?react';
 import OrderListIcon from '@/shared/assets/icons/nav/orderList.svg?react';
 import MyPageIcon from '@/shared/assets/icons/nav/mypage.svg?react';
+import CoinIcon from '@/shared/assets/icons/coin.svg?react';
 
 export default function RiderLayout() {
   return (
@@ -20,8 +21,8 @@ export default function RiderLayout() {
               <MotorcycleIcon
                 className={`size-5 ${
                   isActive
-                    ? '[&_path]:stroke-[var(--color-atomic-neutral-10,#171717)]'
-                    : '[&_path]:stroke-[var(--color-atomic-neutral-60,#8a8a8a)]'
+                    ? '[&_path]:fill-[var(--color-atomic-neutral-10,#171717)]'
+                    : '[&_path]:fill-[var(--color-atomic-neutral-60,#8a8a8a)]'
                 }`}
               />
               <span
@@ -59,7 +60,7 @@ export default function RiderLayout() {
         >
           {({ isActive }) => (
             <>
-              <OrderListIcon
+              <CoinIcon
                 className={`size-5 ${
                   isActive
                     ? '[&_path]:fill-[var(--color-atomic-neutral-10,#171717)]'
