@@ -1,10 +1,11 @@
 import { Outlet, NavLink } from 'react-router-dom';
-import Header from './Header';
+import MotorcycleIcon from '@/shared/assets/icons/order-status/motocycle.svg?react';
+import OrderListIcon from '@/shared/assets/icons/nav/orderList.svg?react';
+import MyPageIcon from '@/shared/assets/icons/nav/mypage.svg?react';
 
 export default function RiderLayout() {
   return (
     <>
-      <Header />
       <main className="flex-1 min-h-0 overflow-auto">
         <Outlet />
       </main>
@@ -15,11 +16,20 @@ export default function RiderLayout() {
           className="flex flex-col items-center justify-center flex-1 h-full no-underline"
         >
           {({ isActive }) => (
-            <span
-              className={`text-xs ${isActive ? 'font-bold text-[var(--color-atomic-neutral-10,#171717)]' : 'text-[var(--color-atomic-neutral-60,#8a8a8a)]'}`}
-            >
-              홈
-            </span>
+            <>
+              <MotorcycleIcon
+                className={`size-5 ${
+                  isActive
+                    ? '[&_path]:stroke-[var(--color-atomic-neutral-10,#171717)]'
+                    : '[&_path]:stroke-[var(--color-atomic-neutral-60,#8a8a8a)]'
+                }`}
+              />
+              <span
+                className={`mt-0.5 text-[10px] ${isActive ? 'font-bold text-[var(--color-atomic-neutral-10,#171717)]' : 'text-[var(--color-atomic-neutral-60,#8a8a8a)]'}`}
+              >
+                홈
+              </span>
+            </>
           )}
         </NavLink>
         <NavLink
@@ -27,11 +37,20 @@ export default function RiderLayout() {
           className="flex flex-col items-center justify-center flex-1 h-full no-underline"
         >
           {({ isActive }) => (
-            <span
-              className={`text-xs ${isActive ? 'font-bold text-[var(--color-atomic-neutral-10,#171717)]' : 'text-[var(--color-atomic-neutral-60,#8a8a8a)]'}`}
-            >
-              배달내역
-            </span>
+            <>
+              <OrderListIcon
+                className={`size-5 ${
+                  isActive
+                    ? '[&_path]:fill-[var(--color-atomic-neutral-10,#171717)]'
+                    : '[&_path]:fill-[var(--color-atomic-neutral-60,#8a8a8a)]'
+                }`}
+              />
+              <span
+                className={`mt-0.5 text-[10px] ${isActive ? 'font-bold text-[var(--color-atomic-neutral-10,#171717)]' : 'text-[var(--color-atomic-neutral-60,#8a8a8a)]'}`}
+              >
+                배달내역
+              </span>
+            </>
           )}
         </NavLink>
         <NavLink
@@ -39,11 +58,20 @@ export default function RiderLayout() {
           className="flex flex-col items-center justify-center flex-1 h-full no-underline"
         >
           {({ isActive }) => (
-            <span
-              className={`text-xs ${isActive ? 'font-bold text-[var(--color-atomic-neutral-10,#171717)]' : 'text-[var(--color-atomic-neutral-60,#8a8a8a)]'}`}
-            >
-              수익
-            </span>
+            <>
+              <OrderListIcon
+                className={`size-5 ${
+                  isActive
+                    ? '[&_path]:fill-[var(--color-atomic-neutral-10,#171717)]'
+                    : '[&_path]:fill-[var(--color-atomic-neutral-60,#8a8a8a)]'
+                }`}
+              />
+              <span
+                className={`mt-0.5 text-[10px] ${isActive ? 'font-bold text-[var(--color-atomic-neutral-10,#171717)]' : 'text-[var(--color-atomic-neutral-60,#8a8a8a)]'}`}
+              >
+                수익
+              </span>
+            </>
           )}
         </NavLink>
         <NavLink
@@ -51,11 +79,20 @@ export default function RiderLayout() {
           className="flex flex-col items-center justify-center flex-1 h-full no-underline"
         >
           {({ isActive }) => (
-            <span
-              className={`text-xs ${isActive ? 'font-bold text-[var(--color-atomic-neutral-10,#171717)]' : 'text-[var(--color-atomic-neutral-60,#8a8a8a)]'}`}
-            >
-              설정
-            </span>
+            <>
+              <MyPageIcon
+                className={`size-5 ${
+                  isActive
+                    ? '[&_path]:fill-[var(--color-atomic-neutral-10,#171717)]'
+                    : '[&_path]:fill-[var(--color-atomic-neutral-60,#8a8a8a)]'
+                }`}
+              />
+              <span
+                className={`mt-0.5 text-[10px] ${isActive ? 'font-bold text-[var(--color-atomic-neutral-10,#171717)]' : 'text-[var(--color-atomic-neutral-60,#8a8a8a)]'}`}
+              >
+                설정
+              </span>
+            </>
           )}
         </NavLink>
       </nav>
