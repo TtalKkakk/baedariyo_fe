@@ -1,5 +1,4 @@
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -10,6 +9,9 @@ import {
 import { useRiderStore } from '@/shared/store';
 import MotorcycleIcon from '@/shared/assets/icons/order-status/motocycle.svg?react';
 import LocationIcon from '@/shared/assets/icons/header/location.svg?react';
+
+const TODAY_EARNINGS = 28500;
+const TODAY_COUNT = 6;
 
 const MOCK_CALLS = [
   {
@@ -43,11 +45,9 @@ const MOCK_CALLS = [
 
 export default function RiderHomePage() {
   const navigate = useNavigate();
-  const isOnline = useRiderStore((s) => s.isOnline);
-  const setOnline = useRiderStore((s) => s.setOnline);
-  const setOffline = useRiderStore((s) => s.setOffline);
-  const [todayEarnings] = useState(28500);
-  const [todayCount] = useState(6);
+  const isOnline = useRiderStore((state) => state.isOnline);
+  const setOnline = useRiderStore((state) => state.setOnline);
+  const setOffline = useRiderStore((state) => state.setOffline);
 
   const onlineMutation = useMutation({
     mutationFn: setRiderOnline,
@@ -67,11 +67,16 @@ export default function RiderHomePage() {
   });
 
   const toggleOnline = () => {
+    if (onlineMutation.isPending || offlineMutation.isPending) {
+      return;
+    }
+
     if (isOnline) {
       offlineMutation.mutate();
-    } else {
-      onlineMutation.mutate();
+      return;
     }
+
+    onlineMutation.mutate();
   };
 
   const isTogglingOnline =
@@ -79,7 +84,6 @@ export default function RiderHomePage() {
 
   return (
     <div className="bg-[var(--color-atomic-coolNeutral-97)] min-h-full pb-6">
-      {/* 상태 바 */}
       <div className="bg-white px-4 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <MotorcycleIcon className="size-5 [&_path]:stroke-[var(--color-semantic-label-normal)]" />
@@ -87,6 +91,7 @@ export default function RiderHomePage() {
             라이더 홈
           </p>
         </div>
+
         <button
           type="button"
           onClick={toggleOnline}
@@ -98,29 +103,31 @@ export default function RiderHomePage() {
           } disabled:opacity-50`}
         >
           <span
-            className={`size-2 rounded-full ${isOnline ? 'bg-white' : 'bg-[var(--color-semantic-label-alternative)]'}`}
+            className={`size-2 rounded-full ${
+              isOnline
+                ? 'bg-white'
+                : 'bg-[var(--color-semantic-label-alternative)]'
+            }`}
           />
           {isOnline ? '온라인' : '오프라인'}
         </button>
       </div>
 
-      {/* 오늘 수익 요약 */}
       <div className="mx-4 mt-4 rounded-xl bg-white p-4 flex flex-col items-center">
         <p className="text-body3 text-[var(--color-semantic-label-alternative)]">
           오늘의 수익
         </p>
         <p className="mt-1 text-[22px] font-bold text-[var(--color-semantic-label-normal)]">
-          {todayEarnings.toLocaleString()}원
+          {TODAY_EARNINGS.toLocaleString()}원
         </p>
         <p className="mt-1 text-body3 text-[var(--color-semantic-label-alternative)]">
           완료한 배달{' '}
           <span className="font-semibold text-[var(--color-atomic-redOrange-80)]">
-            {todayCount}건
+            {TODAY_COUNT}건
           </span>
         </p>
       </div>
 
-      {/* 콜 리스트 */}
       <div className="mx-4 mt-4">
         <p className="text-body2 font-semibold text-[var(--color-semantic-label-normal)] mb-3">
           {isOnline ? `배달 요청 ${MOCK_CALLS.length}건` : '배달 요청'}
@@ -147,47 +154,54 @@ export default function RiderHomePage() {
           </div>
         ) : (
           <div className="space-y-3">
-            {MOCK_CALLS.map((call) => (
-              <div key={call.id} className="rounded-xl bg-white p-4">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-body2 font-semibold text-[var(--color-semantic-label-normal)] truncate">
-                      {call.storeName}
-                    </p>
-                    <div className="mt-1.5 flex items-start gap-1">
-                      <LocationIcon className="size-3.5 mt-0.5 shrink-0 [&_path]:fill-[var(--color-semantic-label-alternative)]" />
-                      <p className="text-body3 text-[var(--color-semantic-label-alternative)] truncate">
-                        {call.customerAddress}
+            {MOCK_CALLS.map((call) => {
+              const isAcceptingCurrentCall =
+                acceptMutation.isPending &&
+                acceptMutation.variables === call.id;
+
+              return (
+                <div key={call.id} className="rounded-xl bg-white p-4">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-body2 font-semibold text-[var(--color-semantic-label-normal)] truncate">
+                        {call.storeName}
                       </p>
+                      <p className="mt-1 text-body3 text-[var(--color-semantic-label-alternative)] truncate">
+                        {call.storeAddress}
+                      </p>
+                      <div className="mt-1.5 flex items-start gap-1">
+                        <LocationIcon className="size-3.5 mt-0.5 shrink-0 [&_path]:fill-[var(--color-semantic-label-alternative)]" />
+                        <p className="text-body3 text-[var(--color-semantic-label-alternative)] truncate">
+                          {call.customerAddress}
+                        </p>
+                      </div>
                     </div>
+
+                    <p className="text-body1 font-bold text-[var(--color-atomic-redOrange-80)] shrink-0">
+                      {call.fee.toLocaleString()}원
+                    </p>
                   </div>
-                  <p className="text-body1 font-bold text-[var(--color-atomic-redOrange-80)] shrink-0">
-                    {call.fee.toLocaleString()}원
-                  </p>
-                </div>
 
-                <div className="mt-3 flex items-center gap-3">
-                  <span className="text-body3 text-[var(--color-semantic-label-alternative)]">
-                    {call.distance}
-                  </span>
-                  <span className="text-body3 text-[var(--color-semantic-label-alternative)]">
-                    약 {call.estimatedMinutes}분
-                  </span>
-                </div>
+                  <div className="mt-3 flex items-center gap-3">
+                    <span className="text-body3 text-[var(--color-semantic-label-alternative)]">
+                      {call.distance}
+                    </span>
+                    <span className="text-body3 text-[var(--color-semantic-label-alternative)]">
+                      약 {call.estimatedMinutes}분
+                    </span>
+                  </div>
 
-                <button
-                  type="button"
-                  onClick={() => acceptMutation.mutate(call.id)}
-                  disabled={acceptMutation.isPending}
-                  className="mt-3 w-full h-10 rounded-lg bg-[var(--color-atomic-redOrange-80)] text-white text-body2 font-semibold disabled:opacity-40"
-                >
-                  {acceptMutation.isPending &&
-                  acceptMutation.variables === call.id
-                    ? '수락 중...'
-                    : '수락하기'}
-                </button>
-              </div>
-            ))}
+                  <button
+                    type="button"
+                    onClick={() => acceptMutation.mutate(call.id)}
+                    disabled={acceptMutation.isPending}
+                    className="mt-3 w-full h-10 rounded-lg bg-[var(--color-atomic-redOrange-80)] text-white text-body2 font-semibold disabled:opacity-40"
+                  >
+                    {isAcceptingCurrentCall ? '수락 중...' : '수락하기'}
+                  </button>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

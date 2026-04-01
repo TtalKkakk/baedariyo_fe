@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 
@@ -10,18 +10,18 @@ import MotorcycleIcon from '@/shared/assets/icons/order-status/motocycle.svg?rea
 import HouseIcon from '@/shared/assets/icons/order-status/house.svg?react';
 import PinIcon from '@/shared/assets/icons/order-status/pin.svg?react';
 
-const STATUSES = ['ACCEPTED', 'PICKING_UP', 'DELIVERING', 'DELIVERED'];
+const STATUSES = ['ACCEPTED', 'PICKUP_READY', 'DELIVERING', 'DELIVERED'];
 
 const STATUS_LABELS = {
   ACCEPTED: '수락됨',
-  PICKING_UP: '픽업 대기',
+  PICKUP_READY: '픽업 대기',
   DELIVERING: '배달 중',
   DELIVERED: '배달 완료',
 };
 
 const STATUS_BUTTON_LABELS = {
-  ACCEPTED: '픽업 시작',
-  PICKING_UP: '픽업 완료',
+  ACCEPTED: '픽업 출발',
+  PICKUP_READY: '픽업 완료',
   DELIVERING: '배달 완료',
 };
 
@@ -34,13 +34,13 @@ const MOCK_ORDER = {
   estimatedMinutes: 8,
   fee: 4500,
   orderItems: ['빅맥 세트', '상하이 버거'],
-  orderTotal: 18500,
 };
 
 export default function RiderDeliveryPage() {
   const { orderId } = useParams();
   const navigate = useNavigate();
   const [status, setStatus] = useState('ACCEPTED');
+  const [showMap, setShowMap] = useState(false);
 
   const startMutation = useMutation({
     mutationFn: startRiderDelivery,
@@ -54,75 +54,74 @@ export default function RiderDeliveryPage() {
 
   const handleNext = () => {
     if (status === 'ACCEPTED') {
-      setStatus('PICKING_UP');
-    } else if (status === 'PICKING_UP') {
-      startMutation.mutate();
-    } else if (status === 'DELIVERING') {
-      completeMutation.mutate();
+      setStatus('PICKUP_READY');
+      return;
+    }
+
+    if (status === 'PICKUP_READY') {
+      startMutation.mutate({ orderId });
+      return;
+    }
+
+    if (status === 'DELIVERING') {
+      completeMutation.mutate({ orderId });
     }
   };
 
-  const [showMap, setShowMap] = useState(false);
   const isPending = startMutation.isPending || completeMutation.isPending;
   const isDone = status === 'DELIVERED';
-
   const currentStepIndex = STATUSES.indexOf(status);
 
   return (
     <div className="flex-1 overflow-y-auto bg-[var(--color-atomic-coolNeutral-97)]">
-      {/* 헤더 */}
       <div className="bg-white px-4 py-4 flex items-center gap-3">
         <button type="button" onClick={() => navigate('/rider')}>
           <BackIcon className="size-5" />
         </button>
         <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
-          배달 #{orderId}
+          배달 #{orderId ?? '-'}
         </p>
       </div>
 
-      {/* 진행 상태 스텝 */}
       <div className="bg-white mt-2 mx-4 rounded-xl px-4 py-4">
         <div className="flex items-start">
-          {STATUSES.map((s, i) => (
-            <>
-              <div
-                key={s}
-                className="flex flex-col items-center shrink-0 w-[48px]"
-              >
+          {STATUSES.map((step, index) => (
+            <Fragment key={step}>
+              <div className="flex flex-col items-center shrink-0 w-[48px]">
                 <div
                   className={`size-6 rounded-full flex items-center justify-center text-[11px] font-bold ${
-                    i <= currentStepIndex
+                    index <= currentStepIndex
                       ? 'bg-[var(--color-atomic-redOrange-80)] text-white'
                       : 'bg-[var(--color-atomic-coolNeutral-90)] text-[var(--color-semantic-label-alternative)]'
                   }`}
                 >
-                  {i < currentStepIndex ? '✓' : i + 1}
+                  {index < currentStepIndex ? '✓' : index + 1}
                 </div>
                 <p
                   className={`mt-1 text-[10px] text-center whitespace-nowrap ${
-                    i <= currentStepIndex
+                    index <= currentStepIndex
                       ? 'text-[var(--color-atomic-redOrange-80)] font-semibold'
                       : 'text-[var(--color-semantic-label-alternative)]'
                   }`}
                 >
-                  {STATUS_LABELS[s]}
+                  {STATUS_LABELS[step]}
                 </p>
               </div>
-              {i < STATUSES.length - 1 && (
+
+              {index < STATUSES.length - 1 && (
                 <div
                   className={`flex-1 h-[2px] mt-3 ${
-                    i < currentStepIndex
+                    index < currentStepIndex
                       ? 'bg-[var(--color-atomic-redOrange-80)]'
                       : 'bg-[var(--color-atomic-coolNeutral-90)]'
                   }`}
                 />
               )}
-            </>
+            </Fragment>
           ))}
         </div>
       </div>
 
-      {/* 지도 영역 */}
       <button
         type="button"
         onClick={() => setShowMap(true)}
@@ -142,7 +141,6 @@ export default function RiderDeliveryPage() {
         />
       )}
 
-      {/* 경로 정보 */}
       <div className="bg-white mx-4 mt-3 rounded-xl p-4 space-y-3">
         <div className="flex items-start gap-3">
           <div className="size-8 rounded-full bg-[var(--color-atomic-redOrange-80)]/10 flex items-center justify-center shrink-0 mt-0.5">
@@ -186,7 +184,6 @@ export default function RiderDeliveryPage() {
         </div>
       </div>
 
-      {/* 주문 정보 */}
       <div className="bg-white mx-4 mt-3 rounded-xl p-4">
         <p className="text-body2 font-semibold text-[var(--color-semantic-label-normal)] mb-3">
           주문 정보
@@ -201,6 +198,7 @@ export default function RiderDeliveryPage() {
             </p>
           ))}
         </div>
+
         <div className="mt-3 pt-3 border-t border-[var(--color-semantic-line-normal-normal)] flex items-center justify-between">
           <p className="text-body3 text-[var(--color-semantic-label-alternative)]">
             배달 수수료
@@ -211,7 +209,6 @@ export default function RiderDeliveryPage() {
         </div>
       </div>
 
-      {/* 액션 버튼 */}
       <div className="px-4 mt-4 pb-6">
         {isDone ? (
           <div className="space-y-2">
@@ -227,6 +224,7 @@ export default function RiderDeliveryPage() {
                 이 적립됩니다.
               </p>
             </div>
+
             <button
               type="button"
               onClick={() => navigate('/rider')}

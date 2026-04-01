@@ -22,13 +22,24 @@ function getErrorMessage(error) {
 
 export default function RiderSettingsPage() {
   const navigate = useNavigate();
-  const [vehicleType, setVehicleType] = useState('MOTORCYCLE');
-  const [region, setRegion] = useState('');
+
+  const [vehicleType, setVehicleType] = useState(
+    () => localStorage.getItem('riderVehicleType') ?? 'MOTORCYCLE'
+  );
+  const [region, setRegion] = useState(
+    () => localStorage.getItem('riderRegion') ?? ''
+  );
   const [vehicleSaved, setVehicleSaved] = useState(false);
+  const [regionSaved, setRegionSaved] = useState(() =>
+    Boolean(localStorage.getItem('riderRegion'))
+  );
 
   const vehicleMutation = useMutation({
-    mutationFn: () => updateRiderVehicle({ vehicleType }),
-    onSuccess: () => setVehicleSaved(true),
+    mutationFn: updateRiderVehicle,
+    onSuccess: () => {
+      localStorage.setItem('riderVehicleType', vehicleType);
+      setVehicleSaved(true);
+    },
   });
 
   const withdrawMutation = useMutation({
@@ -36,6 +47,9 @@ export default function RiderSettingsPage() {
     onSuccess: () => {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
+      localStorage.removeItem('riderRegion');
+      localStorage.removeItem('riderVehicleType');
+      navigate('/rider/login');
     },
   });
 
@@ -49,29 +63,35 @@ export default function RiderSettingsPage() {
     const isConfirmed = window.confirm(
       '정말 탈퇴하시겠습니까? 배달원 계정 복구는 지원되지 않습니다.'
     );
+
     if (!isConfirmed) return;
+
     withdrawMutation.mutate();
   };
 
   const handleVehicleSave = () => {
     setVehicleSaved(false);
-    vehicleMutation.mutate();
+    vehicleMutation.mutate({ vehicleType });
+  };
+
+  const handleRegionSave = () => {
+    localStorage.setItem('riderRegion', region.trim());
+    setRegionSaved(true);
   };
 
   return (
     <div className="bg-[var(--color-atomic-coolNeutral-97)] min-h-full pb-6">
-      {/* 헤더 */}
       <div className="bg-white px-4 py-4">
         <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
           설정
         </p>
       </div>
 
-      {/* 배달 수단 */}
       <div className="mx-4 mt-4 rounded-xl bg-white p-4">
         <p className="text-body2 font-semibold text-[var(--color-semantic-label-normal)] mb-3">
           배달 수단
         </p>
+
         <div className="grid grid-cols-3 gap-2">
           {VEHICLE_TYPES.map((vehicle) => (
             <button
@@ -121,7 +141,6 @@ export default function RiderSettingsPage() {
         </button>
       </div>
 
-      {/* 활동 지역 */}
       <div className="mx-4 mt-3 rounded-xl bg-white p-4">
         <p className="text-body2 font-semibold text-[var(--color-semantic-label-normal)] mb-3">
           활동 지역
@@ -129,27 +148,32 @@ export default function RiderSettingsPage() {
         <input
           type="text"
           value={region}
-          onChange={(e) => setRegion(e.target.value)}
+          onChange={(event) => {
+            setRegion(event.target.value);
+            setRegionSaved(false);
+          }}
           placeholder="예: 서울 강남구"
           className="w-full h-11 px-3 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body2 outline-none"
         />
         <p className="mt-2 text-body3 text-[var(--color-semantic-label-alternative)]">
           주로 배달하는 지역을 입력하면 해당 지역 콜을 우선으로 받을 수 있어요.
         </p>
+
         <button
           type="button"
+          onClick={handleRegionSave}
           disabled={!region.trim()}
           className="mt-3 w-full h-10 rounded-lg bg-[var(--color-atomic-redOrange-80)] text-white text-body2 font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          저장하기
+          {regionSaved ? '저장됨 ✓' : '저장하기'}
         </button>
       </div>
 
-      {/* 계정 */}
       <div className="mx-4 mt-3 rounded-xl bg-white p-4 space-y-2">
         <p className="text-body2 font-semibold text-[var(--color-semantic-label-normal)] mb-1">
           계정
         </p>
+
         <button
           type="button"
           onClick={handleLogout}
@@ -158,29 +182,14 @@ export default function RiderSettingsPage() {
           로그아웃
         </button>
 
-        {withdrawMutation.isSuccess ? (
-          <div className="rounded-lg border border-[var(--color-semantic-line-normal-normal)] p-3">
-            <p className="text-body2 font-semibold text-[var(--color-semantic-label-normal)]">
-              탈퇴가 완료되었습니다.
-            </p>
-            <button
-              type="button"
-              onClick={() => navigate('/rider/login')}
-              className="mt-2 h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body2 text-[var(--color-semantic-label-normal)]"
-            >
-              로그인 페이지로 이동
-            </button>
-          </div>
-        ) : (
-          <button
-            type="button"
-            onClick={handleWithdraw}
-            disabled={withdrawMutation.isPending}
-            className="w-full h-11 rounded-lg bg-[var(--color-semantic-status-cautionary)] text-white text-body2 font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            {withdrawMutation.isPending ? '탈퇴 처리 중...' : '배달원 탈퇴'}
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={handleWithdraw}
+          disabled={withdrawMutation.isPending}
+          className="w-full h-11 rounded-lg bg-[var(--color-semantic-status-cautionary)] text-white text-body2 font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          {withdrawMutation.isPending ? '탈퇴 처리 중...' : '배달원 탈퇴'}
+        </button>
 
         {withdrawMutation.isError && (
           <p className="text-body3 text-[var(--color-semantic-status-cautionary)]">

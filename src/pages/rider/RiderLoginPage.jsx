@@ -17,7 +17,6 @@ export default function RiderLoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loginResult, setLoginResult] = useState(null);
 
   const loginMutation = useMutation({
     mutationFn: loginRider,
@@ -28,23 +27,21 @@ export default function RiderLoginPage() {
         localStorage.setItem('refreshToken', result.refreshToken);
       }
 
-      setLoginResult(result);
       navigate('/rider');
     },
   });
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    if (loginMutation.isPending || !email.trim() || !password) {
+      return;
+    }
+
     loginMutation.mutate({
       email: email.trim(),
       password,
     });
-  };
-
-  const clearToken = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    setLoginResult(null);
   };
 
   return (
@@ -57,6 +54,7 @@ export default function RiderLoginPage() {
         <BackIcon className="size-5" />
         뒤로
       </button>
+
       <p className="text-title2 font-semibold text-[var(--color-semantic-label-normal)]">
         라이더 로그인
       </p>
@@ -74,6 +72,7 @@ export default function RiderLoginPage() {
           autoComplete="email"
           required
         />
+
         <input
           type="password"
           value={password}
@@ -83,6 +82,7 @@ export default function RiderLoginPage() {
           autoComplete="current-password"
           required
         />
+
         <button
           type="submit"
           disabled={loginMutation.isPending || !email.trim() || !password}
@@ -92,29 +92,11 @@ export default function RiderLoginPage() {
         </button>
       </form>
 
-      {loginMutation.isError ? (
+      {loginMutation.isError && (
         <p className="mt-3 text-body2 text-[var(--color-semantic-status-cautionary)]">
           {getErrorMessage(loginMutation.error)}
         </p>
-      ) : null}
-
-      {loginResult ? (
-        <section className="mt-6 p-4 rounded-xl border border-[var(--color-semantic-line-normal-normal)]">
-          <p className="text-body2 font-semibold text-[var(--color-semantic-label-normal)]">
-            로그인 성공
-          </p>
-          <p className="mt-1 break-all text-body3 text-[var(--color-semantic-label-alternative)]">
-            accessToken: {loginResult.accessToken}
-          </p>
-          <button
-            type="button"
-            onClick={clearToken}
-            className="mt-3 h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body2"
-          >
-            토큰 삭제
-          </button>
-        </section>
-      ) : null}
+      )}
     </div>
   );
 }
