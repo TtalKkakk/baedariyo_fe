@@ -34,6 +34,7 @@ const BACK_TITLE_ROUTES = {
   '/mypage/security': '보안 설정',
   '/mypage/notification-settings': '알림 설정',
   '/mypage/withdraw': '회원 탈퇴',
+  '/order-complete': '주문완료',
 };
 
 export default function Header() {
@@ -57,7 +58,7 @@ export default function Header() {
   const storeReviewsMatch = useMatch('/stores/:storeId/reviews');
   const storeInfoMatch = useMatch('/stores/:storeId/info');
   const dynamicBackTitle = orderTrackingMatch
-    ? '실시간 주문 추적'
+    ? '실시간 현황'
     : orderDetailMatch
       ? '주문 상세'
       : storeDetailMatch
@@ -129,7 +130,9 @@ export default function Header() {
               ? navigate('/address/setting')
               : pathname === '/address/setting'
                 ? navigate('/')
-                : navigate(-1)
+                : pathname === '/order-complete'
+                  ? navigate('/')
+                  : navigate(-1)
           }
           className="shrink-0"
         >
@@ -173,9 +176,11 @@ export default function Header() {
         </button>
       )}
       <div className="flex items-center gap-5">
-        <button onClick={() => navigate('/search')}>
-          <SearchIcon className="size-5 [&_path]:fill-[var(--color-semantic-label-normal)]" />
-        </button>
+        {pathname !== '/orders' && (
+          <button onClick={() => navigate('/search')}>
+            <SearchIcon className="size-5 [&_path]:fill-[var(--color-semantic-label-normal)]" />
+          </button>
+        )}
         <button onClick={() => navigate('/cart')} className="pr-[6px]">
           <CartIcon className="size-5 [&_path]:fill-[var(--color-semantic-label-normal)]" />
         </button>

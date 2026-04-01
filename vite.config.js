@@ -10,7 +10,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss(), svgr()],
-  base: '/baedariyo_fe/',
+  base: '/baedaliyo_fe/',
   server: {
     proxy: {
       '/api': {

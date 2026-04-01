@@ -52,3 +52,11 @@ export async function getMyPayments(status) {
     fallback: () => mockApi.getMyPayments(status),
   });
 }
+
+export async function deleteMyPayment(paymentId) {
+  return requestWithMockFallback({
+    apiName: 'deleteMyPayment',
+    request: () => api.delete(`/api/payments/${paymentId}`),
+    fallback: () => mockApi.deleteMyPayment(paymentId),
+  });
+}

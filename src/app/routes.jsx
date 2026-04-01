@@ -11,11 +11,13 @@ import StoreDetailPage from '../pages/user/StoreDetailPage';
 import MenuDetailPage from '../pages/user/MenuDetailPage';
 import CartPage from '../pages/user/CartPage';
 import CheckoutPage from '../pages/user/CheckoutPage';
+import OrderCompletePage from '../pages/user/OrderCompletePage';
 import OrderListPage from '../pages/user/OrderListPage';
 import OrderDetailPage from '../pages/user/OrderDetailPage';
 import OrderTrackingPage from '../pages/user/OrderTrackingPage';
 import LoginPage from '../pages/user/LoginPage';
-import SignupPage from '../pages/user/SignupPage';
+import SignupRolePage from '../pages/user/SignupRolePage';
+import UserSignupPage from '../pages/user/UserSignupPage';
 import AddressRegisterPage from '../pages/user/AddressRegisterPage';
 import AddressSearchPage from '../pages/user/AddressSearchPage';
 import AddressSettingPage from '../pages/user/AddressSettingPage';
@@ -66,13 +68,14 @@ const router = createBrowserRouter(
 
         // 로그인/회원가입
         { path: '/login', element: <LoginPage /> },
-        { path: '/signup', element: <SignupPage /> },
+        { path: '/signup', element: <SignupRolePage /> },
+        { path: '/signup/user', element: <UserSignupPage /> },
+        { path: '/signup/rider', element: <RiderSignupPage /> },
         { path: '/address/register', element: <AddressRegisterPage /> },
         { path: '/address/location', element: <LocationConfirmPage /> },
 
-        // 배달원 로그인/회원가입/교육
+        // 배달원 로그인
         { path: '/rider/login', element: <RiderLoginPage /> },
-        { path: '/rider/signup', element: <RiderSignupPage /> },
         { path: '/rider/training', element: <RiderTrainingPage /> },
         { path: '/rider/mode', element: <RiderModePage /> },
 
@@ -89,6 +92,7 @@ const router = createBrowserRouter(
             { path: '/address/setting', element: <AddressSettingPage /> },
 
             // 가게/메뉴
+            { path: '/stores/create', element: <StoreCreatePage /> },
             { path: '/stores/:storeId', element: <StoreDetailPage /> },
             {
               path: '/stores/:storeId/menu/:menuId',
@@ -99,12 +103,12 @@ const router = createBrowserRouter(
               element: <StoreReviewsPage />,
             },
             { path: '/stores/:storeId/info', element: <StoreInfoPage /> },
-            { path: '/stores/create', element: <StoreCreatePage /> },
             { path: '/reviews/:reviewId', element: <ReviewDetailPage /> },
 
             // 장바구니/주문
             { path: '/cart', element: <CartPage /> },
             { path: '/checkout', element: <CheckoutPage /> },
+            { path: '/order-complete', element: <OrderCompletePage /> },
 
             // 주문내역
             { path: '/orders', element: <OrderListPage /> },
@@ -175,7 +179,7 @@ const router = createBrowserRouter(
     },
   ],
   {
-    basename: '/baedariyo_fe',
+    basename: '/baedaliyo_fe',
   }
 );
 
