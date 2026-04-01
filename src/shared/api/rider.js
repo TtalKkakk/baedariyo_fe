@@ -50,18 +50,18 @@ export async function assignRiderToOrder({ orderId }) {
   });
 }
 
-// export async function startRiderDelivery({ orderId }) {
-//   return requestWithMockFallback({
-//     apiName: 'startRiderDelivery',
-//     request: () => api.post(`/api/deliveries/${orderId}/start`),
-//     fallback: () => mockApi.startRiderDelivery({ orderId }),
-//   });
-// }
+export async function startRiderDelivery({ orderId }) {
+  return requestWithMockFallback({
+    apiName: 'startRiderDelivery',
+    request: () => api.post(`/api/deliveries/${orderId}/start`),
+    fallback: () => mockApi.startRiderDelivery({ orderId }),
+  });
+}
 
-// export async function completeRiderDelivery({ orderId }) {
-//   return requestWithMockFallback({
-//     apiName: 'completeRiderDelivery',
-//     request: () => api.post(`/api/deliveries/${orderId}/complete`),
-//     fallback: () => mockApi.completeRiderDelivery({ orderId }),
-//   });
-// }
+export async function completeRiderDelivery({ orderId }) {
+  return requestWithMockFallback({
+    apiName: 'completeRiderDelivery',
+    request: () => api.post(`/api/deliveries/${orderId}/complete`),
+    fallback: () => mockApi.completeRiderDelivery({ orderId }),
+  });
+}
