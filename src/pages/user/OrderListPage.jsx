@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { getMyPayments } from '@/shared/api';
@@ -47,10 +47,12 @@ const STATUS_ICONS = {
 function ActiveOrderCard({ order }) {
   const navigate = useNavigate();
   const stepIndex = DELIVERY_STATUSES.indexOf(order.deliveryStatus);
-  const progressPercent = stepIndex === 0 ? 8 : (stepIndex / (DELIVERY_STATUSES.length - 1)) * 100;
+  const progressPercent =
+    stepIndex === 0 ? 8 : (stepIndex / (DELIVERY_STATUSES.length - 1)) * 100;
 
-  const storeImage = order.storeImage
-    ?? `https://picsum.photos/seed/active-${order.paymentId}/120/120`;
+  const storeImage =
+    order.storeImage ??
+    `https://picsum.photos/seed/active-${order.paymentId}/120/120`;
 
   const StatusIcon = STATUS_ICONS[order.deliveryStatus] ?? OrderIcon;
   const isDelivered = order.deliveryStatus === 'DELIVERED';
@@ -199,16 +201,15 @@ export default function OrderListPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPeriod, setSelectedPeriod] = useState(PERIOD_OPTIONS[0]);
   const [isPeriodModalOpen, setIsPeriodModalOpen] = useState(false);
-  const [showDeleteToast, setShowDeleteToast] = useState(false);
+  const [showDeleteToast, setShowDeleteToast] = useState(() => {
+    if (location.state?.showDeleteToast) {
+      window.history.replaceState({}, '');
+      return true;
+    }
+    return false;
+  });
 
   const activeOrders = useActiveOrderStore((state) => state.activeOrders);
-
-  useEffect(() => {
-    if (location.state?.showDeleteToast) {
-      setShowDeleteToast(true);
-      window.history.replaceState({}, '');
-    }
-  }, [location.state]);
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['my-payments', 'ALL'],
@@ -314,13 +315,16 @@ export default function OrderListPage() {
           </div>
         )}
 
-        {!isLoading && !isError && filteredPayments.length === 0 && activeOrders.length === 0 && (
-          <p className="text-[14px] text-[var(--color-semantic-label-alternative)] py-10 text-center">
-            {searchQuery.trim()
-              ? '검색 결과가 없습니다.'
-              : '주문 내역이 없습니다.'}
-          </p>
-        )}
+        {!isLoading &&
+          !isError &&
+          filteredPayments.length === 0 &&
+          activeOrders.length === 0 && (
+            <p className="text-[14px] text-[var(--color-semantic-label-alternative)] py-10 text-center">
+              {searchQuery.trim()
+                ? '검색 결과가 없습니다.'
+                : '주문 내역이 없습니다.'}
+            </p>
+          )}
 
         {filteredPayments.map((payment, index) => (
           <OrderCard

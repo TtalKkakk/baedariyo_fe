@@ -16,7 +16,8 @@ import OrderListPage from '../pages/user/OrderListPage';
 import OrderDetailPage from '../pages/user/OrderDetailPage';
 import OrderTrackingPage from '../pages/user/OrderTrackingPage';
 import LoginPage from '../pages/user/LoginPage';
-import SignupPage from '../pages/user/SignupPage';
+import SignupRolePage from '../pages/user/SignupRolePage';
+import UserSignupPage from '../pages/user/UserSignupPage';
 import AddressRegisterPage from '../pages/user/AddressRegisterPage';
 import AddressSearchPage from '../pages/user/AddressSearchPage';
 import AddressSettingPage from '../pages/user/AddressSettingPage';
@@ -67,13 +68,14 @@ const router = createBrowserRouter(
 
         // 로그인/회원가입
         { path: '/login', element: <LoginPage /> },
-        { path: '/signup', element: <SignupPage /> },
+        { path: '/signup', element: <SignupRolePage /> },
+        { path: '/signup/user', element: <UserSignupPage /> },
+        { path: '/signup/rider', element: <RiderSignupPage /> },
         { path: '/address/register', element: <AddressRegisterPage /> },
         { path: '/address/location', element: <LocationConfirmPage /> },
 
-        // 배달원 로그인/회원가입/교육
+        // 배달원 로그인
         { path: '/rider/login', element: <RiderLoginPage /> },
-        { path: '/rider/signup', element: <RiderSignupPage /> },
         { path: '/rider/training', element: <RiderTrainingPage /> },
         { path: '/rider/mode', element: <RiderModePage /> },
 

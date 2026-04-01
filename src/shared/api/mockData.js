@@ -724,9 +724,21 @@ const BAEKDABANG_MENUS_TEMPLATE = [
         maxSelectableCount: 1,
         absolutePrice: true,
         options: [
-          { name: 'ICE 기본 (473ml)', optionPrice: { amount: 1500 }, isPopular: true },
-          { name: 'HOT 기본 (355ml)', optionPrice: { amount: 1500 }, isPopular: false },
-          { name: 'ICE 빽사이즈 (887ml)', optionPrice: { amount: 2000 }, isPopular: false },
+          {
+            name: 'ICE 기본 (473ml)',
+            optionPrice: { amount: 1500 },
+            isPopular: true,
+          },
+          {
+            name: 'HOT 기본 (355ml)',
+            optionPrice: { amount: 1500 },
+            isPopular: false,
+          },
+          {
+            name: 'ICE 빽사이즈 (887ml)',
+            optionPrice: { amount: 2000 },
+            isPopular: false,
+          },
         ],
       },
       {
@@ -735,9 +747,21 @@ const BAEKDABANG_MENUS_TEMPLATE = [
         maxSelectableCount: 3,
         absolutePrice: false,
         options: [
-          { name: '에스프레소 샷 추가', optionPrice: { amount: 500 }, isPopular: true },
-          { name: '바닐라 시럽 추가', optionPrice: { amount: 300 }, isPopular: false },
-          { name: '헤이즐넛 시럽 추가', optionPrice: { amount: 300 }, isPopular: false },
+          {
+            name: '에스프레소 샷 추가',
+            optionPrice: { amount: 500 },
+            isPopular: true,
+          },
+          {
+            name: '바닐라 시럽 추가',
+            optionPrice: { amount: 300 },
+            isPopular: false,
+          },
+          {
+            name: '헤이즐넛 시럽 추가',
+            optionPrice: { amount: 300 },
+            isPopular: false,
+          },
         ],
       },
     ],
@@ -745,7 +769,8 @@ const BAEKDABANG_MENUS_TEMPLATE = [
   {
     id: 202,
     menuName: '원조커피',
-    menuDescription: '빽다방 시그니처! 달달하고 진한 원조커피. 설탕이 들어간 달달한 커피.',
+    menuDescription:
+      '빽다방 시그니처! 달달하고 진한 원조커피. 설탕이 들어간 달달한 커피.',
     price: { amount: 0 },
     reviewCount: 2100,
     menuOptionGroups: [
@@ -755,8 +780,16 @@ const BAEKDABANG_MENUS_TEMPLATE = [
         maxSelectableCount: 1,
         absolutePrice: true,
         options: [
-          { name: 'ICE 기본 (473ml)', optionPrice: { amount: 1500 }, isPopular: true },
-          { name: 'ICE 빽사이즈 (887ml)', optionPrice: { amount: 2000 }, isPopular: false },
+          {
+            name: 'ICE 기본 (473ml)',
+            optionPrice: { amount: 1500 },
+            isPopular: true,
+          },
+          {
+            name: 'ICE 빽사이즈 (887ml)',
+            optionPrice: { amount: 2000 },
+            isPopular: false,
+          },
         ],
       },
       {
@@ -765,8 +798,16 @@ const BAEKDABANG_MENUS_TEMPLATE = [
         maxSelectableCount: 2,
         absolutePrice: false,
         options: [
-          { name: '에스프레소 샷 추가', optionPrice: { amount: 500 }, isPopular: false },
-          { name: '설탕 시럽 추가', optionPrice: { amount: 300 }, isPopular: false },
+          {
+            name: '에스프레소 샷 추가',
+            optionPrice: { amount: 500 },
+            isPopular: false,
+          },
+          {
+            name: '설탕 시럽 추가',
+            optionPrice: { amount: 300 },
+            isPopular: false,
+          },
         ],
       },
     ],
@@ -784,9 +825,21 @@ const BAEKDABANG_MENUS_TEMPLATE = [
         maxSelectableCount: 1,
         absolutePrice: true,
         options: [
-          { name: 'ICE 기본 (473ml)', optionPrice: { amount: 2000 }, isPopular: true },
-          { name: 'HOT 기본 (355ml)', optionPrice: { amount: 2000 }, isPopular: false },
-          { name: 'ICE 빽사이즈 (887ml)', optionPrice: { amount: 2500 }, isPopular: false },
+          {
+            name: 'ICE 기본 (473ml)',
+            optionPrice: { amount: 2000 },
+            isPopular: true,
+          },
+          {
+            name: 'HOT 기본 (355ml)',
+            optionPrice: { amount: 2000 },
+            isPopular: false,
+          },
+          {
+            name: 'ICE 빽사이즈 (887ml)',
+            optionPrice: { amount: 2500 },
+            isPopular: false,
+          },
         ],
       },
       {
@@ -795,8 +848,16 @@ const BAEKDABANG_MENUS_TEMPLATE = [
         maxSelectableCount: 3,
         absolutePrice: false,
         options: [
-          { name: '에스프레소 샷 추가', optionPrice: { amount: 500 }, isPopular: false },
-          { name: '바닐라 시럽 추가', optionPrice: { amount: 300 }, isPopular: true },
+          {
+            name: '에스프레소 샷 추가',
+            optionPrice: { amount: 500 },
+            isPopular: false,
+          },
+          {
+            name: '바닐라 시럽 추가',
+            optionPrice: { amount: 300 },
+            isPopular: true,
+          },
         ],
       },
     ],
@@ -814,9 +875,21 @@ const BAEKDABANG_MENUS_TEMPLATE = [
         maxSelectableCount: 1,
         absolutePrice: true,
         options: [
-          { name: 'ICE 기본 (473ml)', optionPrice: { amount: 2500 }, isPopular: true },
-          { name: 'HOT 기본 (355ml)', optionPrice: { amount: 2500 }, isPopular: false },
-          { name: 'ICE 빽사이즈 (887ml)', optionPrice: { amount: 3000 }, isPopular: false },
+          {
+            name: 'ICE 기본 (473ml)',
+            optionPrice: { amount: 2500 },
+            isPopular: true,
+          },
+          {
+            name: 'HOT 기본 (355ml)',
+            optionPrice: { amount: 2500 },
+            isPopular: false,
+          },
+          {
+            name: 'ICE 빽사이즈 (887ml)',
+            optionPrice: { amount: 3000 },
+            isPopular: false,
+          },
         ],
       },
       {
@@ -825,7 +898,11 @@ const BAEKDABANG_MENUS_TEMPLATE = [
         maxSelectableCount: 2,
         absolutePrice: false,
         options: [
-          { name: '에스프레소 샷 추가', optionPrice: { amount: 500 }, isPopular: false },
+          {
+            name: '에스프레소 샷 추가',
+            optionPrice: { amount: 500 },
+            isPopular: false,
+          },
         ],
       },
     ],
@@ -843,8 +920,16 @@ const BAEKDABANG_MENUS_TEMPLATE = [
         maxSelectableCount: 1,
         absolutePrice: true,
         options: [
-          { name: 'ICE 기본 (473ml)', optionPrice: { amount: 2500 }, isPopular: true },
-          { name: 'ICE 빽사이즈 (887ml)', optionPrice: { amount: 3000 }, isPopular: false },
+          {
+            name: 'ICE 기본 (473ml)',
+            optionPrice: { amount: 2500 },
+            isPopular: true,
+          },
+          {
+            name: 'ICE 빽사이즈 (887ml)',
+            optionPrice: { amount: 3000 },
+            isPopular: false,
+          },
         ],
       },
     ],
@@ -852,7 +937,8 @@ const BAEKDABANG_MENUS_TEMPLATE = [
   {
     id: 206,
     menuName: '빽스치노',
-    menuDescription: '달콤 진한 커피에 크림과 초코 드리즐로 마무리한 시그니처 음료.',
+    menuDescription:
+      '달콤 진한 커피에 크림과 초코 드리즐로 마무리한 시그니처 음료.',
     price: { amount: 0 },
     reviewCount: 740,
     menuOptionGroups: [
@@ -862,8 +948,16 @@ const BAEKDABANG_MENUS_TEMPLATE = [
         maxSelectableCount: 1,
         absolutePrice: true,
         options: [
-          { name: 'ICE 기본 (473ml)', optionPrice: { amount: 3000 }, isPopular: true },
-          { name: 'ICE 빽사이즈 (887ml)', optionPrice: { amount: 3500 }, isPopular: false },
+          {
+            name: 'ICE 기본 (473ml)',
+            optionPrice: { amount: 3000 },
+            isPopular: true,
+          },
+          {
+            name: 'ICE 빽사이즈 (887ml)',
+            optionPrice: { amount: 3500 },
+            isPopular: false,
+          },
         ],
       },
     ],
@@ -881,8 +975,16 @@ const BAEKDABANG_MENUS_TEMPLATE = [
         maxSelectableCount: 1,
         absolutePrice: true,
         options: [
-          { name: 'ICE 기본 (473ml)', optionPrice: { amount: 3000 }, isPopular: true },
-          { name: 'ICE 빽사이즈 (887ml)', optionPrice: { amount: 3500 }, isPopular: false },
+          {
+            name: 'ICE 기본 (473ml)',
+            optionPrice: { amount: 3000 },
+            isPopular: true,
+          },
+          {
+            name: 'ICE 빽사이즈 (887ml)',
+            optionPrice: { amount: 3500 },
+            isPopular: false,
+          },
         ],
       },
     ],
@@ -900,8 +1002,16 @@ const BAEKDABANG_MENUS_TEMPLATE = [
         maxSelectableCount: 1,
         absolutePrice: true,
         options: [
-          { name: 'ICE 기본 (473ml)', optionPrice: { amount: 2500 }, isPopular: true },
-          { name: 'ICE 빽사이즈 (887ml)', optionPrice: { amount: 3000 }, isPopular: false },
+          {
+            name: 'ICE 기본 (473ml)',
+            optionPrice: { amount: 2500 },
+            isPopular: true,
+          },
+          {
+            name: 'ICE 빽사이즈 (887ml)',
+            optionPrice: { amount: 3000 },
+            isPopular: false,
+          },
         ],
       },
     ],
@@ -919,8 +1029,16 @@ const BAEKDABANG_MENUS_TEMPLATE = [
         maxSelectableCount: 1,
         absolutePrice: true,
         options: [
-          { name: 'ICE 기본 (473ml)', optionPrice: { amount: 2500 }, isPopular: true },
-          { name: 'ICE 빽사이즈 (887ml)', optionPrice: { amount: 3000 }, isPopular: false },
+          {
+            name: 'ICE 기본 (473ml)',
+            optionPrice: { amount: 2500 },
+            isPopular: true,
+          },
+          {
+            name: 'ICE 빽사이즈 (887ml)',
+            optionPrice: { amount: 3000 },
+            isPopular: false,
+          },
         ],
       },
     ],
@@ -938,8 +1056,16 @@ const BAEKDABANG_MENUS_TEMPLATE = [
         maxSelectableCount: 1,
         absolutePrice: true,
         options: [
-          { name: 'ICE 기본 (473ml)', optionPrice: { amount: 2000 }, isPopular: true },
-          { name: 'ICE 빽사이즈 (887ml)', optionPrice: { amount: 2500 }, isPopular: false },
+          {
+            name: 'ICE 기본 (473ml)',
+            optionPrice: { amount: 2000 },
+            isPopular: true,
+          },
+          {
+            name: 'ICE 빽사이즈 (887ml)',
+            optionPrice: { amount: 2500 },
+            isPopular: false,
+          },
         ],
       },
     ],
@@ -974,8 +1100,16 @@ const SHANGTZ_MENUS_TEMPLATE = [
         maxSelectableCount: 1,
         absolutePrice: true,
         options: [
-          { name: '기본 1인분', optionPrice: { amount: 9800 }, isPopular: true },
-          { name: '프리미엄 1인분 (재료 업그레이드)', optionPrice: { amount: 12800 }, isPopular: false },
+          {
+            name: '기본 1인분',
+            optionPrice: { amount: 9800 },
+            isPopular: true,
+          },
+          {
+            name: '프리미엄 1인분 (재료 업그레이드)',
+            optionPrice: { amount: 12800 },
+            isPopular: false,
+          },
         ],
       },
       {
@@ -985,9 +1119,21 @@ const SHANGTZ_MENUS_TEMPLATE = [
         absolutePrice: false,
         options: [
           { name: '당면 추가', optionPrice: { amount: 1000 }, isPopular: true },
-          { name: '우동면 추가', optionPrice: { amount: 1000 }, isPopular: false },
-          { name: '라면사리 추가', optionPrice: { amount: 1000 }, isPopular: false },
-          { name: '쌀국수면 추가', optionPrice: { amount: 1000 }, isPopular: false },
+          {
+            name: '우동면 추가',
+            optionPrice: { amount: 1000 },
+            isPopular: false,
+          },
+          {
+            name: '라면사리 추가',
+            optionPrice: { amount: 1000 },
+            isPopular: false,
+          },
+          {
+            name: '쌀국수면 추가',
+            optionPrice: { amount: 1000 },
+            isPopular: false,
+          },
         ],
       },
     ],
@@ -1030,8 +1176,16 @@ const SHANGTZ_MENUS_TEMPLATE = [
         absolutePrice: false,
         options: [
           { name: '당면 추가', optionPrice: { amount: 1000 }, isPopular: true },
-          { name: '우동면 추가', optionPrice: { amount: 1000 }, isPopular: false },
-          { name: '라면사리 추가', optionPrice: { amount: 1000 }, isPopular: false },
+          {
+            name: '우동면 추가',
+            optionPrice: { amount: 1000 },
+            isPopular: false,
+          },
+          {
+            name: '라면사리 추가',
+            optionPrice: { amount: 1000 },
+            isPopular: false,
+          },
         ],
       },
     ],
@@ -1063,8 +1217,16 @@ const SHANGTZ_MENUS_TEMPLATE = [
         maxSelectableCount: 1,
         absolutePrice: true,
         options: [
-          { name: '기본 1인분', optionPrice: { amount: 12900 }, isPopular: true },
-          { name: '프리미엄 1인분', optionPrice: { amount: 15900 }, isPopular: false },
+          {
+            name: '기본 1인분',
+            optionPrice: { amount: 12900 },
+            isPopular: true,
+          },
+          {
+            name: '프리미엄 1인분',
+            optionPrice: { amount: 15900 },
+            isPopular: false,
+          },
         ],
       },
       {
@@ -1074,8 +1236,16 @@ const SHANGTZ_MENUS_TEMPLATE = [
         absolutePrice: false,
         options: [
           { name: '당면 추가', optionPrice: { amount: 1000 }, isPopular: true },
-          { name: '우동면 추가', optionPrice: { amount: 1000 }, isPopular: false },
-          { name: '볶음면으로 변경', optionPrice: { amount: 1500 }, isPopular: false },
+          {
+            name: '우동면 추가',
+            optionPrice: { amount: 1000 },
+            isPopular: false,
+          },
+          {
+            name: '볶음면으로 변경',
+            optionPrice: { amount: 1500 },
+            isPopular: false,
+          },
         ],
       },
     ],
@@ -1106,8 +1276,16 @@ const SHANGTZ_MENUS_TEMPLATE = [
         maxSelectableCount: 1,
         absolutePrice: true,
         options: [
-          { name: '기본 2인분', optionPrice: { amount: 24900 }, isPopular: true },
-          { name: '프리미엄 2인분', optionPrice: { amount: 29900 }, isPopular: false },
+          {
+            name: '기본 2인분',
+            optionPrice: { amount: 24900 },
+            isPopular: true,
+          },
+          {
+            name: '프리미엄 2인분',
+            optionPrice: { amount: 29900 },
+            isPopular: false,
+          },
         ],
       },
     ],
@@ -1156,7 +1334,11 @@ const SHANGTZ_MENUS_TEMPLATE = [
         maxSelectableCount: 1,
         absolutePrice: true,
         options: [
-          { name: '미니 (200g)', optionPrice: { amount: 8900 }, isPopular: true },
+          {
+            name: '미니 (200g)',
+            optionPrice: { amount: 8900 },
+            isPopular: true,
+          },
         ],
       },
       {
@@ -1165,7 +1347,11 @@ const SHANGTZ_MENUS_TEMPLATE = [
         maxSelectableCount: 1,
         absolutePrice: false,
         options: [
-          { name: '기본 새콤달콤 소스', optionPrice: { amount: 0 }, isPopular: true },
+          {
+            name: '기본 새콤달콤 소스',
+            optionPrice: { amount: 0 },
+            isPopular: true,
+          },
           { name: '마라 소스', optionPrice: { amount: 500 }, isPopular: false },
         ],
       },
@@ -1184,8 +1370,16 @@ const SHANGTZ_MENUS_TEMPLATE = [
         maxSelectableCount: 1,
         absolutePrice: true,
         options: [
-          { name: '정 (350g)', optionPrice: { amount: 12900 }, isPopular: true },
-          { name: '대 (500g)', optionPrice: { amount: 16900 }, isPopular: false },
+          {
+            name: '정 (350g)',
+            optionPrice: { amount: 12900 },
+            isPopular: true,
+          },
+          {
+            name: '대 (500g)',
+            optionPrice: { amount: 16900 },
+            isPopular: false,
+          },
         ],
       },
       {
@@ -1194,7 +1388,11 @@ const SHANGTZ_MENUS_TEMPLATE = [
         maxSelectableCount: 1,
         absolutePrice: false,
         options: [
-          { name: '기본 새콤달콤 소스', optionPrice: { amount: 0 }, isPopular: true },
+          {
+            name: '기본 새콤달콤 소스',
+            optionPrice: { amount: 0 },
+            isPopular: true,
+          },
           { name: '마라 소스', optionPrice: { amount: 500 }, isPopular: false },
         ],
       },
@@ -1203,7 +1401,8 @@ const SHANGTZ_MENUS_TEMPLATE = [
   {
     id: 308,
     menuName: '온면',
-    menuDescription: '따뜻한 마라 국물에 담긴 온면. 마라탕과 함께 즐기기 좋은 사이드.',
+    menuDescription:
+      '따뜻한 마라 국물에 담긴 온면. 마라탕과 함께 즐기기 좋은 사이드.',
     price: { amount: 0 },
     reviewCount: 870,
     menuOptionGroups: [
@@ -1269,7 +1468,8 @@ const SHANGTZ_MENUS_TEMPLATE = [
   {
     id: 311,
     menuName: '고수 군만두 (8개)',
-    menuDescription: '고소하고 바삭한 군만두. 고수 향이 살짝 가미된 중식 스타일.',
+    menuDescription:
+      '고소하고 바삭한 군만두. 고수 향이 살짝 가미된 중식 스타일.',
     price: { amount: 5900 },
     reviewCount: 420,
     menuOptionGroups: [],
@@ -1340,7 +1540,9 @@ function buildStore({
 }) {
   const hasCustomMenus = Array.isArray(menus);
   const resolvedMenus = hasCustomMenus ? menus : buildDefaultMenus(id, 1);
-  const allMenus = hasCustomMenus ? resolvedMenus : [...resolvedMenus, ...EXTRA_MENUS];
+  const allMenus = hasCustomMenus
+    ? resolvedMenus
+    : [...resolvedMenus, ...EXTRA_MENUS];
   return {
     id,
     storePublicId,
@@ -1354,7 +1556,9 @@ function buildStore({
     totalRating: 0,
     reviewCount: 0,
     menus: allMenus,
-    menuGroups: buildMenuGroupsFromMenus(resolvedMenus, { includeExtraGroups: !hasCustomMenus }),
+    menuGroups: buildMenuGroupsFromMenus(resolvedMenus, {
+      includeExtraGroups: !hasCustomMenus,
+    }),
     recentPhotoReviews: [],
   };
 }
@@ -1476,6 +1680,7 @@ const searchResultSeedStores = SEARCH_RESULT_STORES.map((s, i) => {
 });
 
 const mockState = {
+  currentUser: null,
   nextStoreId: 2 + SEARCH_RESULT_STORES.length,
   nextMenuId: 100,
   nextOrderId: 5000,
@@ -1675,11 +1880,14 @@ function toReviewDetail(review, fallbackPublicId) {
 recalculateAllStoreStats();
 
 function signupUser(payload) {
-  return clone({
+  mockState.currentUser = {
     userId: MOCK_USER_ID,
     email: payload?.email ?? 'mock-user@baedariyo.com',
+    name: payload?.name ?? '',
     nickname: payload?.nickname ?? 'mock-user',
-  });
+    phoneNumber: payload?.phoneNumber ?? '',
+  };
+  return clone(mockState.currentUser);
 }
 
 function signupRider(payload) {
@@ -1692,11 +1900,15 @@ function signupRider(payload) {
 }
 
 function loginUser(payload) {
+  const saved = mockState.currentUser;
   return clone({
     accessToken: createToken('mock-user-access'),
     refreshToken: createToken('mock-user-refresh'),
     userId: MOCK_USER_ID,
-    email: payload?.email ?? 'mock-user@baedariyo.com',
+    email: payload?.email ?? saved?.email ?? 'mock-user@baedariyo.com',
+    name: saved?.name ?? '',
+    nickname: saved?.nickname ?? '',
+    phoneNumber: saved?.phoneNumber ?? '',
   });
 }
 
@@ -2172,12 +2384,12 @@ function deleteAllRecentKeywords() {
 }
 
 function getUserProfile() {
+  const saved = mockState.currentUser;
   return clone({
-    name: '홍길동',
-    nickname: '망고가 말랑',
-    email: 'email@email.com',
-    phoneNumber: '010-6659-5866',
-    birthDate: '2001.05.22',
+    name: saved?.name ?? '홍길동',
+    nickname: saved?.nickname ?? '망고가 말랑',
+    email: saved?.email ?? 'email@email.com',
+    phoneNumber: saved?.phoneNumber ?? '010-6659-5866',
   });
 }
 

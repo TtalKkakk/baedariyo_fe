@@ -1,6 +1,11 @@
 import { create } from 'zustand';
 
-export const DELIVERY_STATUSES = ['CONFIRMED', 'PREPARING', 'DELIVERING', 'DELIVERED'];
+export const DELIVERY_STATUSES = [
+  'CONFIRMED',
+  'PREPARING',
+  'DELIVERING',
+  'DELIVERED',
+];
 
 export const DELIVERY_STATUS_LABELS = {
   CONFIRMED: '주문 접수',
@@ -44,7 +49,9 @@ export const useActiveOrderStore = create((set, get) => ({
       if (nextStatus === 'DELIVERED') {
         setTimeout(() => {
           set((state) => ({
-            activeOrders: state.activeOrders.filter((o) => o.paymentId !== paymentId),
+            activeOrders: state.activeOrders.filter(
+              (o) => o.paymentId !== paymentId
+            ),
           }));
         }, 8000);
       } else {

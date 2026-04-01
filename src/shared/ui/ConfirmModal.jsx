@@ -12,7 +12,10 @@ export function ConfirmModal({
 
   return (
     <div className="absolute inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" onClick={onCancel} />
+      <div
+        className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
+        onClick={onCancel}
+      />
       <div className="relative mx-4 w-full max-w-[328px] rounded-2xl bg-white px-6 py-6">
         <p className="text-center text-h6 font-bold text-[var(--color-semantic-label-normal)]">
           {title}

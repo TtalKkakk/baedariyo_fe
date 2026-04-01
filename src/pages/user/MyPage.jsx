@@ -7,6 +7,7 @@ import { useProfileStore } from '@/shared/store';
 import { BottomModal } from '@/shared/ui/BottomModal';
 import { ConfirmModal } from '@/shared/ui/ConfirmModal';
 import { Toast } from '@/shared/ui/Toast';
+import MotorcycleIcon from '@/shared/assets/icons/order-status/motocycle.svg?react';
 
 function UserAvatar() {
   return (
@@ -143,28 +144,6 @@ function LogoutIcon() {
         strokeLinejoin="round"
       />
     </svg>
-  );
-}
-
-function SocialLoginButton({ icon, label, bgColor, textColor, onClick }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="flex flex-col items-center gap-1.5"
-    >
-      <div
-        className="flex h-12 w-12 items-center justify-center rounded-full"
-        style={{ backgroundColor: bgColor }}
-      >
-        <span className="text-lg" style={{ color: textColor }}>
-          {icon}
-        </span>
-      </div>
-      <span className="text-caption2 text-[var(--color-semantic-label-alternative)]">
-        {label}
-      </span>
-    </button>
   );
 }
 
@@ -308,44 +287,16 @@ export default function MyPage() {
         title=""
       >
         <div className="px-6 pb-4">
-          <div className="flex flex-col items-center gap-3 py-4">
+          <div className="flex flex-col items-center gap-2 py-4">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--color-atomic-redOrange-80)]">
-              <span className="text-2xl text-white">🛵</span>
+              <MotorcycleIcon className="size-9 [&_path]:stroke-white" />
             </div>
+            <p className="text-body1 font-bold text-[var(--color-semantic-label-normal)]">
+              배달이요
+            </p>
             <p className="text-body3 text-[var(--color-semantic-label-alternative)]">
               빠른 배달, 맛있는 배달
             </p>
-          </div>
-
-          <div className="flex justify-center gap-6 py-4">
-            <SocialLoginButton
-              icon="💬"
-              label="카카오"
-              bgColor="#FEE500"
-              textColor="#191919"
-              onClick={() => setShowLoginModal(false)}
-            />
-            <SocialLoginButton
-              icon="N"
-              label="네이버"
-              bgColor="#03C75A"
-              textColor="#fff"
-              onClick={() => setShowLoginModal(false)}
-            />
-            <SocialLoginButton
-              icon=""
-              label="애플"
-              bgColor="#000"
-              textColor="#fff"
-              onClick={() => setShowLoginModal(false)}
-            />
-            <SocialLoginButton
-              icon="G"
-              label="구글"
-              bgColor="#F2F2F2"
-              textColor="#191919"
-              onClick={() => setShowLoginModal(false)}
-            />
           </div>
 
           <button
@@ -356,7 +307,7 @@ export default function MyPage() {
             }}
             className="mt-2 w-full rounded-lg border border-[var(--color-atomic-redOrange-80)] py-2.5 text-center text-body2 font-medium text-[var(--color-atomic-redOrange-80)]"
           >
-            휴대폰번호로 로그인
+            이메일로 로그인
           </button>
 
           <button
@@ -367,7 +318,7 @@ export default function MyPage() {
             }}
             className="mt-2 w-full rounded-lg bg-[var(--color-atomic-redOrange-80)] py-2.5 text-center text-body2 font-semibold text-white"
           >
-            가입
+            회원가입
           </button>
         </div>
       </BottomModal>

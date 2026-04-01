@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { createOrder, getStoreMenus } from '@/shared/api';
@@ -116,6 +116,7 @@ export default function CheckoutPage() {
   const [newPhoneDraft, setNewPhoneDraft] = useState('');
   const [verificationSent, setVerificationSent] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
+  const fallbackPaymentIdRef = useRef(null);
 
   const uniqueStorePublicIds = useMemo(
     () => [
@@ -205,7 +206,7 @@ export default function CheckoutPage() {
     },
     onSuccess: (result) => {
       addActiveOrder({
-        paymentId: result?.paymentId ?? Date.now(),
+        paymentId: result?.paymentId ?? fallbackPaymentIdRef.current,
         orderId: result?.orderId ?? null,
         storeName: items[0]?.storeName ?? '주문',
         orderMenus: items.map((item) => ({
@@ -533,7 +534,10 @@ export default function CheckoutPage() {
         </div>
         <button
           type="button"
-          onClick={() => createOrderMutation.mutate()}
+          onClick={() => {
+            fallbackPaymentIdRef.current = Date.now();
+            createOrderMutation.mutate();
+          }}
           disabled={
             createOrderMutation.isPending || uniqueStorePublicIds.length !== 1
           }

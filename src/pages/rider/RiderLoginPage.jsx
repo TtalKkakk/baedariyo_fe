@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { loginRider } from '@/shared/api';
+import BackIcon from '@/shared/assets/icons/header/back.svg?react';
 
 function getErrorMessage(error) {
   return (
@@ -47,12 +48,20 @@ export default function RiderLoginPage() {
   };
 
   return (
-    <div className="min-h-full bg-white px-4 py-6">
-      <h1 className="text-title2 font-semibold text-[var(--color-semantic-label-normal)]">
-        배달원 로그인
-      </h1>
+    <div className="flex-1 overflow-y-auto bg-white px-4 py-6">
+      <button
+        type="button"
+        onClick={() => navigate(-1)}
+        className="flex items-center gap-1 mb-4 text-body2 text-[var(--color-semantic-label-alternative)]"
+      >
+        <BackIcon className="size-5" />
+        뒤로
+      </button>
+      <p className="text-title2 font-semibold text-[var(--color-semantic-label-normal)]">
+        라이더 로그인
+      </p>
       <p className="mt-1 text-body2 text-[var(--color-semantic-label-alternative)]">
-        로그인 성공 시 `/rider`로 이동합니다.
+        로그인 성공 시 라이더 홈으로 이동합니다.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-5 space-y-3">

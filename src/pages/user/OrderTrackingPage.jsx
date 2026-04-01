@@ -88,12 +88,11 @@ const RIDER_OVERLAY_HTML = `
 `;
 
 function RealtimeTrackingView({ order }) {
-  const navigate = useNavigate();
   const mapElRef = useRef(null);
   const mapRef = useRef(null);
   const kakaoRef = useRef(null);
   const riderRef = useRef(null);
-  const storeCoordsRef = useRef(null);   // { lat, lng }
+  const storeCoordsRef = useRef(null); // { lat, lng }
   const deliveryCoordsRef = useRef(null); // { lat, lng }
   const intervalRef = useRef(null);
   const [isMapReady, setIsMapReady] = useState(false);
@@ -139,7 +138,10 @@ function RealtimeTrackingView({ order }) {
           });
 
           // 배달지 마커 (집 아이콘)
-          const deliveryPt = new kakao.maps.LatLng(deliveryC.lat, deliveryC.lng);
+          const deliveryPt = new kakao.maps.LatLng(
+            deliveryC.lat,
+            deliveryC.lng
+          );
           new kakao.maps.CustomOverlay({
             position: deliveryPt,
             content: HOUSE_MARKER_HTML,
@@ -288,7 +290,12 @@ function RealtimeTrackingView({ order }) {
       >
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
           <circle cx="10" cy="10" r="3.5" stroke="#555" strokeWidth="1.5" />
-          <path d="M10 2v2.5M10 15.5V18M2 10h2.5M15.5 10H18" stroke="#555" strokeWidth="1.5" strokeLinecap="round" />
+          <path
+            d="M10 2v2.5M10 15.5V18M2 10h2.5M15.5 10H18"
+            stroke="#555"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
         </svg>
       </button>
 
@@ -327,9 +334,10 @@ function RealtimeTrackingView({ order }) {
               className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-[11px] h-[11px] rounded-full transition-colors duration-500"
               style={{
                 left: `${left}%`,
-                background: i <= currentStep
-                  ? 'var(--color-atomic-redOrange-80)'
-                  : 'var(--color-semantic-line-normal-normal)',
+                background:
+                  i <= currentStep
+                    ? 'var(--color-atomic-redOrange-80)'
+                    : 'var(--color-semantic-line-normal-normal)',
               }}
             />
           ))}
@@ -365,7 +373,8 @@ function DeliveredView({ order }) {
         배달 완료!
       </p>
       <p className="text-[15px] text-[var(--color-semantic-label-alternative)] text-center mt-3 leading-relaxed">
-        {order.storeName}의<br />주문이 맛있게 도착했어요
+        {order.storeName}의<br />
+        주문이 맛있게 도착했어요
       </p>
       <div className="w-full mt-12 space-y-3">
         <button
@@ -390,9 +399,21 @@ function DeliveredView({ order }) {
 // ─── 기존 결제 상태 추적 (active order가 아닌 경우) ──────────
 
 const TRACKING_STEPS = [
-  { key: 'READY', title: '주문 생성', description: '주문이 생성되어 접수 대기 중입니다.' },
-  { key: 'REQUESTED', title: '결제 요청', description: '결제 요청이 전송되었습니다.' },
-  { key: 'APPROVED', title: '결제 완료', description: '결제가 승인되었습니다.' },
+  {
+    key: 'READY',
+    title: '주문 생성',
+    description: '주문이 생성되어 접수 대기 중입니다.',
+  },
+  {
+    key: 'REQUESTED',
+    title: '결제 요청',
+    description: '결제 요청이 전송되었습니다.',
+  },
+  {
+    key: 'APPROVED',
+    title: '결제 완료',
+    description: '결제가 승인되었습니다.',
+  },
 ];
 
 function getCurrentStepIndex(status) {
@@ -408,16 +429,21 @@ function stepClassName(variant) {
 }
 
 function findByRouteId(payments, routeId) {
-  return (Array.isArray(payments) ? payments : []).find(
-    (p) => getPaymentRouteId(p) === routeId
-  ) ?? null;
+  return (
+    (Array.isArray(payments) ? payments : []).find(
+      (p) => getPaymentRouteId(p) === routeId
+    ) ?? null
+  );
 }
 
-function PaymentTrackingView({ payment, onBack, onToDetail }) {
+function PaymentTrackingView({ payment, onToDetail }) {
   const currentStepIndex = getCurrentStepIndex(payment?.paymentStatus);
   const isFailedOrCanceled =
-    payment?.paymentStatus === 'FAILED' || payment?.paymentStatus === 'CANCELED';
-  const orderMenus = Array.isArray(payment?.orderMenus) ? payment.orderMenus : [];
+    payment?.paymentStatus === 'FAILED' ||
+    payment?.paymentStatus === 'CANCELED';
+  const orderMenus = Array.isArray(payment?.orderMenus)
+    ? payment.orderMenus
+    : [];
 
   return (
     <div className="min-h-full bg-white py-4 pb-8">
@@ -436,7 +462,9 @@ function PaymentTrackingView({ payment, onBack, onToDetail }) {
           <p className="text-[16px] font-semibold text-[var(--color-semantic-label-normal)]">
             {payment?.storeName ?? '가게명 없음'}
           </p>
-          <span className={`rounded-full px-2 py-0.5 text-[12px] ${getPaymentStatusClassName(payment?.paymentStatus)}`}>
+          <span
+            className={`rounded-full px-2 py-0.5 text-[12px] ${getPaymentStatusClassName(payment?.paymentStatus)}`}
+          >
             {getPaymentStatusLabel(payment?.paymentStatus)}
           </span>
         </div>
@@ -451,26 +479,36 @@ function PaymentTrackingView({ payment, onBack, onToDetail }) {
       {isFailedOrCanceled ? (
         <section className="mt-4 rounded-xl border border-[var(--color-semantic-status-cautionary)] bg-[var(--color-atomic-redOrange-99)] p-4">
           <p className="text-[16px] font-semibold text-[var(--color-semantic-status-cautionary)]">
-            주문이 {payment?.paymentStatus === 'FAILED' ? '실패' : '취소'} 상태입니다.
+            주문이 {payment?.paymentStatus === 'FAILED' ? '실패' : '취소'}{' '}
+            상태입니다.
           </p>
         </section>
       ) : (
         <section className="mt-4 rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-white p-4">
-          <p className="text-[16px] font-semibold text-[var(--color-semantic-label-normal)]">진행 단계</p>
+          <p className="text-[16px] font-semibold text-[var(--color-semantic-label-normal)]">
+            진행 단계
+          </p>
           <ol className="mt-3 space-y-2">
             {TRACKING_STEPS.map((step, index) => {
               const variant =
                 currentStepIndex === -1
                   ? 'pending'
                   : index < currentStepIndex
-                  ? 'completed'
-                  : index === currentStepIndex
-                  ? 'current'
-                  : 'pending';
+                    ? 'completed'
+                    : index === currentStepIndex
+                      ? 'current'
+                      : 'pending';
               return (
-                <li key={step.key} className={`rounded-lg border px-3 py-2 ${stepClassName(variant)}`}>
-                  <p className="text-[14px] font-semibold text-[var(--color-semantic-label-normal)]">{step.title}</p>
-                  <p className="mt-0.5 text-[13px] text-[var(--color-semantic-label-alternative)]">{step.description}</p>
+                <li
+                  key={step.key}
+                  className={`rounded-lg border px-3 py-2 ${stepClassName(variant)}`}
+                >
+                  <p className="text-[14px] font-semibold text-[var(--color-semantic-label-normal)]">
+                    {step.title}
+                  </p>
+                  <p className="mt-0.5 text-[13px] text-[var(--color-semantic-label-alternative)]">
+                    {step.description}
+                  </p>
                 </li>
               );
             })}
@@ -479,13 +517,20 @@ function PaymentTrackingView({ payment, onBack, onToDetail }) {
       )}
 
       <section className="mt-4 rounded-xl border border-[var(--color-semantic-line-normal-normal)] bg-white p-4">
-        <p className="text-[16px] font-semibold text-[var(--color-semantic-label-normal)]">주문 메뉴</p>
+        <p className="text-[16px] font-semibold text-[var(--color-semantic-label-normal)]">
+          주문 메뉴
+        </p>
         {orderMenus.length === 0 ? (
-          <p className="mt-2 text-[13px] text-[var(--color-semantic-label-alternative)]">메뉴 정보가 없습니다.</p>
+          <p className="mt-2 text-[13px] text-[var(--color-semantic-label-alternative)]">
+            메뉴 정보가 없습니다.
+          </p>
         ) : (
           <ul className="mt-2 space-y-1">
             {orderMenus.map((menu, i) => (
-              <li key={`${menu?.menuName}-${i}`} className="flex items-center justify-between text-[13px]">
+              <li
+                key={`${menu?.menuName}-${i}`}
+                className="flex items-center justify-between text-[13px]"
+              >
                 <span className="text-[var(--color-semantic-label-normal)]">
                   {menu?.menuName ?? '메뉴'} x{menu?.quantity ?? 0}
                 </span>
@@ -511,7 +556,8 @@ export default function OrderTrackingPage() {
   // active order에서 paymentId로 조회
   const activeOrders = useActiveOrderStore((state) => state.activeOrders);
   const paymentId = Number(orderId);
-  const activeOrder = activeOrders.find((o) => o.paymentId === paymentId) ?? null;
+  const activeOrder =
+    activeOrders.find((o) => o.paymentId === paymentId) ?? null;
 
   // active order가 있으면 실시간 지도 뷰
   if (activeOrder) {
@@ -556,7 +602,9 @@ function LegacyTrackingWrapper({ orderId, navigate, location }) {
   if (!routeId) {
     return (
       <div className="py-6">
-        <p className="text-[15px] font-semibold text-[var(--color-semantic-label-normal)]">잘못된 주문 경로입니다.</p>
+        <p className="text-[15px] font-semibold text-[var(--color-semantic-label-normal)]">
+          잘못된 주문 경로입니다.
+        </p>
         <button
           type="button"
           onClick={() => navigate('/orders')}
@@ -569,14 +617,21 @@ function LegacyTrackingWrapper({ orderId, navigate, location }) {
   }
 
   if (shouldFetch && isLoading) {
-    return <p className="py-6 text-[14px] text-[var(--color-semantic-label-alternative)]">주문 추적 정보를 불러오는 중입니다...</p>;
+    return (
+      <p className="py-6 text-[14px] text-[var(--color-semantic-label-alternative)]">
+        주문 추적 정보를 불러오는 중입니다...
+      </p>
+    );
   }
 
   if (shouldFetch && isError) {
     return (
       <div className="py-6">
         <p className="text-[14px] font-semibold text-[var(--color-semantic-status-cautionary)]">
-          {getPaymentErrorMessage(error, '주문 추적 정보를 불러오지 못했습니다.')}
+          {getPaymentErrorMessage(
+            error,
+            '주문 추적 정보를 불러오지 못했습니다.'
+          )}
         </p>
         <div className="mt-3 flex gap-2">
           <button
@@ -603,7 +658,9 @@ function LegacyTrackingWrapper({ orderId, navigate, location }) {
   if (!payment) {
     return (
       <div className="py-6">
-        <p className="text-[15px] font-semibold text-[var(--color-semantic-label-normal)]">추적할 주문 정보를 찾을 수 없습니다.</p>
+        <p className="text-[15px] font-semibold text-[var(--color-semantic-label-normal)]">
+          추적할 주문 정보를 찾을 수 없습니다.
+        </p>
         <button
           type="button"
           onClick={() => navigate('/orders')}
@@ -615,5 +672,5 @@ function LegacyTrackingWrapper({ orderId, navigate, location }) {
     );
   }
 
-  return <PaymentTrackingView payment={payment} onBack={() => navigate(-1)} onToDetail={toDetail} />;
+  return <PaymentTrackingView payment={payment} onToDetail={toDetail} />;
 }
