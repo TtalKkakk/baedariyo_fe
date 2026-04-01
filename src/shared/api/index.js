@@ -33,6 +33,9 @@ export {
   updateRiderVehicle,
   setRiderOnline,
   setRiderOffline,
+  assignRiderToOrder,
+  startRiderDelivery,
+  completeRiderDelivery,
 } from './rider';
 
 // order
