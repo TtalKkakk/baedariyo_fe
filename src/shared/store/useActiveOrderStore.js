@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import { approvePayment } from '@/shared/api';
+import { queryClient } from '@/shared/lib/queryClient';
 
 export const DELIVERY_STATUSES = [
   'WAITING',
@@ -49,6 +51,9 @@ export const useActiveOrderStore = create((set, get) => ({
       }));
 
       if (nextStatus === 'DELIVERED') {
+        approvePayment(paymentId, { transactionId: `mock-tx-${paymentId}` })
+          .then(() => queryClient.invalidateQueries({ queryKey: ['my-payments'] }))
+          .catch(() => {});
         setTimeout(() => {
           set((state) => ({
             activeOrders: state.activeOrders.filter(

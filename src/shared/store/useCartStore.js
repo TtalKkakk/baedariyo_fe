@@ -105,7 +105,7 @@ export const useCartStore = create(
           set((state) => ({
             items: state.items.map((item) =>
               item.itemKey === itemKey
-                ? { ...item, quantity: item.quantity + 1 }
+                ? { ...item, quantity: Math.min(99, item.quantity + 1) }
                 : item
             ),
           })),

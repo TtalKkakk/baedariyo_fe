@@ -3,7 +3,6 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { signupUser } from '@/shared/api';
-import { useAddressBookStore } from '@/shared/store';
 import { loadDaumPostcode } from '@/shared/lib/loadDaumPostcode';
 import BackIcon from '@/shared/assets/icons/header/back.svg?react';
 import SearchIcon from '@/shared/assets/icons/header/search.svg?react';
@@ -27,7 +26,6 @@ const LABEL_PRESETS = ['집', '회사', '기타'];
 
 export default function UserSignupPage() {
   const navigate = useNavigate();
-  const addAddress = useAddressBookStore((s) => s.addAddress);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -59,13 +57,30 @@ export default function UserSignupPage() {
     phoneNumber.trim() &&
     !isPasswordMismatch;
 
+  const [addressCoords, setAddressCoords] = useState({ latitude: null, longitude: null });
+
   const handleAddressSearch = async () => {
     try {
       const daum = await loadDaumPostcode();
       new daum.Postcode({
         oncomplete: (data) => {
-          setRoadAddress(data.roadAddress);
-          setJibunAddress(data.jibunAddress || data.autoJibunAddress || '');
+          const road = data.roadAddress;
+          const jibun = data.jibunAddress || data.autoJibunAddress || '';
+          setRoadAddress(road);
+          setJibunAddress(jibun);
+          setAddressCoords({ latitude: null, longitude: null });
+
+          if (window.kakao?.maps?.services) {
+            const geocoder = new window.kakao.maps.services.Geocoder();
+            geocoder.addressSearch(road, (result, status) => {
+              if (status === window.kakao.maps.services.Status.OK && result[0]) {
+                setAddressCoords({
+                  latitude: parseFloat(result[0].y),
+                  longitude: parseFloat(result[0].x),
+                });
+              }
+            });
+          }
         },
       }).open();
     } catch {
@@ -83,24 +98,21 @@ export default function UserSignupPage() {
         phoneNumber: phoneNumber.replace(/-/g, ''),
       }),
     onSuccess: () => {
-      if (roadAddress) {
-        const label =
-          labelPreset === '기타' ? customLabel.trim() || '기타' : labelPreset;
-        addAddress({
-          label,
-          recipientName: name.trim(),
-          phoneNumber: phoneNumber.replace(/-/g, ''),
-          roadAddress,
-          jibunAddress,
-          detailAddress,
-          riderMemo: '',
-          directions: '',
-          latitude: null,
-          longitude: null,
-          isDefault: true,
-        });
-      }
-      navigate('/login', { state: { fromSignup: true } });
+      const pendingAddress = roadAddress
+        ? {
+            label: labelPreset === '기타' ? customLabel.trim() || '기타' : labelPreset,
+            recipientName: name.trim(),
+            phoneNumber: phoneNumber.replace(/-/g, ''),
+            roadAddress,
+            jibunAddress,
+            detailAddress,
+            riderMemo: '',
+            directions: '',
+            latitude: addressCoords.latitude,
+            longitude: addressCoords.longitude,
+          }
+        : null;
+      navigate('/login', { state: { fromSignup: true, pendingAddress } });
     },
   });
 

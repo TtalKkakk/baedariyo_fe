@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import { loginUser } from '@/shared/api';
-import { useProfileStore } from '@/shared/store';
+import { useProfileStore, useAddressBookStore } from '@/shared/store';
 import BackIcon from '@/shared/assets/icons/header/back.svg?react';
 
 function getErrorMessage(error) {
@@ -16,7 +16,10 @@ function getErrorMessage(error) {
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const saveProfile = useProfileStore((state) => state.saveProfile);
+  const clearAddresses = useAddressBookStore((s) => s.clearAddresses);
+  const addAddress = useAddressBookStore((s) => s.addAddress);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -27,12 +30,24 @@ export default function LoginPage() {
       if (result.refreshToken) {
         localStorage.setItem('refreshToken', result.refreshToken);
       }
+      const prevEmail = localStorage.getItem('loggedInEmail');
+      const isDifferentUser = prevEmail && prevEmail !== result.email;
+
       saveProfile({
         email: result.email,
         name: result.name,
         nickname: result.nickname,
         phoneNumber: result.phoneNumber,
       });
+      localStorage.setItem('loggedInEmail', result.email);
+
+      if (isDifferentUser) {
+        clearAddresses();
+      }
+      const pendingAddress = location.state?.pendingAddress;
+      if (pendingAddress) {
+        addAddress({ ...pendingAddress, isDefault: true });
+      }
       navigate('/mypage', { replace: true });
     },
   });

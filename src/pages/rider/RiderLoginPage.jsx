@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { loginRider } from '@/shared/api';
 import BackIcon from '@/shared/assets/icons/header/back.svg?react';
+import { useProfileStore } from '@/shared/store';
 
 function getErrorMessage(error) {
   return (
@@ -15,6 +16,7 @@ function getErrorMessage(error) {
 
 export default function RiderLoginPage() {
   const navigate = useNavigate();
+  const saveProfile = useProfileStore((state) => state.saveProfile);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -26,6 +28,13 @@ export default function RiderLoginPage() {
       if (result.refreshToken) {
         localStorage.setItem('refreshToken', result.refreshToken);
       }
+
+      saveProfile({
+        email: result.email,
+        name: result.name,
+        nickname: result.nickname,
+        phoneNumber: result.phoneNumber,
+      });
 
       navigate('/rider');
     },

@@ -112,6 +112,7 @@ export default function CheckoutPage() {
   const [isRiderModalOpen, setIsRiderModalOpen] = useState(false);
   const [isStoreModalOpen, setIsStoreModalOpen] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [legalModalKey, setLegalModalKey] = useState(null);
   const [isChangingNumber, setIsChangingNumber] = useState(false);
   const [newPhoneDraft, setNewPhoneDraft] = useState('');
   const [verificationSent, setVerificationSent] = useState(false);
@@ -193,6 +194,8 @@ export default function CheckoutPage() {
 
       return createOrder({
         storeId: resolvedStoreId,
+        storePublicId: items[0]?.storePublicId,
+        storeName: items[0]?.storeName,
         menus,
         storeRequest: buildStoreRequestString(),
         riderRequest: riderRequest === '없음' ? '' : riderRequest,
@@ -451,11 +454,15 @@ export default function CheckoutPage() {
           </p>
           <div className="flex items-center justify-between">
             <span className="text-[14px] text-[var(--color-semantic-label-normal)]">
-              신한카드 1234
-            </span>
-            <span className="text-[12px] text-[var(--color-semantic-label-alternative)]">
               신용/체크카드
             </span>
+            <button
+              type="button"
+              onClick={() => navigate('/mypage/payment-methods/register')}
+              className="h-8 px-3 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-[12px] font-medium text-[var(--color-semantic-label-normal)]"
+            >
+              카드 등록하기
+            </button>
           </div>
         </div>
 
@@ -495,17 +502,18 @@ export default function CheckoutPage() {
         {/* 법적 동의 */}
         <div className="bg-[var(--color-atomic-coolNeutral-97)] px-4 py-5">
           {[
-            '배달상품 주의사항 동의',
-            '개인정보 제3자 제공 동의',
-            '업주의 개인정보 처리 위탁 안내',
-          ].map((text) => (
+            { label: '배달상품 주의사항 동의', key: 'delivery-notice' },
+            { label: '개인정보 제3자 제공 동의', key: 'privacy-third-party' },
+            { label: '업주의 개인정보 처리 위탁 안내', key: 'privacy-consignment' },
+          ].map(({ label, key }) => (
             <button
-              key={text}
+              key={key}
               type="button"
               className="w-full flex items-center justify-between py-[4px]"
+              onClick={() => setLegalModalKey(key)}
             >
               <span className="text-[13px] text-[var(--color-semantic-label-alternative)]">
-                {text}
+                {label}
               </span>
               <ArrowIcon className="size-4 -rotate-90 [&_path]:fill-[var(--color-semantic-label-alternative)]" />
             </button>
@@ -636,6 +644,11 @@ export default function CheckoutPage() {
               type="button"
               onClick={() => {
                 if (isChangingNumber && verificationCode) {
+                  const phoneRegex = /^01[0-9]{1}-?\d{3,4}-?\d{4}$/;
+                  if (!phoneRegex.test(newPhoneDraft.replace(/-/g, ''))) {
+                    alert('올바른 휴대폰 번호를 입력해주세요.');
+                    return;
+                  }
                   saveProfile({ phoneNumber: newPhoneDraft });
                 }
                 setIsContactModalOpen(false);
@@ -721,6 +734,88 @@ export default function CheckoutPage() {
           >
             저장
           </button>
+        </div>
+      </BottomModal>
+
+      {/* 배달상품 주의사항 동의 */}
+      <BottomModal
+        isOpen={legalModalKey === 'delivery-notice'}
+        onClose={() => setLegalModalKey(null)}
+        title="배달상품 주의사항 동의"
+      >
+        <div className="px-5 pb-2 max-h-[60vh] overflow-y-auto text-[13px] leading-relaxed text-[var(--color-semantic-label-normal)] space-y-4">
+          <p>배달 서비스를 이용하시기 전에 아래 주의사항을 확인해 주세요.</p>
+          <div>
+            <p className="font-semibold mb-1">1. 상품 수령 후 확인</p>
+            <p className="text-[var(--color-semantic-label-alternative)]">상품 수령 즉시 수량 및 상태를 확인해 주세요. 배달 완료 후 발생한 파손·누락에 대한 책임은 업주 및 배달 플랫폼 정책에 따릅니다.</p>
+          </div>
+          <div>
+            <p className="font-semibold mb-1">2. 식품 알레르기 안내</p>
+            <p className="text-[var(--color-semantic-label-alternative)]">알레르기 유발 성분이 포함될 수 있습니다. 알레르기가 있는 경우 주문 전 업주에게 문의해 주세요.</p>
+          </div>
+          <div>
+            <p className="font-semibold mb-1">3. 음식 보관 및 섭취</p>
+            <p className="text-[var(--color-semantic-label-alternative)]">수령 후 가능한 빠른 시간 내에 섭취해 주세요. 장시간 방치로 인한 변질에 대해 책임지지 않습니다.</p>
+          </div>
+          <div>
+            <p className="font-semibold mb-1">4. 취소 및 환불</p>
+            <p className="text-[var(--color-semantic-label-alternative)]">조리 시작 후에는 단순 변심에 의한 취소 및 환불이 불가합니다. 상품 불량·오배송의 경우 고객센터로 문의해 주세요.</p>
+          </div>
+        </div>
+      </BottomModal>
+
+      {/* 개인정보 제3자 제공 동의 */}
+      <BottomModal
+        isOpen={legalModalKey === 'privacy-third-party'}
+        onClose={() => setLegalModalKey(null)}
+        title="개인정보 제3자 제공 동의"
+      >
+        <div className="px-5 pb-2 max-h-[60vh] overflow-y-auto text-[13px] leading-relaxed text-[var(--color-semantic-label-normal)] space-y-4">
+          <p>배달 서비스 제공을 위해 아래와 같이 개인정보를 제3자에게 제공합니다.</p>
+          <div>
+            <p className="font-semibold mb-1">제공받는 자</p>
+            <p className="text-[var(--color-semantic-label-alternative)]">입점 업주 (주문한 음식점)</p>
+          </div>
+          <div>
+            <p className="font-semibold mb-1">제공 항목</p>
+            <p className="text-[var(--color-semantic-label-alternative)]">주문자 이름, 연락처, 배달 주소, 주문 내역</p>
+          </div>
+          <div>
+            <p className="font-semibold mb-1">제공 목적</p>
+            <p className="text-[var(--color-semantic-label-alternative)]">주문 접수 및 음식 준비, 배달 처리</p>
+          </div>
+          <div>
+            <p className="font-semibold mb-1">보유 및 이용 기간</p>
+            <p className="text-[var(--color-semantic-label-alternative)]">주문 완료 후 1년 (관계 법령에 따라 일부 정보는 별도 보관)</p>
+          </div>
+          <p className="text-[var(--color-semantic-label-alternative)]">위 제공에 동의하지 않으실 경우 서비스 이용이 제한될 수 있습니다.</p>
+        </div>
+      </BottomModal>
+
+      {/* 업주의 개인정보 처리 위탁 안내 */}
+      <BottomModal
+        isOpen={legalModalKey === 'privacy-consignment'}
+        onClose={() => setLegalModalKey(null)}
+        title="업주의 개인정보 처리 위탁 안내"
+      >
+        <div className="px-5 pb-2 max-h-[60vh] overflow-y-auto text-[13px] leading-relaxed text-[var(--color-semantic-label-normal)] space-y-4">
+          <p>배달이요는 서비스 제공을 위해 아래와 같이 개인정보 처리 업무를 위탁합니다.</p>
+          <div>
+            <p className="font-semibold mb-1">위탁받는 자 (수탁자)</p>
+            <p className="text-[var(--color-semantic-label-alternative)]">입점 업주 (주문한 음식점 사업자)</p>
+          </div>
+          <div>
+            <p className="font-semibold mb-1">위탁 업무 내용</p>
+            <p className="text-[var(--color-semantic-label-alternative)]">주문 처리 및 음식 조리, 고객 응대</p>
+          </div>
+          <div>
+            <p className="font-semibold mb-1">위탁 개인정보 항목</p>
+            <p className="text-[var(--color-semantic-label-alternative)]">주문자 이름, 연락처, 배달 주소, 요청사항</p>
+          </div>
+          <div>
+            <p className="font-semibold mb-1">수탁자의 의무</p>
+            <p className="text-[var(--color-semantic-label-alternative)]">수탁자는 위탁받은 업무 범위를 초과하여 개인정보를 이용하거나 제3자에게 제공할 수 없으며, 기술적·관리적 보호조치를 이행해야 합니다.</p>
+          </div>
         </div>
       </BottomModal>
     </div>

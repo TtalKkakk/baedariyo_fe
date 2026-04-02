@@ -57,6 +57,7 @@ export {
   cancelPayment,
   getPaymentDetail,
   getMyPayments,
+  deleteMyPayment,
 } from './payment';
 
 // review

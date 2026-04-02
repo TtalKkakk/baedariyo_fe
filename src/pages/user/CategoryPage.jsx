@@ -9,6 +9,7 @@ import TimeIcon from '@/shared/assets/icons/store/time.svg?react';
 import DeliveryFeeIcon from '@/shared/assets/icons/store/deliveryfee.svg?react';
 import { searchStores } from '@/shared/api';
 import { BottomModal } from '@/shared/ui';
+import { useAddressBookStore } from '@/shared/store/useAddressBookStore';
 
 const SORT_OPTIONS = [
   '기본순',
@@ -106,6 +107,11 @@ export default function CategoryPage() {
   const activeCategory =
     CATEGORIES.find((c) => c.id === categoryId) ?? CATEGORIES[0];
 
+  const addresses = useAddressBookStore((s) => s.addresses);
+  const defaultAddressId = useAddressBookStore((s) => s.defaultAddressId);
+  const defaultAddress = addresses.find((a) => a.id === defaultAddressId);
+  const { latitude, longitude } = defaultAddress ?? {};
+
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [sort, setSort] = useState('기본순');
   const [rating, setRating] = useState('전체');
@@ -120,10 +126,12 @@ export default function CategoryPage() {
 
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ['category-stores', activeCategory.apiValue],
+      queryKey: ['category-stores', activeCategory.apiValue, latitude, longitude],
       queryFn: ({ pageParam = 0 }) =>
         searchStores({
           storeCategory: activeCategory.apiValue,
+          latitude,
+          longitude,
           page: pageParam,
           size: 20,
         }),
@@ -133,6 +141,7 @@ export default function CategoryPage() {
         return fetched < total ? allPages.length : undefined;
       },
       initialPageParam: 0,
+      enabled: !!latitude && !!longitude,
     });
 
   useEffect(() => {
@@ -324,7 +333,16 @@ export default function CategoryPage() {
 
         {/* 콘텐츠 */}
         <div className="pt-6">
-          {isLoading ? (
+          {!latitude ? (
+            <div className="flex flex-col items-center justify-center h-40 gap-2">
+              <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
+                주소를 설정해주세요
+              </p>
+              <p className="text-body2 text-[var(--color-semantic-label-alternative)]">
+                배달받을 주소가 필요해요
+              </p>
+            </div>
+          ) : isLoading ? (
             <div className="flex items-center justify-center h-40">
               <p className="text-body2 text-[var(--color-semantic-label-alternative)]">
                 불러오는 중...

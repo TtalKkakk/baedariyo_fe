@@ -1600,6 +1600,7 @@ function buildPayment({
   paymentId,
   orderId,
   storeName,
+  storePublicId,
   paymentStatus,
   amount,
   paymentKey,
@@ -1614,6 +1615,7 @@ function buildPayment({
     orderId,
     userId: MOCK_USER_ID,
     storeName,
+    storePublicId: storePublicId ?? null,
     paymentStatus,
     status: paymentStatus,
     amount,
@@ -1679,6 +1681,25 @@ const searchResultSeedStores = SEARCH_RESULT_STORES.map((s, i) => {
   return store;
 });
 
+const MOCK_PAYMENTS_KEY = 'mock-payments';
+
+function loadPayments() {
+  try {
+    const raw = localStorage.getItem(MOCK_PAYMENTS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function savePayments() {
+  try {
+    localStorage.setItem(MOCK_PAYMENTS_KEY, JSON.stringify(mockState.payments));
+  } catch {
+    // ignore
+  }
+}
+
 const mockState = {
   currentUser: null,
   nextStoreId: 2 + SEARCH_RESULT_STORES.length,
@@ -1704,46 +1725,7 @@ const mockState = {
   ],
   recentKeywords: ['처갓집양념치킨', '메가커피', '춘', '마라탕', '치킨'],
   deliveryLocations: {},
-  payments: [
-    buildPayment({
-      paymentId: 6101,
-      orderId: 4001,
-      storeName: seedStore.storeName,
-      paymentStatus: 'APPROVED',
-      amount: 24000,
-      paymentKey: 'mock_payment_6101',
-      createdAt: '2026-02-27T08:20:00.000Z',
-      orderMenus: [
-        { menuName: '후라이드 치킨', quantity: 1, price: 18000 },
-        { menuName: '감자튀김', quantity: 1, price: 4000 },
-      ],
-      storeImages: [seedStore.thumbnailUrl],
-      rating: 5,
-      storeReviewComment: '다시 주문할게요.',
-    }),
-    buildPayment({
-      paymentId: 6102,
-      orderId: 4002,
-      storeName: seedStore.storeName,
-      paymentStatus: 'REQUESTED',
-      amount: 20000,
-      paymentKey: 'mock_payment_6102',
-      createdAt: '2026-02-27T12:00:00.000Z',
-      orderMenus: [{ menuName: '양념 치킨', quantity: 1, price: 20000 }],
-      storeImages: [seedStore.thumbnailUrl],
-    }),
-    buildPayment({
-      paymentId: 6103,
-      orderId: 4003,
-      storeName: seedStore.storeName,
-      paymentStatus: 'FAILED',
-      amount: 18000,
-      paymentKey: 'mock_payment_6103',
-      createdAt: '2026-02-25T15:10:00.000Z',
-      orderMenus: [{ menuName: '후라이드 치킨', quantity: 1, price: 18000 }],
-      storeImages: [seedStore.thumbnailUrl],
-    }),
-  ],
+  payments: loadPayments(),
 };
 
 function getReviewsByStoreId(storePublicId) {
@@ -2064,7 +2046,8 @@ function createOrder(payload) {
   mockState.nextPaymentId += 1;
 
   const storeId = toPositiveInteger(payload?.storeId) ?? 1;
-  const storeName = resolveStoreNameById(storeId, 'Mock 치킨집');
+  const storeName = payload?.storeName?.trim() || resolveStoreNameById(storeId, 'Mock 치킨집');
+  const storePublicId = payload?.storePublicId ?? null;
   const orderMenus = Array.isArray(payload?.menus)
     ? payload.menus.map((menu) => ({
         menuName: menu?.menuName ?? '메뉴',
@@ -2081,6 +2064,7 @@ function createOrder(payload) {
     paymentId,
     orderId,
     storeName,
+    storePublicId,
     paymentStatus: 'READY',
     amount,
     paymentKey: `mock_order_payment_${paymentId}`,
@@ -2090,6 +2074,7 @@ function createOrder(payload) {
   });
 
   mockState.payments.unshift(payment);
+  savePayments();
 
   return clone({
     orderId,
@@ -2131,6 +2116,7 @@ function createPayment(payload) {
   });
 
   mockState.payments.unshift(payment);
+  savePayments();
   return paymentId;
 }
 
@@ -2212,6 +2198,7 @@ function getMyPayments(status) {
 function deleteMyPayment(paymentId) {
   const idx = mockState.payments.findIndex((p) => p.paymentId === paymentId);
   if (idx !== -1) mockState.payments.splice(idx, 1);
+  savePayments();
   return clone({ deleted: true, paymentId });
 }
 

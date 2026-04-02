@@ -75,7 +75,7 @@ function ActiveOrderCard({ order }) {
                 state: { payment: order },
               })
             }
-            className="h-8 px-4 rounded-full bg-[var(--color-atomic-redOrange-80)] text-white text-[13px] font-medium shrink-0"
+            className="h-7 px-3 rounded-full bg-[var(--color-atomic-redOrange-80)] text-white text-[13px] font-medium shrink-0"
           >
             현황 보기
           </button>
@@ -112,7 +112,7 @@ function ActiveOrderCard({ order }) {
   );
 }
 
-function OrderCard({ payment, onOpenDetail }) {
+function OrderCard({ payment, onOpenDetail, activeOrders }) {
   const navigate = useNavigate();
   const orderMenus = Array.isArray(payment?.orderMenus)
     ? payment.orderMenus
@@ -174,23 +174,33 @@ function OrderCard({ payment, onOpenDetail }) {
         )}
       </div>
 
-      {/* 하단 버튼 */}
-      <div className="flex gap-2 mt-4">
-        <button
-          type="button"
-          onClick={() => onOpenDetail(payment)}
-          className="w-[145px] h-[32px] rounded-[6px] border border-[var(--color-semantic-line-normal-normal)] bg-white text-[14px] font-medium text-[var(--color-semantic-label-normal)]"
-        >
-          리뷰 작성
-        </button>
-        <button
-          type="button"
-          onClick={() => navigate(`/stores/${payment?.storePublicId ?? ''}`)}
-          className="w-[145px] h-[32px] rounded-[6px] bg-[var(--color-atomic-redOrange-80)] text-white text-[14px] font-medium"
-        >
-          재주문
-        </button>
-      </div>
+      {/* 하단 버튼 - 배달 완료 시에만 표시 */}
+      {!['FAILED', 'CANCELLED', 'REQUESTED'].includes(payment?.paymentStatus) &&
+        !activeOrders.some((o) => o.paymentId === payment?.paymentId) && (
+        <div className="flex gap-2 mt-4">
+          <button
+            type="button"
+            onClick={() =>
+              navigate('/reviews/write', {
+                state: {
+                  storePublicId: payment?.storePublicId,
+                  storeName: payment?.storeName,
+                },
+              })
+            }
+            className="w-[145px] h-[32px] rounded-[6px] border border-[var(--color-semantic-line-normal-normal)] bg-white text-[14px] font-medium text-[var(--color-semantic-label-normal)]"
+          >
+            리뷰 작성
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate(`/stores/${payment?.storePublicId ?? ''}`)}
+            className="w-[145px] h-[32px] rounded-[6px] bg-[var(--color-atomic-redOrange-80)] text-white text-[14px] font-medium"
+          >
+            재주문
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -331,6 +341,7 @@ export default function OrderListPage() {
             key={`${getPaymentRouteId(payment)}-${index}`}
             payment={payment}
             onOpenDetail={openOrderDetail}
+            activeOrders={activeOrders}
           />
         ))}
       </div>

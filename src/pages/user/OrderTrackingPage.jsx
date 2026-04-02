@@ -43,7 +43,7 @@ function getArrivalTime() {
   const h = d.getHours();
   const m = String(d.getMinutes()).padStart(2, '0');
   const ampm = h < 12 ? '오전' : '오후';
-  return `${ampm} ${h % 12 || 12}:${m}분 도착 예정`;
+  return `${ampm} ${h % 12 || 12}:${m} 도착 예정`;
 }
 
 // 가게 마커 (핀 아이콘 - 주황)
@@ -309,7 +309,7 @@ function RealtimeTrackingView({ order }) {
         <div className="w-10 h-1 bg-[var(--color-semantic-line-normal-normal)] rounded-full mx-auto mb-4" />
 
         {/* 상태 메시지 */}
-        <p className="text-[21px] font-bold text-[var(--color-semantic-label-normal)] leading-snug">
+        <p className="text-[18px] font-bold text-[var(--color-semantic-label-normal)] leading-snug">
           {STATUS_MESSAGES[deliveryStatus] ?? ''}
         </p>
 
@@ -317,10 +317,10 @@ function RealtimeTrackingView({ order }) {
         <div className="relative mt-5 h-[3px]">
           {/* 도착 예정 — 배달완료 점 위에 */}
           <div className="absolute -top-9 right-0 text-center">
-            <p className="text-[12px] text-[var(--color-semantic-label-alternative)] leading-tight whitespace-nowrap">
+            <p className="text-[11px] text-[var(--color-semantic-label-alternative)] leading-tight whitespace-nowrap">
               {arrivalTime.replace(' 도착 예정', '')}
             </p>
-            <p className="text-[12px] text-[var(--color-semantic-label-alternative)] leading-tight whitespace-nowrap">
+            <p className="text-[11px] text-[var(--color-semantic-label-alternative)] leading-tight whitespace-nowrap">
               도착 예정
             </p>
           </div>
@@ -624,12 +624,21 @@ export default function OrderTrackingPage() {
   const activeOrder =
     activeOrders.find((o) => o.paymentId === paymentId) ?? null;
 
+  const lastOrderRef = useRef(null);
+  if (activeOrder) lastOrderRef.current = activeOrder;
+  const lastOrder = lastOrderRef.current;
+
   // active order가 있으면 실시간 추적 뷰
   if (activeOrder) {
     if (activeOrder.deliveryStatus === 'WAITING') {
       return <WaitingForRiderView />;
     }
     return <RealtimeTrackingView order={activeOrder} />;
+  }
+
+  // DELIVERED 후 activeOrder가 사라져도 완료 화면 유지
+  if (lastOrder?.deliveryStatus === 'DELIVERED') {
+    return <DeliveredView order={lastOrder} />;
   }
 
   // 아니면 기존 결제 상태 뷰

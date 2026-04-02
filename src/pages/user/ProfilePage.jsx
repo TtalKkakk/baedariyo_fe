@@ -118,6 +118,7 @@ export default function ProfilePage() {
   const { data: serverProfile } = useQuery({
     queryKey: ['user-profile'],
     // queryFn: getUserProfile,
+    enabled: false, // TODO: 백엔드 연결 시 enabled: !!localStorage.getItem('accessToken') 로 교체
   });
 
   const profile = serverProfile ?? localProfile;

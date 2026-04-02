@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-import { getMyPayments } from '@/shared/api';
+import { getMyPayments, deleteMyPayment } from '@/shared/api';
 import {
   useAddressBookStore,
   useCartStore,
@@ -157,18 +157,18 @@ export default function OrderDetailPage() {
     orderMenus.forEach((menu) => {
       const selectedOptions = Array.isArray(menu.options)
         ? menu.options.map((opt, i) => ({
-            groupId: i,
+            groupId: opt.groupId ?? i,
             groupName: opt.groupName ?? '',
-            optionId: i,
+            optionId: opt.optionId ?? i,
             optionName: opt.optionName ?? '',
-            optionPriceAmount: 0,
+            optionPriceAmount: opt.optionPriceAmount ?? opt.price ?? 0,
           }))
         : [];
 
       addItem({
         storePublicId,
         storeName,
-        menuId: menu.menuName ?? `menu-${Math.random()}`,
+        menuId: menu.menuId ?? menu.menuPublicId ?? menu.menuName ?? 'unknown-menu',
         menuName: menu.menuName ?? '메뉴',
         menuDescription: '',
         basePriceAmount: menu.price ?? 0,
@@ -187,7 +187,7 @@ export default function OrderDetailPage() {
   async function handleDelete() {
     setIsDeleting(true);
     try {
-      // await deleteMyPayment(payment.paymentId);
+      await deleteMyPayment(payment.paymentId);
       queryClient.invalidateQueries({ queryKey: ['my-payments'] });
     } finally {
       setIsDeleting(false);
