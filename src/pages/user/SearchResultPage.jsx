@@ -133,7 +133,13 @@ export default function SearchResultPage() {
     useInfiniteQuery({
       queryKey: ['search-stores', initialQuery, latitude, longitude],
       queryFn: ({ pageParam = 0 }) =>
-        searchStores({ keyword: initialQuery, latitude, longitude, page: pageParam, size: 20 }),
+        searchStores({
+          keyword: initialQuery,
+          latitude,
+          longitude,
+          page: pageParam,
+          size: 20,
+        }),
       getNextPageParam: (lastPage, allPages) => {
         const total = lastPage?.totalCount ?? 0;
         const fetched = allPages.flatMap((p) => p?.stores ?? p ?? []).length;

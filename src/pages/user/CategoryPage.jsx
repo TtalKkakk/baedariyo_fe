@@ -126,7 +126,12 @@ export default function CategoryPage() {
 
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ['category-stores', activeCategory.apiValue, latitude, longitude],
+      queryKey: [
+        'category-stores',
+        activeCategory.apiValue,
+        latitude,
+        longitude,
+      ],
       queryFn: ({ pageParam = 0 }) =>
         searchStores({
           storeCategory: activeCategory.apiValue,

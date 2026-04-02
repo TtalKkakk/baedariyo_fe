@@ -168,7 +168,8 @@ export default function OrderDetailPage() {
       addItem({
         storePublicId,
         storeName,
-        menuId: menu.menuId ?? menu.menuPublicId ?? menu.menuName ?? 'unknown-menu',
+        menuId:
+          menu.menuId ?? menu.menuPublicId ?? menu.menuName ?? 'unknown-menu',
         menuName: menu.menuName ?? '메뉴',
         menuDescription: '',
         basePriceAmount: menu.price ?? 0,

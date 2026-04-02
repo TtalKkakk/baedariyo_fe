@@ -5,6 +5,17 @@ import { useNavigate } from 'react-router-dom';
 import { deleteMyReview, getMyReviews } from '@/shared/api';
 import { ConfirmModal } from '@/shared/ui/ConfirmModal';
 import { Toast } from '@/shared/ui/Toast';
+import { BottomModal } from '@/shared/ui';
+import ArrowIcon from '@/shared/assets/icons/header/arrow.svg?react';
+import CheckIcon from '@/shared/assets/icons/header/check.svg?react';
+
+const PERIOD_OPTIONS = [
+  { label: '전체', months: null },
+  { label: '1개월', months: 1 },
+  { label: '3개월', months: 3 },
+  { label: '6개월', months: 6 },
+  { label: '1년', months: 12 },
+];
 
 function formatDate(value) {
   if (!value) return '-';
@@ -29,6 +40,7 @@ function StarRating({ rating }) {
 }
 
 function ReviewCard({ review, onDelete }) {
+  const navigate = useNavigate();
   const images = Array.isArray(review?.orderMenuImages)
     ? review.orderMenuImages
     : [];
@@ -37,7 +49,11 @@ function ReviewCard({ review, onDelete }) {
     <div className="border-b border-[var(--color-semantic-line-normal-normal)] pb-4">
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => navigate(`/stores/${review?.storePublicId ?? ''}`)}
+            className="flex items-center gap-1"
+          >
             <p className="text-body2 font-semibold text-[var(--color-semantic-label-normal)]">
               {review?.storeName ?? '가게명 없음'}
             </p>
@@ -50,7 +66,7 @@ function ReviewCard({ review, onDelete }) {
                 strokeLinejoin="round"
               />
             </svg>
-          </div>
+          </button>
           <div className="mt-1 flex items-center gap-2">
             <StarRating rating={review?.rating ?? 0} />
             <span className="text-caption1 text-[var(--color-semantic-label-alternative)]">
@@ -92,6 +108,8 @@ export default function MyReviewsPage() {
   const queryClient = useQueryClient();
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [toast, setToast] = useState({ visible: false, message: '' });
+  const [selectedPeriod, setSelectedPeriod] = useState(PERIOD_OPTIONS[0]);
+  const [isPeriodModalOpen, setIsPeriodModalOpen] = useState(false);
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['my-reviews'],
@@ -100,6 +118,16 @@ export default function MyReviewsPage() {
   });
 
   const reviews = Array.isArray(data) ? data : [];
+
+  const filteredReviews = selectedPeriod.months
+    ? reviews.filter((review) => {
+        if (!review?.createdAt) return false;
+        const created = new Date(review.createdAt);
+        const cutoff = new Date();
+        cutoff.setMonth(cutoff.getMonth() - selectedPeriod.months);
+        return created >= cutoff;
+      })
+    : reviews;
 
   const deleteMutation = useMutation({
     mutationFn: deleteMyReview,
@@ -160,44 +188,22 @@ export default function MyReviewsPage() {
     <div className="min-h-full bg-white pb-4">
       <p className="py-3 text-body1 font-bold text-[var(--color-semantic-label-normal)]">
         내가 쓴 리뷰{'  '}
-        <span className="text-body1 font-bold">{reviews.length}개</span>
+        <span className="text-body1 font-bold">{filteredReviews.length}개</span>
       </p>
 
-      {/* Filters */}
-      <div className="flex gap-2 py-2">
+      {/* 기간 필터 */}
+      <div className="flex py-2">
         <button
           type="button"
-          className="flex items-center gap-1 rounded-full border border-[var(--color-semantic-line-normal-normal)] px-3 py-1.5 text-caption1 text-[var(--color-semantic-label-normal)]"
+          onClick={() => setIsPeriodModalOpen(true)}
+          className="flex items-center gap-1 h-8 px-3 rounded-full border border-[var(--color-semantic-line-normal-normal)] bg-[var(--color-atomic-coolNeutral-98)] text-[13px] text-[var(--color-semantic-label-normal)]"
         >
-          주소
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path
-              d="M3 4.5l3 3 3-3"
-              stroke="currentColor"
-              strokeWidth="1"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-        <button
-          type="button"
-          className="flex items-center gap-1 rounded-full border border-[var(--color-semantic-line-normal-normal)] px-3 py-1.5 text-caption1 text-[var(--color-semantic-label-normal)]"
-        >
-          조회 기간
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path
-              d="M3 4.5l3 3 3-3"
-              stroke="currentColor"
-              strokeWidth="1"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          {selectedPeriod.label === '전체' ? '조회 기간' : selectedPeriod.label}
+          <ArrowIcon className="size-3 [&_path]:fill-[var(--color-semantic-label-normal)]" />
         </button>
       </div>
 
-      {reviews.length === 0 ? (
+      {filteredReviews.length === 0 ? (
         <div className="mt-8 py-6 text-center">
           <p className="text-body2 text-[var(--color-semantic-label-alternative)]">
             아직 작성한 리뷰가 없습니다.
@@ -205,7 +211,7 @@ export default function MyReviewsPage() {
         </div>
       ) : (
         <div className="mt-2 space-y-4">
-          {reviews.map((review, index) => (
+          {filteredReviews.map((review, index) => (
             <ReviewCard
               key={`${review?.publicStoreReviewId ?? 'review'}-${index}`}
               review={review}
@@ -214,6 +220,43 @@ export default function MyReviewsPage() {
           ))}
         </div>
       )}
+
+      <BottomModal
+        isOpen={isPeriodModalOpen}
+        onClose={() => setIsPeriodModalOpen(false)}
+        title="조회 기간"
+        showClose={false}
+      >
+        <div className="px-5 pb-2">
+          {PERIOD_OPTIONS.map((option) => {
+            const isSelected = selectedPeriod.label === option.label;
+            return (
+              <button
+                key={option.label}
+                type="button"
+                onClick={() => {
+                  setSelectedPeriod(option);
+                  setIsPeriodModalOpen(false);
+                }}
+                className={`w-full flex items-center justify-between py-[10px] ${
+                  isSelected
+                    ? 'text-[var(--color-atomic-redOrange-80)]'
+                    : 'text-[var(--color-semantic-label-normal)]'
+                }`}
+              >
+                <span
+                  className={`text-[14px] ${isSelected ? 'font-bold' : 'font-normal'}`}
+                >
+                  {option.label}
+                </span>
+                {isSelected && (
+                  <CheckIcon className="size-[18px] shrink-0 [&_path]:fill-[var(--color-atomic-redOrange-80)]" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </BottomModal>
 
       <ConfirmModal
         isOpen={Boolean(deleteTarget)}

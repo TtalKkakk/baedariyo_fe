@@ -52,7 +52,9 @@ export const useActiveOrderStore = create((set, get) => ({
 
       if (nextStatus === 'DELIVERED') {
         approvePayment(paymentId, { transactionId: `mock-tx-${paymentId}` })
-          .then(() => queryClient.invalidateQueries({ queryKey: ['my-payments'] }))
+          .then(() =>
+            queryClient.invalidateQueries({ queryKey: ['my-payments'] })
+          )
           .catch(() => {});
         setTimeout(() => {
           set((state) => ({

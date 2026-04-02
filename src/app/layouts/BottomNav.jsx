@@ -17,6 +17,21 @@ const HIDDEN_PATHS = [
   '/checkout',
   '/order-complete',
   '/orders/',
+  '/address/search',
+  '/address/setting',
+  '/address/location',
+  '/mypage/profile',
+  '/mypage/addresses',
+  '/mypage/payment',
+  '/mypage/payment-methods',
+  '/mypage/reviews',
+  '/mypage/coupons',
+  '/mypage/terms',
+  '/mypage/support',
+  '/mypage/inquiries',
+  '/mypage/security',
+  '/mypage/notification-settings',
+  '/mypage/withdraw',
 ];
 
 export default function BottomNav() {

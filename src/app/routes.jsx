@@ -73,7 +73,14 @@ const router = createBrowserRouter(
         { path: '/search/result', element: <SearchResultPage /> },
 
         // 리뷰 작성 (헤더/내비 없음)
-        { path: '/reviews/write', element: <PrivateRoute><WriteReviewPage /></PrivateRoute> },
+        {
+          path: '/reviews/write',
+          element: (
+            <PrivateRoute>
+              <WriteReviewPage />
+            </PrivateRoute>
+          ),
+        },
 
         // 로그인/회원가입
         { path: '/login', element: <LoginPage /> },
@@ -115,43 +122,178 @@ const router = createBrowserRouter(
             { path: '/reviews/:reviewId', element: <ReviewDetailPage /> },
 
             // 장바구니/주문
-            { path: '/cart', element: <PrivateRoute><CartPage /></PrivateRoute> },
-            { path: '/checkout', element: <PrivateRoute><CheckoutPage /></PrivateRoute> },
-            { path: '/order-complete', element: <PrivateRoute><OrderCompletePage /></PrivateRoute> },
+            {
+              path: '/cart',
+              element: (
+                <PrivateRoute>
+                  <CartPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/checkout',
+              element: (
+                <PrivateRoute>
+                  <CheckoutPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/order-complete',
+              element: (
+                <PrivateRoute>
+                  <OrderCompletePage />
+                </PrivateRoute>
+              ),
+            },
 
             // 주문내역
-            { path: '/orders', element: <PrivateRoute><OrderListPage /></PrivateRoute> },
-            { path: '/orders/:orderId', element: <PrivateRoute><OrderDetailPage /></PrivateRoute> },
+            {
+              path: '/orders',
+              element: (
+                <PrivateRoute>
+                  <OrderListPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/orders/:orderId',
+              element: (
+                <PrivateRoute>
+                  <OrderDetailPage />
+                </PrivateRoute>
+              ),
+            },
             {
               path: '/orders/:orderId/tracking',
-              element: <PrivateRoute><OrderTrackingPage /></PrivateRoute>,
+              element: (
+                <PrivateRoute>
+                  <OrderTrackingPage />
+                </PrivateRoute>
+              ),
             },
 
             // 마이페이지
-            { path: '/mypage', element: <PrivateRoute><MyPage /></PrivateRoute> },
-            { path: '/mypage/profile', element: <PrivateRoute><ProfilePage /></PrivateRoute> },
-            { path: '/mypage/addresses', element: <PrivateRoute><AddressPage /></PrivateRoute> },
-            { path: '/mypage/payment', element: <PrivateRoute><PaymentPage /></PrivateRoute> },
+            {
+              path: '/mypage',
+              element: (
+                <PrivateRoute>
+                  <MyPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/mypage/profile',
+              element: (
+                <PrivateRoute>
+                  <ProfilePage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/mypage/addresses',
+              element: (
+                <PrivateRoute>
+                  <AddressPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/mypage/payment',
+              element: (
+                <PrivateRoute>
+                  <PaymentPage />
+                </PrivateRoute>
+              ),
+            },
             {
               path: '/mypage/payment-methods',
-              element: <PrivateRoute><PaymentMethodsPage /></PrivateRoute>,
+              element: (
+                <PrivateRoute>
+                  <PaymentMethodsPage />
+                </PrivateRoute>
+              ),
             },
             {
               path: '/mypage/payment-methods/register',
-              element: <PrivateRoute><PaymentMethodRegisterPage /></PrivateRoute>,
+              element: (
+                <PrivateRoute>
+                  <PaymentMethodRegisterPage />
+                </PrivateRoute>
+              ),
             },
-            { path: '/mypage/reviews', element: <PrivateRoute><MyReviewsPage /></PrivateRoute> },
-            { path: '/mypage/coupons', element: <PrivateRoute><CouponsPage /></PrivateRoute> },
-            { path: '/mypage/terms', element: <PrivateRoute><TermsPage /></PrivateRoute> },
-            { path: '/mypage/support', element: <PrivateRoute><SupportPage /></PrivateRoute> },
-            { path: '/mypage/inquiries', element: <PrivateRoute><InquiryPage /></PrivateRoute> },
-            { path: '/mypage/security', element: <PrivateRoute><SecurityPage /></PrivateRoute> },
+            {
+              path: '/mypage/reviews',
+              element: (
+                <PrivateRoute>
+                  <MyReviewsPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/mypage/coupons',
+              element: (
+                <PrivateRoute>
+                  <CouponsPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/mypage/terms',
+              element: (
+                <PrivateRoute>
+                  <TermsPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/mypage/support',
+              element: (
+                <PrivateRoute>
+                  <SupportPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/mypage/inquiries',
+              element: (
+                <PrivateRoute>
+                  <InquiryPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/mypage/security',
+              element: (
+                <PrivateRoute>
+                  <SecurityPage />
+                </PrivateRoute>
+              ),
+            },
             {
               path: '/mypage/notification-settings',
-              element: <PrivateRoute><NotificationSettingsPage /></PrivateRoute>,
+              element: (
+                <PrivateRoute>
+                  <NotificationSettingsPage />
+                </PrivateRoute>
+              ),
             },
-            { path: '/mypage/withdraw', element: <PrivateRoute><WithdrawPage /></PrivateRoute> },
-            { path: '/notifications', element: <PrivateRoute><NotificationsPage /></PrivateRoute> },
+            {
+              path: '/mypage/withdraw',
+              element: (
+                <PrivateRoute>
+                  <WithdrawPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/notifications',
+              element: (
+                <PrivateRoute>
+                  <NotificationsPage />
+                </PrivateRoute>
+              ),
+            },
           ],
         },
 
@@ -159,26 +301,70 @@ const router = createBrowserRouter(
         {
           element: <RiderLayout />,
           children: [
-            { path: '/rider', element: <PrivateRoute redirectTo="/rider/login"><RiderHomePage /></PrivateRoute> },
+            {
+              path: '/rider',
+              element: (
+                <PrivateRoute redirectTo="/rider/login">
+                  <RiderHomePage />
+                </PrivateRoute>
+              ),
+            },
             {
               path: '/rider/delivery/:orderId',
-              element: <PrivateRoute redirectTo="/rider/login"><RiderDeliveryPage /></PrivateRoute>,
+              element: (
+                <PrivateRoute redirectTo="/rider/login">
+                  <RiderDeliveryPage />
+                </PrivateRoute>
+              ),
             },
             {
               path: '/rider/delivery/:orderId/pickup',
-              element: <PrivateRoute redirectTo="/rider/login"><RiderPickupPage /></PrivateRoute>,
+              element: (
+                <PrivateRoute redirectTo="/rider/login">
+                  <RiderPickupPage />
+                </PrivateRoute>
+              ),
             },
             {
               path: '/rider/delivery/:orderId/complete',
-              element: <PrivateRoute redirectTo="/rider/login"><RiderCompletePage /></PrivateRoute>,
+              element: (
+                <PrivateRoute redirectTo="/rider/login">
+                  <RiderCompletePage />
+                </PrivateRoute>
+              ),
             },
             {
               path: '/rider/delivery/:orderId/verify',
-              element: <PrivateRoute redirectTo="/rider/login"><RiderVerifyPage /></PrivateRoute>,
+              element: (
+                <PrivateRoute redirectTo="/rider/login">
+                  <RiderVerifyPage />
+                </PrivateRoute>
+              ),
             },
-            { path: '/rider/history', element: <PrivateRoute redirectTo="/rider/login"><RiderHistoryPage /></PrivateRoute> },
-            { path: '/rider/earnings', element: <PrivateRoute redirectTo="/rider/login"><RiderEarningsPage /></PrivateRoute> },
-            { path: '/rider/settings', element: <PrivateRoute redirectTo="/rider/login"><RiderSettingsPage /></PrivateRoute> },
+            {
+              path: '/rider/history',
+              element: (
+                <PrivateRoute redirectTo="/rider/login">
+                  <RiderHistoryPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/rider/earnings',
+              element: (
+                <PrivateRoute redirectTo="/rider/login">
+                  <RiderEarningsPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/rider/settings',
+              element: (
+                <PrivateRoute redirectTo="/rider/login">
+                  <RiderSettingsPage />
+                </PrivateRoute>
+              ),
+            },
           ],
         },
 

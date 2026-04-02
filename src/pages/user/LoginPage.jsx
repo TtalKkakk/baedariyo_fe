@@ -43,6 +43,8 @@ export default function LoginPage() {
 
       if (isDifferentUser) {
         clearAddresses();
+        localStorage.removeItem('mock-payments');
+        localStorage.removeItem('mock-reviews');
       }
       const pendingAddress = location.state?.pendingAddress;
       if (pendingAddress) {

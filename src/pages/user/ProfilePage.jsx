@@ -146,12 +146,6 @@ export default function ProfilePage() {
       />
 
       <InfoRow
-        icon={<BirthIcon />}
-        label="생년월일"
-        value={profile.birthDate || '-'}
-      />
-
-      <InfoRow
         icon={<EmailIcon />}
         label="이메일"
         value={profile.email || '-'}

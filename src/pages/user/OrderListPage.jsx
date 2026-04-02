@@ -125,33 +125,37 @@ function OrderCard({ payment, onOpenDetail, activeOrders }) {
     <div className="bg-white rounded-2xl border border-[var(--color-semantic-line-normal-normal)] shadow-[0_1px_4px_rgba(0,0,0,0.06)] p-3">
       {/* 가게 정보 헤더 */}
       <div className="flex items-start gap-[10px]">
-        <img
-          src={
-            storeImage ??
-            `https://picsum.photos/seed/store-${payment?.orderId}/120/120`
-          }
-          alt={payment?.storeName}
-          className="w-[46px] h-[46px] rounded-xl object-cover shrink-0"
-        />
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between gap-2">
+        <button
+          type="button"
+          onClick={() => navigate(`/stores/${payment?.storePublicId ?? ''}`)}
+          className="flex items-start gap-[10px] flex-1 min-w-0 text-left"
+        >
+          <img
+            src={
+              storeImage ??
+              `https://picsum.photos/seed/store-${payment?.orderId}/120/120`
+            }
+            alt={payment?.storeName}
+            className="w-[46px] h-[46px] rounded-xl object-cover shrink-0"
+          />
+          <div className="flex-1 min-w-0">
             <p className="text-[14px] font-bold text-[var(--color-semantic-label-normal)] truncate">
               {payment?.storeName ?? '가게명 없음'}
             </p>
-            <button
-              type="button"
-              onClick={() => onOpenDetail(payment)}
-              className="shrink-0 py-1 px-2 rounded-full border border-[var(--color-semantic-line-normal-normal)] bg-white text-[12px] text-[var(--color-semantic-label-normal)]"
-            >
-              주문 상세
-            </button>
+            <p className="text-[12px] font-medium text-[var(--color-semantic-label-alternative)] mt-[4px]">
+              {formatDateOnly(payment?.createdAt)}
+              <span className="mx-[6px]">|</span>
+              {formatPaymentAmount(payment?.amount)}
+            </p>
           </div>
-          <p className="text-[12px] font-medium text-[var(--color-semantic-label-alternative)] mt-[4px]">
-            {formatDateOnly(payment?.createdAt)}
-            <span className="mx-[6px]">|</span>
-            {formatPaymentAmount(payment?.amount)}
-          </p>
-        </div>
+        </button>
+        <button
+          type="button"
+          onClick={() => onOpenDetail(payment)}
+          className="shrink-0 py-1 px-2 rounded-full border border-[var(--color-semantic-line-normal-normal)] bg-white text-[12px] text-[var(--color-semantic-label-normal)]"
+        >
+          주문 상세
+        </button>
       </div>
 
       {/* 메뉴 목록 */}
@@ -177,30 +181,32 @@ function OrderCard({ payment, onOpenDetail, activeOrders }) {
       {/* 하단 버튼 - 배달 완료 시에만 표시 */}
       {!['FAILED', 'CANCELLED', 'REQUESTED'].includes(payment?.paymentStatus) &&
         !activeOrders.some((o) => o.paymentId === payment?.paymentId) && (
-        <div className="flex gap-2 mt-4">
-          <button
-            type="button"
-            onClick={() =>
-              navigate('/reviews/write', {
-                state: {
-                  storePublicId: payment?.storePublicId,
-                  storeName: payment?.storeName,
-                },
-              })
-            }
-            className="w-[145px] h-[32px] rounded-[6px] border border-[var(--color-semantic-line-normal-normal)] bg-white text-[14px] font-medium text-[var(--color-semantic-label-normal)]"
-          >
-            리뷰 작성
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate(`/stores/${payment?.storePublicId ?? ''}`)}
-            className="w-[145px] h-[32px] rounded-[6px] bg-[var(--color-atomic-redOrange-80)] text-white text-[14px] font-medium"
-          >
-            재주문
-          </button>
-        </div>
-      )}
+          <div className="flex gap-2 mt-4">
+            <button
+              type="button"
+              onClick={() =>
+                navigate('/reviews/write', {
+                  state: {
+                    storePublicId: payment?.storePublicId,
+                    storeName: payment?.storeName,
+                  },
+                })
+              }
+              className="w-[145px] h-[32px] rounded-[6px] border border-[var(--color-semantic-line-normal-normal)] bg-white text-[14px] font-medium text-[var(--color-semantic-label-normal)]"
+            >
+              리뷰 작성
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                navigate(`/stores/${payment?.storePublicId ?? ''}`)
+              }
+              className="w-[145px] h-[32px] rounded-[6px] bg-[var(--color-atomic-redOrange-80)] text-white text-[14px] font-medium"
+            >
+              재주문
+            </button>
+          </div>
+        )}
     </div>
   );
 }

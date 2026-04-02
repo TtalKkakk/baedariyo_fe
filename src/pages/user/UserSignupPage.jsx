@@ -57,7 +57,10 @@ export default function UserSignupPage() {
     phoneNumber.trim() &&
     !isPasswordMismatch;
 
-  const [addressCoords, setAddressCoords] = useState({ latitude: null, longitude: null });
+  const [addressCoords, setAddressCoords] = useState({
+    latitude: null,
+    longitude: null,
+  });
 
   const handleAddressSearch = async () => {
     try {
@@ -73,7 +76,10 @@ export default function UserSignupPage() {
           if (window.kakao?.maps?.services) {
             const geocoder = new window.kakao.maps.services.Geocoder();
             geocoder.addressSearch(road, (result, status) => {
-              if (status === window.kakao.maps.services.Status.OK && result[0]) {
+              if (
+                status === window.kakao.maps.services.Status.OK &&
+                result[0]
+              ) {
                 setAddressCoords({
                   latitude: parseFloat(result[0].y),
                   longitude: parseFloat(result[0].x),
@@ -100,7 +106,10 @@ export default function UserSignupPage() {
     onSuccess: () => {
       const pendingAddress = roadAddress
         ? {
-            label: labelPreset === '기타' ? customLabel.trim() || '기타' : labelPreset,
+            label:
+              labelPreset === '기타'
+                ? customLabel.trim() || '기타'
+                : labelPreset,
             recipientName: name.trim(),
             phoneNumber: phoneNumber.replace(/-/g, ''),
             roadAddress,

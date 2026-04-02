@@ -157,6 +157,8 @@ export default function MyPage() {
 
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [showSupportModal, setShowSupportModal] = useState(false);
   const [toast, setToast] = useState({ visible: false, message: '' });
 
   const { data: serverProfile } = useQuery({
@@ -263,13 +265,14 @@ export default function MyPage() {
         <MenuItem
           icon={<TermsIcon />}
           label="약관 및 정책"
-          onClick={() => navigate('/mypage/terms')}
+          onClick={() => setShowTermsModal(true)}
           hasArrow={false}
         />
         <MenuItem
           icon={<SupportIcon />}
           label="고객센터"
-          onClick={() => navigate('/mypage/support')}
+          onClick={() => setShowSupportModal(true)}
+          hasArrow={false}
         />
         <MenuItem
           icon={<LogoutIcon />}
@@ -287,6 +290,82 @@ export default function MyPage() {
           hasArrow={false}
         />
       </section>
+
+      {/* 약관 및 정책 */}
+      <BottomModal
+        isOpen={showTermsModal}
+        onClose={() => setShowTermsModal(false)}
+        title="약관 및 정책"
+      >
+        <div className="px-5 pb-6 space-y-4 text-[14px] leading-relaxed text-[var(--color-semantic-label-normal)]">
+          <div>
+            <p className="font-semibold mb-1">서비스 이용약관</p>
+            <p className="text-[var(--color-semantic-label-alternative)]">
+              배달이요 서비스를 이용하시려면 본 약관에 동의하셔야 합니다. 서비스
+              이용 중 발생하는 모든 거래는 본 약관에 따라 처리됩니다.
+            </p>
+          </div>
+          <div>
+            <p className="font-semibold mb-1">개인정보 처리방침</p>
+            <p className="text-[var(--color-semantic-label-alternative)]">
+              수집 항목: 이름, 이메일, 전화번호, 배달 주소. 수집 목적: 서비스
+              제공 및 주문 처리. 보유 기간: 회원 탈퇴 시까지.
+            </p>
+          </div>
+          <div>
+            <p className="font-semibold mb-1">위치정보 이용약관</p>
+            <p className="text-[var(--color-semantic-label-alternative)]">
+              주변 음식점 검색 및 배달 현황 확인을 위해 위치 정보를
+              수집·이용합니다.
+            </p>
+          </div>
+        </div>
+      </BottomModal>
+
+      {/* 고객센터 */}
+      <BottomModal
+        isOpen={showSupportModal}
+        onClose={() => setShowSupportModal(false)}
+        title="고객센터"
+      >
+        <div className="px-5 pb-6 space-y-3">
+          <p className="text-[13px] text-[var(--color-semantic-label-alternative)]">
+            운영시간 평일 09:00 ~ 18:00 (주말·공휴일 휴무)
+          </p>
+          <a
+            href="tel:1588-0000"
+            className="flex items-center justify-between w-full py-3 border-b border-[var(--color-semantic-line-normal-normal)]"
+          >
+            <span className="text-[14px] text-[var(--color-semantic-label-normal)]">
+              전화 문의
+            </span>
+            <span className="text-[14px] font-semibold text-[var(--color-atomic-redOrange-80)]">
+              1588-0000
+            </span>
+          </a>
+          <button
+            type="button"
+            onClick={() => {
+              setShowSupportModal(false);
+              navigate('/mypage/inquiries');
+            }}
+            className="flex items-center justify-between w-full py-3 border-b border-[var(--color-semantic-line-normal-normal)]"
+          >
+            <span className="text-[14px] text-[var(--color-semantic-label-normal)]">
+              1:1 문의
+            </span>
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+              <path
+                d="M7.5 5l5 5-5 5"
+                stroke="var(--color-semantic-label-alternative)"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
+      </BottomModal>
 
       {/* Login Bottom Modal */}
       <BottomModal

@@ -624,21 +624,12 @@ export default function OrderTrackingPage() {
   const activeOrder =
     activeOrders.find((o) => o.paymentId === paymentId) ?? null;
 
-  const lastOrderRef = useRef(null);
-  if (activeOrder) lastOrderRef.current = activeOrder;
-  const lastOrder = lastOrderRef.current;
-
   // active order가 있으면 실시간 추적 뷰
   if (activeOrder) {
     if (activeOrder.deliveryStatus === 'WAITING') {
       return <WaitingForRiderView />;
     }
     return <RealtimeTrackingView order={activeOrder} />;
-  }
-
-  // DELIVERED 후 activeOrder가 사라져도 완료 화면 유지
-  if (lastOrder?.deliveryStatus === 'DELIVERED') {
-    return <DeliveredView order={lastOrder} />;
   }
 
   // 아니면 기존 결제 상태 뷰

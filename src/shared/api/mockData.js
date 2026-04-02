@@ -1636,27 +1636,6 @@ const seedStore = buildStore({
   menus: buildDefaultMenus(1, 1),
 });
 
-const seedStoreReviews = [
-  buildStoreReview({
-    publicId: '33333333-3333-4333-8333-333333333333',
-    storePublicId: DEFAULT_STORE_PUBLIC_ID,
-    storeName: seedStore.storeName,
-    rating: 5,
-    createdAt: '2026-02-27T09:30:00.000Z',
-    comment: '치킨이 바삭하고 배달도 빨랐어요.',
-    images: ['https://picsum.photos/seed/review-1/480/320'],
-  }),
-  buildStoreReview({
-    publicId: '44444444-4444-4444-8444-444444444444',
-    storePublicId: DEFAULT_STORE_PUBLIC_ID,
-    storeName: seedStore.storeName,
-    rating: 4,
-    createdAt: '2026-02-26T11:45:00.000Z',
-    comment: '양념이 달달해서 아이들도 좋아해요.',
-    images: ['https://picsum.photos/seed/review-2/480/320'],
-  }),
-];
-
 const searchResultSeedStores = SEARCH_RESULT_STORES.map((s, i) => {
   const storeId = 2 + i;
   const customMenuTemplate = CUSTOM_STORE_MENUS_MAP[s.storePublicId];
@@ -1682,6 +1661,7 @@ const searchResultSeedStores = SEARCH_RESULT_STORES.map((s, i) => {
 });
 
 const MOCK_PAYMENTS_KEY = 'mock-payments';
+const MOCK_REVIEWS_KEY = 'mock-reviews';
 
 function loadPayments() {
   try {
@@ -1700,6 +1680,29 @@ function savePayments() {
   }
 }
 
+function loadReviews() {
+  try {
+    const raw = localStorage.getItem(MOCK_REVIEWS_KEY);
+    return raw ? JSON.parse(raw) : { myReviews: [], storeReviews: {} };
+  } catch {
+    return { myReviews: [], storeReviews: {} };
+  }
+}
+
+function saveReviews() {
+  try {
+    localStorage.setItem(
+      MOCK_REVIEWS_KEY,
+      JSON.stringify({
+        myReviews: mockState.myReviews,
+        storeReviews: mockState.storeReviewsByStoreId,
+      })
+    );
+  } catch {
+    // ignore
+  }
+}
+
 const mockState = {
   currentUser: null,
   nextStoreId: 2 + SEARCH_RESULT_STORES.length,
@@ -1707,13 +1710,19 @@ const mockState = {
   nextOrderId: 5000,
   nextPaymentId: 7000,
   stores: [seedStore, ...searchResultSeedStores],
-  storeReviewsByStoreId: {
-    [DEFAULT_STORE_PUBLIC_ID]: seedStoreReviews,
-    ...Object.fromEntries(
-      SEARCH_RESULT_STORES.map((s) => [s.storePublicId, []])
-    ),
-  },
-  myReviews: seedStoreReviews.map((review) => buildMyReview(review)),
+  storeReviewsByStoreId: (() => {
+    const saved = loadReviews();
+    const base = {
+      ...Object.fromEntries(
+        [
+          DEFAULT_STORE_PUBLIC_ID,
+          ...SEARCH_RESULT_STORES.map((s) => s.storePublicId),
+        ].map((id) => [id, []])
+      ),
+    };
+    return { ...base, ...saved.storeReviews };
+  })(),
+  myReviews: loadReviews().myReviews,
   userAddresses: [
     {
       alias: '집',
@@ -1987,6 +1996,7 @@ function createStoreReview(storePublicId, payload) {
   getReviewsByStoreId(store.storePublicId).unshift(review);
   mockState.myReviews.unshift(myReview);
   recalculateStoreStats(store.storePublicId);
+  saveReviews();
 
   return clone({
     publicId,
@@ -2036,6 +2046,7 @@ function deleteMyReview(publicStoreReviewId) {
     recalculateStoreStats(storePublicId);
   }
 
+  saveReviews();
   return clone({ deleted: true, publicStoreReviewId });
 }
 
@@ -2046,7 +2057,8 @@ function createOrder(payload) {
   mockState.nextPaymentId += 1;
 
   const storeId = toPositiveInteger(payload?.storeId) ?? 1;
-  const storeName = payload?.storeName?.trim() || resolveStoreNameById(storeId, 'Mock 치킨집');
+  const storeName =
+    payload?.storeName?.trim() || resolveStoreNameById(storeId, 'Mock 치킨집');
   const storePublicId = payload?.storePublicId ?? null;
   const orderMenus = Array.isArray(payload?.menus)
     ? payload.menus.map((menu) => ({
