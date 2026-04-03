@@ -3,11 +3,12 @@ import { requestWithMockFallback } from './fallback';
 import { mockApi } from './mockData';
 
 export async function startCardRegistration() {
-  return requestWithMockFallback({
-    apiName: 'startCardRegistration',
-    request: () => api.post('/api/user/payment-methods/start'),
-    fallback: () => mockApi.startCardRegistration(),
-  });
+  try {
+    const response = await api.post('/api/user/payment-methods/start');
+    return response?.data?.data ?? response?.data;
+  } catch {
+    return mockApi.startCardRegistration();
+  }
 }
 
 export async function getPaymentMethods() {
