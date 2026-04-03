@@ -379,6 +379,7 @@ function buildDefaultMenus(storeId, startMenuId) {
       store: { id: storeId },
       menuName: '양념 치킨',
       menuDescription: '달콤한 특제 양념소스',
+      thumbnailUrl: IMG.menuSeasonedChicken,
       price: { amount: 0 },
       reviewCount: 1,
       menuOptionGroups: [
@@ -418,6 +419,7 @@ function buildDefaultMenus(storeId, startMenuId) {
       store: { id: storeId },
       menuName: '감자튀김',
       menuDescription: '바삭하게 튀긴 황금빛 감자튀김',
+      thumbnailUrl: IMG.menuFries,
       price: { amount: 0 },
       reviewCount: 3,
       menuOptionGroups: [
@@ -454,6 +456,7 @@ function buildDefaultMenus(storeId, startMenuId) {
       store: { id: storeId },
       menuName: '메인 메뉴 1',
       menuDescription: '메인 메뉴 1에 대한 설명이 어쩌고 저쩌고',
+      thumbnailUrl: IMG.menuColeslaw,
       price: { amount: 0 },
       reviewCount: 22,
       menuOptionGroups: [
@@ -500,6 +503,7 @@ function buildDefaultMenus(storeId, startMenuId) {
       store: { id: storeId },
       menuName: '메인 메뉴 2',
       menuDescription: '메인 메뉴 2에 대한 설명이 어쩌고 저쩌고',
+      thumbnailUrl: IMG.menuCheeseBall,
       price: { amount: 0 },
       reviewCount: 8,
       menuOptionGroups: [
@@ -548,6 +552,7 @@ const EXTRA_MENUS = [
     id: 901,
     menuName: '후라이드+감자튀김 세트',
     menuDescription: '후라이드 치킨과 감자튀김 세트',
+    thumbnailUrl: IMG.menuFriedChicken,
     price: { amount: 0 },
     reviewCount: 15,
     rank: null,
@@ -588,6 +593,7 @@ const EXTRA_MENUS = [
     id: 902,
     menuName: '양념+콜라 세트',
     menuDescription: '양념 치킨과 콜라 세트',
+    thumbnailUrl: IMG.menuSeasonedChicken,
     price: { amount: 0 },
     reviewCount: 7,
     rank: null,
@@ -628,6 +634,7 @@ const EXTRA_MENUS = [
     id: 911,
     menuName: '감자튀김',
     menuDescription: '바삭한 황금빛 감자튀김',
+    thumbnailUrl: IMG.menuFries,
     price: { amount: 0 },
     reviewCount: 32,
     rank: null,
@@ -658,6 +665,7 @@ const EXTRA_MENUS = [
     id: 912,
     menuName: '코울슬로',
     menuDescription: '신선한 채소로 만든 코울슬로',
+    thumbnailUrl: IMG.menuColeslaw,
     price: { amount: 0 },
     reviewCount: 12,
     rank: null,
@@ -687,6 +695,7 @@ const EXTRA_MENUS = [
     id: 913,
     menuName: '치즈볼',
     menuDescription: '쫄깃한 치즈볼 5개',
+    thumbnailUrl: IMG.menuCheeseBall,
     price: { amount: 0 },
     reviewCount: 45,
     rank: null,
@@ -717,6 +726,7 @@ const EXTRA_MENUS = [
     id: 921,
     menuName: '콜라 500ml',
     menuDescription: '시원한 콜라',
+    thumbnailUrl: IMG.menuCola,
     price: { amount: 2000 },
     reviewCount: 5,
     rank: null,
@@ -737,6 +747,7 @@ const EXTRA_MENUS = [
     id: 922,
     menuName: '사이다 500ml',
     menuDescription: '청량한 사이다',
+    thumbnailUrl: IMG.menuCola,
     price: { amount: 2000 },
     reviewCount: 3,
     rank: null,
@@ -757,6 +768,7 @@ const EXTRA_MENUS = [
     id: 923,
     menuName: '맥주 500ml',
     menuDescription: '시원한 맥주',
+    thumbnailUrl: IMG.menuBeer,
     price: { amount: 4000 },
     reviewCount: 18,
     rank: null,
@@ -780,6 +792,7 @@ const BAEKDABANG_MENUS_TEMPLATE = [
     id: 201,
     menuName: '아메리카노',
     menuDescription: '빽다방의 기본 아메리카노. 진한 에스프레소와 물의 조화.',
+    thumbnailUrl: IMG.menuAmericano,
     price: { amount: 0 },
     reviewCount: 1240,
     menuOptionGroups: [
@@ -836,6 +849,7 @@ const BAEKDABANG_MENUS_TEMPLATE = [
     menuName: '원조커피',
     menuDescription:
       '빽다방 시그니처! 달달하고 진한 원조커피. 설탕이 들어간 달달한 커피.',
+    thumbnailUrl: IMG.menuCreamCoffee,
     price: { amount: 0 },
     reviewCount: 2100,
     menuOptionGroups: [
@@ -881,6 +895,7 @@ const BAEKDABANG_MENUS_TEMPLATE = [
     id: 203,
     menuName: '카페라떼',
     menuDescription: '부드러운 우유와 에스프레소의 조화.',
+    thumbnailUrl: IMG.menuLatte,
     price: { amount: 0 },
     reviewCount: 890,
     menuOptionGroups: [
@@ -931,6 +946,7 @@ const BAEKDABANG_MENUS_TEMPLATE = [
     id: 204,
     menuName: '바닐라라떼',
     menuDescription: '달콤한 바닐라 향이 가득한 라떼.',
+    thumbnailUrl: IMG.menuVanillaLatte,
     price: { amount: 0 },
     reviewCount: 1050,
     menuOptionGroups: [
@@ -976,6 +992,7 @@ const BAEKDABANG_MENUS_TEMPLATE = [
     id: 205,
     menuName: '크림커피',
     menuDescription: '달달한 원조커피 위에 크림을 얹은 빽다방 대표 메뉴.',
+    thumbnailUrl: IMG.menuCreamCoffee,
     price: { amount: 0 },
     reviewCount: 1830,
     menuOptionGroups: [
@@ -1004,6 +1021,7 @@ const BAEKDABANG_MENUS_TEMPLATE = [
     menuName: '빽스치노',
     menuDescription:
       '달콤 진한 커피에 크림과 초코 드리즐로 마무리한 시그니처 음료.',
+    thumbnailUrl: IMG.menuLatte,
     price: { amount: 0 },
     reviewCount: 740,
     menuOptionGroups: [
@@ -1031,6 +1049,7 @@ const BAEKDABANG_MENUS_TEMPLATE = [
     id: 207,
     menuName: '딸기라떼',
     menuDescription: '새콤달콤 딸기와 우유의 조화, 빽다방 딸기라떼.',
+    thumbnailUrl: IMG.menuStrawberryLatte,
     price: { amount: 0 },
     reviewCount: 560,
     menuOptionGroups: [
@@ -1058,6 +1077,7 @@ const BAEKDABANG_MENUS_TEMPLATE = [
     id: 208,
     menuName: '딸기에이드',
     menuDescription: '상큼한 딸기와 탄산의 조화.',
+    thumbnailUrl: IMG.menuAde,
     price: { amount: 0 },
     reviewCount: 320,
     menuOptionGroups: [
@@ -1085,6 +1105,7 @@ const BAEKDABANG_MENUS_TEMPLATE = [
     id: 209,
     menuName: '청포도에이드',
     menuDescription: '달콤 상큼한 청포도 에이드.',
+    thumbnailUrl: IMG.menuAde,
     price: { amount: 0 },
     reviewCount: 210,
     menuOptionGroups: [
@@ -1112,6 +1133,7 @@ const BAEKDABANG_MENUS_TEMPLATE = [
     id: 210,
     menuName: '복숭아아이스티',
     menuDescription: '시원하고 달콤한 복숭아 아이스티.',
+    thumbnailUrl: IMG.menuIcedTea,
     price: { amount: 0 },
     reviewCount: 180,
     menuOptionGroups: [
@@ -1143,6 +1165,7 @@ const SHANGTZ_MENUS_TEMPLATE = [
     menuName: 'Self 마라탕 1인분',
     menuDescription:
       '직접 재료를 담아 끓여드리는 셀프 마라탕 1인분. 기본 채소+육류 재료 포함.',
+    thumbnailUrl: IMG.menuMaratang,
     price: { amount: 0 },
     reviewCount: 4200,
     menuOptionGroups: [
@@ -1208,6 +1231,7 @@ const SHANGTZ_MENUS_TEMPLATE = [
     menuName: '2~3인분 마라탕 세트',
     menuDescription:
       '두 명 이상이 함께 즐기는 마라탕 세트. 푸짐한 재료와 함께.',
+    thumbnailUrl: IMG.menuMaratang,
     price: { amount: 0 },
     reviewCount: 1800,
     menuOptionGroups: [
@@ -1260,6 +1284,7 @@ const SHANGTZ_MENUS_TEMPLATE = [
     menuName: '마라샹궈 1인분',
     menuDescription:
       '볶음식 마라 요리. 강한 마라향이 재료에 깊게 배어 있는 볶음 요리.',
+    thumbnailUrl: IMG.menuXiaochao,
     price: { amount: 0 },
     reviewCount: 3100,
     menuOptionGroups: [
@@ -1319,6 +1344,7 @@ const SHANGTZ_MENUS_TEMPLATE = [
     id: 304,
     menuName: '마라샹궈 2인분',
     menuDescription: '두 명이 함께 즐기는 마라샹궈. 푸짐한 양과 진한 마라향.',
+    thumbnailUrl: IMG.menuXiaochao,
     price: { amount: 0 },
     reviewCount: 980,
     menuOptionGroups: [
@@ -1360,6 +1386,7 @@ const SHANGTZ_MENUS_TEMPLATE = [
     menuName: '마라 로제 샹궈',
     menuDescription:
       '마라 특유의 얼얼함에 부드러운 로제 크림소스를 더한 퓨전 샹궈.',
+    thumbnailUrl: IMG.menuXiaochao,
     price: { amount: 0 },
     reviewCount: 2400,
     menuOptionGroups: [
@@ -1390,6 +1417,7 @@ const SHANGTZ_MENUS_TEMPLATE = [
     id: 306,
     menuName: '꿔바로우 미니',
     menuDescription: '바삭한 튀김옷에 새콤달콤 소스를 곁들인 꿔바로우 소자.',
+    thumbnailUrl: IMG.menuGwobaorou,
     price: { amount: 0 },
     reviewCount: 5600,
     menuOptionGroups: [
@@ -1426,6 +1454,7 @@ const SHANGTZ_MENUS_TEMPLATE = [
     id: 307,
     menuName: '꿔바로우',
     menuDescription: '바삭한 튀김옷에 새콤달콤 소스를 곁들인 꿔바로우 정자.',
+    thumbnailUrl: IMG.menuGwobaorou,
     price: { amount: 0 },
     reviewCount: 3200,
     menuOptionGroups: [
@@ -1468,6 +1497,7 @@ const SHANGTZ_MENUS_TEMPLATE = [
     menuName: '온면',
     menuDescription:
       '따뜻한 마라 국물에 담긴 온면. 마라탕과 함께 즐기기 좋은 사이드.',
+    thumbnailUrl: IMG.menuNoodle,
     price: { amount: 0 },
     reviewCount: 870,
     menuOptionGroups: [
@@ -1497,6 +1527,7 @@ const SHANGTZ_MENUS_TEMPLATE = [
     id: 309,
     menuName: '볶음면',
     menuDescription: '마라 소스로 볶아낸 탱탱한 볶음면.',
+    thumbnailUrl: IMG.menuNoodle,
     price: { amount: 0 },
     reviewCount: 540,
     menuOptionGroups: [
@@ -1526,6 +1557,7 @@ const SHANGTZ_MENUS_TEMPLATE = [
     id: 310,
     menuName: '계란볶음밥',
     menuDescription: '고슬고슬하게 볶아낸 중식 계란볶음밥.',
+    thumbnailUrl: IMG.menuFriedRice,
     price: { amount: 4900 },
     reviewCount: 310,
     menuOptionGroups: [],
@@ -1535,6 +1567,7 @@ const SHANGTZ_MENUS_TEMPLATE = [
     menuName: '고수 군만두 (8개)',
     menuDescription:
       '고소하고 바삭한 군만두. 고수 향이 살짝 가미된 중식 스타일.',
+    thumbnailUrl: IMG.menuDumpling,
     price: { amount: 5900 },
     reviewCount: 420,
     menuOptionGroups: [],

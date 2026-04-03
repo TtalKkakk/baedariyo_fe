@@ -102,6 +102,11 @@ export default function UserSignupPage() {
         name: name.trim(),
         nickname: nickname.trim(),
         phoneNumber: phoneNumber.replace(/-/g, ''),
+        roadAddress: roadAddress.trim(),
+        jibunAddress: jibunAddress.trim(),
+        detailAddress: detailAddress.trim(),
+        addressAlias:
+          labelPreset === '기타' ? customLabel.trim() || '기타' : labelPreset,
       }),
     onSuccess: () => {
       const pendingAddress = roadAddress

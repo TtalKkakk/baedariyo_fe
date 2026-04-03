@@ -31,15 +31,10 @@ export default function LoginPage() {
         localStorage.setItem('refreshToken', result.refreshToken);
       }
       const prevEmail = localStorage.getItem('loggedInEmail');
-      const isDifferentUser = prevEmail && prevEmail !== result.email;
+      const isDifferentUser = prevEmail && prevEmail !== email.trim();
 
-      saveProfile({
-        email: result.email,
-        name: result.name,
-        nickname: result.nickname,
-        phoneNumber: result.phoneNumber,
-      });
-      localStorage.setItem('loggedInEmail', result.email);
+      saveProfile({ email: email.trim() });
+      localStorage.setItem('loggedInEmail', email.trim());
 
       if (isDifferentUser) {
         clearAddresses();

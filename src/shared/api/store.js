@@ -10,12 +10,25 @@ export async function createStore(payload) {
   });
 }
 
+function normalizeStore(store) {
+  return {
+    ...store,
+    totalRating: store.totalRating ?? store.rating ?? 0,
+    deliveryTimeMin: store.deliveryTimeMin ?? store.deliveryTime ?? 0,
+    deliveryFee: store.deliveryFee ?? { amount: 0 },
+    minimumOrderAmount: store.minimumOrderAmount ?? {
+      amount: store.minOrderPrice ?? 0,
+    },
+  };
+}
+
 export async function getStoreDetail(storePublicId) {
-  return requestWithMockFallback({
+  const result = await requestWithMockFallback({
     apiName: 'getStoreDetail',
     request: () => api.get(`/api/stores/${storePublicId}`),
     fallback: () => mockApi.getStoreDetail(storePublicId),
   });
+  return result ? normalizeStore(result) : result;
 }
 
 export async function searchStores({
@@ -26,7 +39,7 @@ export async function searchStores({
   page = 0,
   size = 20,
 } = {}) {
-  return requestWithMockFallback({
+  const result = await requestWithMockFallback({
     apiName: 'searchStores',
     request: () =>
       api.get('/api/stores', {
@@ -35,12 +48,26 @@ export async function searchStores({
     fallback: () =>
       mockApi.searchStores({ keyword, storeCategory, page, size }),
   });
+  return Array.isArray(result) ? result.map(normalizeStore) : result;
+}
+
+function getAccountIdFromToken() {
+  const token = localStorage.getItem('accessToken');
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.accountId ?? payload.userId ?? payload.sub ?? null;
+  } catch {
+    return null;
+  }
 }
 
 export async function getSearchHistory(limit = 5) {
+  const userId = getAccountIdFromToken();
   return requestWithMockFallback({
     apiName: 'getSearchHistory',
-    request: () => api.get('/api/search/recent'),
+    request: () =>
+      api.get('/api/search/recent', { params: { userId } }),
     fallback: () => mockApi.getSearchHistory(limit),
   });
 }

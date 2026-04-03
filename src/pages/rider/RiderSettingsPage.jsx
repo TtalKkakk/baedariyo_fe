@@ -74,15 +74,9 @@ export default function RiderSettingsPage() {
   const [vehicleType, setVehicleType] = useState(
     () => localStorage.getItem('riderVehicleType') ?? 'MOTORCYCLE'
   );
-  const [region, setRegion] = useState(
-    () => localStorage.getItem('riderRegion') ?? ''
-  );
   const [vehicleSaved, setVehicleSaved] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
-  const [regionSaved, setRegionSaved] = useState(() =>
-    Boolean(localStorage.getItem('riderRegion'))
-  );
 
   const vehicleMutation = useMutation({
     mutationFn: updateRiderVehicle,
@@ -97,7 +91,6 @@ export default function RiderSettingsPage() {
     onSuccess: () => {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
-      localStorage.removeItem('riderRegion');
       localStorage.removeItem('riderVehicleType');
       navigate('/rider/login');
     },
@@ -116,11 +109,6 @@ export default function RiderSettingsPage() {
   const handleVehicleSave = () => {
     setVehicleSaved(false);
     vehicleMutation.mutate({ vehicleType });
-  };
-
-  const handleRegionSave = () => {
-    localStorage.setItem('riderRegion', region.trim());
-    setRegionSaved(true);
   };
 
   return (
@@ -192,34 +180,6 @@ export default function RiderSettingsPage() {
             : vehicleMutation.isPending
               ? '저장 중...'
               : '저장하기'}
-        </button>
-      </div>
-
-      <div className="mx-4 mt-3 rounded-xl bg-white p-4">
-        <p className="text-body2 font-semibold text-[var(--color-semantic-label-normal)] mb-3">
-          활동 지역
-        </p>
-        <input
-          type="text"
-          value={region}
-          onChange={(event) => {
-            setRegion(event.target.value);
-            setRegionSaved(false);
-          }}
-          placeholder="예: 서울 강남구"
-          className="w-full h-11 px-3 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body2 outline-none"
-        />
-        <p className="mt-2 text-body3 text-[var(--color-semantic-label-alternative)]">
-          주로 배달하는 지역을 입력하면 해당 지역 콜을 우선으로 받을 수 있어요.
-        </p>
-
-        <button
-          type="button"
-          onClick={handleRegionSave}
-          disabled={!region.trim()}
-          className="mt-3 w-full h-10 rounded-lg bg-[var(--color-atomic-redOrange-80)] text-white text-body2 font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          {regionSaved ? '저장됨 ✓' : '저장하기'}
         </button>
       </div>
 

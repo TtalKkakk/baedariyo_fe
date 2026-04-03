@@ -29,3 +29,28 @@ export const createStompClient = ({ orderId, onMessage }) => {
   client.activate();
   return client;
 };
+
+export const createRiderCallsClient = ({ onCall }) => {
+  const client = new Client({
+    webSocketFactory: () => new SockJS(WS_URL),
+    reconnectDelay: 5000,
+
+    connectHeaders: {
+      Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+    },
+
+    onConnect: () => {
+      client.subscribe('/topic/rider-calls', (message) => {
+        const data = JSON.parse(message.body);
+        onCall(data);
+      });
+    },
+
+    onStompError: (frame) => {
+      console.error('라이더 콜 소켓 에러:', frame);
+    },
+  });
+
+  client.activate();
+  return client;
+};

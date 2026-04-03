@@ -29,12 +29,7 @@ export default function RiderLoginPage() {
         localStorage.setItem('refreshToken', result.refreshToken);
       }
 
-      saveProfile({
-        email: result.email,
-        name: result.name,
-        nickname: result.nickname,
-        phoneNumber: result.phoneNumber,
-      });
+      saveProfile({ email: email.trim() });
 
       navigate('/rider');
     },
