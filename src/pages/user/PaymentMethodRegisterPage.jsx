@@ -1,16 +1,48 @@
-import { useMutation } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 
-import { startCardRegistration } from '@/shared/api';
+import { startCardRegistration, addPaymentMethod } from '@/shared/api';
 
 const PG_URL = import.meta.env.VITE_PG_URL ?? 'http://localhost:4000';
 
 export default function PaymentMethodRegisterPage() {
+  const [waiting, setWaiting] = useState(false);
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const mutation = useMutation({
     mutationFn: startCardRegistration,
     onSuccess: ({ token }) => {
-      window.location.href = `${PG_URL}?token=${token}`;
+      window.open(`${PG_URL}?token=${token}`, '_blank');
+      setWaiting(true);
     },
   });
+
+  useEffect(() => {
+    const handler = async (event) => {
+      if (event.data?.type !== 'CARD_REGISTERED') return;
+      const { billingKey, cardNumber } = event.data;
+      await addPaymentMethod({ billingKey, cardNumber });
+      queryClient.invalidateQueries({ queryKey: ['payment-methods'] });
+      navigate('/mypage/payment-methods');
+    };
+    window.addEventListener('message', handler);
+    return () => window.removeEventListener('message', handler);
+  }, [navigate, queryClient]);
+
+  if (waiting) {
+    return (
+      <div className="flex min-h-full flex-col items-center justify-center gap-4 px-6 bg-white">
+        <p className="text-center text-body1 text-[var(--color-semantic-label-normal)]">
+          카드사 페이지에서 등록을 완료해주세요.
+        </p>
+        <p className="text-caption1 text-[var(--color-semantic-label-alternative)]">
+          등록이 완료되면 자동으로 이동합니다.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-full flex-col bg-white">
