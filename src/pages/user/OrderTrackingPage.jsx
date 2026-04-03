@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 
-import { getMyPayments } from '@/shared/api';
+import { getMyPayments, getDeliveryLocation } from '@/shared/api';
 import { useActiveOrderStore, DELIVERY_STATUS_LABELS } from '@/shared/store';
 import { loadKakaoMapSdk } from '@/shared/lib/loadKakaoMap';
 import {
@@ -239,20 +239,39 @@ function RealtimeTrackingView({ order }) {
     if (deliveryStatus === 'CONFIRMED' || deliveryStatus === 'PREPARING') {
       rider.setPosition(new kakao.maps.LatLng(storeC.lat, storeC.lng));
     } else if (deliveryStatus === 'DELIVERING') {
-      const t0 = Date.now();
-      intervalRef.current = setInterval(() => {
-        const p = Math.min((Date.now() - t0) / DELIVERING_MS, 1);
-        const lat = storeC.lat + (deliveryC.lat - storeC.lat) * p;
-        const lng = storeC.lng + (deliveryC.lng - storeC.lng) * p;
-        const pt = new kakao.maps.LatLng(lat, lng);
-        rider.setPosition(pt);
-        map.setCenter(pt);
-
-        if (p >= 1) {
-          clearInterval(intervalRef.current);
-          intervalRef.current = null;
-        }
-      }, 300);
+      if (order.orderId) {
+        // 실제 라이더 위치 폴링 (5초마다)
+        intervalRef.current = setInterval(async () => {
+          try {
+            const data = await getDeliveryLocation(order.orderId);
+            if (
+              typeof data?.latitude === 'number' &&
+              typeof data?.longitude === 'number'
+            ) {
+              const pt = new kakao.maps.LatLng(data.latitude, data.longitude);
+              rider.setPosition(pt);
+              map.setCenter(pt);
+            }
+          } catch {
+            // 실패 시 무시
+          }
+        }, 5000);
+      } else {
+        // orderId 없을 때 목 애니메이션 fallback
+        const t0 = Date.now();
+        intervalRef.current = setInterval(() => {
+          const p = Math.min((Date.now() - t0) / DELIVERING_MS, 1);
+          const lat = storeC.lat + (deliveryC.lat - storeC.lat) * p;
+          const lng = storeC.lng + (deliveryC.lng - storeC.lng) * p;
+          const pt = new kakao.maps.LatLng(lat, lng);
+          rider.setPosition(pt);
+          map.setCenter(pt);
+          if (p >= 1) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+          }
+        }, 300);
+      }
     } else if (deliveryStatus === 'DELIVERED') {
       rider.setPosition(new kakao.maps.LatLng(deliveryC.lat, deliveryC.lng));
     }
@@ -263,7 +282,7 @@ function RealtimeTrackingView({ order }) {
         intervalRef.current = null;
       }
     };
-  }, [isMapReady, deliveryStatus]);
+  }, [isMapReady, deliveryStatus, order.orderId]);
 
   const handleRecenter = () => {
     if (mapRef.current && riderRef.current) {

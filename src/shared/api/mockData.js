@@ -2517,6 +2517,72 @@ function deletePaymentMethod(paymentMethodId) {
   return clone({ deleted: true });
 }
 
+function getRiderDeliveryHistory() {
+  const now = new Date();
+  const today = (h, m) => {
+    const d = new Date(now);
+    d.setHours(h, m, 0, 0);
+    return d.toISOString();
+  };
+  const yesterday = (h, m) => {
+    const d = new Date(now);
+    d.setDate(d.getDate() - 1);
+    d.setHours(h, m, 0, 0);
+    return d.toISOString();
+  };
+
+  return clone([
+    {
+      orderId: 101,
+      storeName: '맥도날드 강남점',
+      customerAddress: '서울 강남구 역삼동',
+      deliveryFee: 4500,
+      deliveryStartedAt: today(18, 20),
+      deliveryCompleteAt: today(18, 42),
+    },
+    {
+      orderId: 100,
+      storeName: '버거킹 선릉점',
+      customerAddress: '서울 강남구 대치동',
+      deliveryFee: 5000,
+      deliveryStartedAt: today(16, 55),
+      deliveryCompleteAt: today(17, 17),
+    },
+    {
+      orderId: 99,
+      storeName: 'BBQ 삼성점',
+      customerAddress: '서울 강남구 삼성동',
+      deliveryFee: 4000,
+      deliveryStartedAt: today(15, 45),
+      deliveryCompleteAt: today(16, 3),
+    },
+    {
+      orderId: 95,
+      storeName: '피자헛 역삼점',
+      customerAddress: '서울 강남구 역삼동',
+      deliveryFee: 5500,
+      deliveryStartedAt: yesterday(19, 50),
+      deliveryCompleteAt: yesterday(20, 12),
+    },
+    {
+      orderId: 94,
+      storeName: '도미노피자 대치점',
+      customerAddress: '서울 강남구 도곡동',
+      deliveryFee: 4500,
+      deliveryStartedAt: yesterday(18, 10),
+      deliveryCompleteAt: yesterday(18, 30),
+    },
+    {
+      orderId: 93,
+      storeName: '교촌치킨 삼성점',
+      customerAddress: '서울 강남구 청담동',
+      deliveryFee: 5000,
+      deliveryStartedAt: yesterday(16, 45),
+      deliveryCompleteAt: yesterday(17, 5),
+    },
+  ]);
+}
+
 export const mockApi = {
   signupUser,
   signupRider,
@@ -2576,4 +2642,5 @@ export const mockApi = {
   getPaymentMethods,
   addPaymentMethod,
   deletePaymentMethod,
+  getRiderDeliveryHistory,
 };

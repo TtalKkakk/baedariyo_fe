@@ -1,9 +1,13 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 
 import { createStompClient } from '@/shared/socket/client';
-import { startRiderDelivery, completeRiderDelivery } from '@/shared/api';
+import {
+  startRiderDelivery,
+  completeRiderDelivery,
+  updateDeliveryLocation,
+} from '@/shared/api';
 import { RiderDeliveryMap } from '@/features/map';
 import BackIcon from '@/shared/assets/icons/header/back.svg?react';
 import LocationIcon from '@/shared/assets/icons/header/location.svg?react';
@@ -44,6 +48,7 @@ export default function RiderDeliveryPage() {
   const [status, setStatus] = useState('ACCEPTED');
   const [showMap, setShowMap] = useState(false);
   const [riderLocation, setRiderLocation] = useState(null);
+  const watchIdRef = useRef(null);
 
   const startMutation = useMutation({
     mutationFn: startRiderDelivery,
@@ -83,6 +88,29 @@ export default function RiderDeliveryPage() {
       client.deactivate();
     };
   }, [orderId]);
+
+  // 배달 중일 때 GPS 위치 실시간 업데이트
+  useEffect(() => {
+    if (status !== 'DELIVERING' || !orderId || !navigator.geolocation) return;
+
+    watchIdRef.current = navigator.geolocation.watchPosition(
+      (position) => {
+        updateDeliveryLocation(orderId, {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        }).catch(() => {});
+      },
+      () => {},
+      { enableHighAccuracy: true, maximumAge: 0 }
+    );
+
+    return () => {
+      if (watchIdRef.current !== null) {
+        navigator.geolocation.clearWatch(watchIdRef.current);
+        watchIdRef.current = null;
+      }
+    };
+  }, [orderId, status]);
 
   const handleNext = () => {
     if (!orderId) return;

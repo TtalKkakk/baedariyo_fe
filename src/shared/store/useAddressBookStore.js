@@ -29,6 +29,7 @@ export const useAddressBookStore = create(
             const nextAddress = {
               id: createAddressId(),
               label: label?.trim() || '기본 주소',
+              alias: label?.trim() || '기본 주소',
               recipientName: recipientName?.trim() || '',
               phoneNumber: phoneNumber?.trim() || '',
               roadAddress: roadAddress?.trim() || '',
@@ -55,22 +56,33 @@ export const useAddressBookStore = create(
 
         setDefaultAddress: (addressId) =>
           set((state) => {
-            const exists = state.addresses.some(
+            const target = state.addresses.find(
               (item) => item.id === addressId
             );
-            if (!exists) return state;
+
+            if (!target) return state;
+
+            console.log('기본주소 alias:', target.alias);
+
             return { defaultAddressId: addressId };
           }),
 
         removeAddress: (addressId) =>
           set((state) => {
+            const target = state.addresses.find(
+              (item) => item.id === addressId
+            );
+
             const nextAddresses = state.addresses.filter(
               (item) => item.id !== addressId
             );
+
             const nextDefaultAddressId =
               state.defaultAddressId === addressId
                 ? (nextAddresses[0]?.id ?? null)
                 : state.defaultAddressId;
+
+            console.log('삭제할 alias:', target?.alias);
 
             return {
               addresses: nextAddresses,
@@ -79,11 +91,27 @@ export const useAddressBookStore = create(
           }),
 
         updateAddress: (addressId, fields) =>
-          set((state) => ({
-            addresses: state.addresses.map((item) =>
-              item.id === addressId ? { ...item, ...fields } : item
-            ),
-          })),
+          set((state) => {
+            const prev = state.addresses.find((item) => item.id === addressId);
+
+            const nextAddresses = state.addresses.map((item) =>
+              item.id === addressId
+                ? {
+                    ...item,
+                    ...fields,
+                    alias: fields.label ? fields.label.trim() : item.alias,
+                  }
+                : item
+            );
+
+            if (fields.label && prev?.label !== fields.label) {
+              console.log('alias 변경:', prev.label, '→', fields.label);
+            }
+
+            return {
+              addresses: nextAddresses,
+            };
+          }),
 
         clearAddresses: () =>
           set({

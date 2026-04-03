@@ -51,6 +51,9 @@ export default function WriteReviewPage() {
       queryClient.invalidateQueries({
         queryKey: ['store-reviews', storePublicId],
       });
+      queryClient.invalidateQueries({
+        queryKey: ['store-detail', storePublicId],
+      });
       navigate(-1);
     },
   });

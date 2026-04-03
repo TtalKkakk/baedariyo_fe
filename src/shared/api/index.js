@@ -48,6 +48,7 @@ export {
   completeDelivery,
   getDeliveryLocation,
   updateDeliveryLocation,
+  getRiderDeliveryHistory,
 } from './delivery';
 
 // payment

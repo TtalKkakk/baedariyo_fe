@@ -127,8 +127,12 @@ function OrderCard({ payment, onOpenDetail, activeOrders }) {
       <div className="flex items-start gap-[10px]">
         <button
           type="button"
-          onClick={() => navigate(`/stores/${payment?.storePublicId ?? ''}`)}
-          className="flex items-start gap-[10px] flex-1 min-w-0 text-left"
+          onClick={() =>
+            payment?.storePublicId
+              ? navigate(`/stores/${payment.storePublicId}`)
+              : undefined
+          }
+          className={`flex items-start gap-[10px] flex-1 min-w-0 text-left${payment?.storePublicId ? '' : ' cursor-default'}`}
         >
           <img
             src={
@@ -178,30 +182,38 @@ function OrderCard({ payment, onOpenDetail, activeOrders }) {
         )}
       </div>
 
-      {/* 하단 버튼 - 배달 완료 시에만 표시 */}
-      {!['FAILED', 'CANCELLED', 'REQUESTED'].includes(payment?.paymentStatus) &&
+      {/* 하단 버튼 - 실패/취소/대기 제외하고 표시 */}
+      {!['FAILED', 'CANCELED', 'CANCELLED', 'REQUESTED', 'READY'].includes(
+        payment?.paymentStatus
+      ) &&
         !activeOrders.some((o) => o.paymentId === payment?.paymentId) && (
           <div className="flex gap-2 mt-4">
             <button
               type="button"
-              onClick={() =>
-                navigate('/reviews/write', {
-                  state: {
-                    storePublicId: payment?.storePublicId,
-                    storeName: payment?.storeName,
-                  },
-                })
-              }
-              className="w-[145px] h-[32px] rounded-[6px] border border-[var(--color-semantic-line-normal-normal)] bg-white text-[14px] font-medium text-[var(--color-semantic-label-normal)]"
+              onClick={() => {
+                if (payment?.storePublicId) {
+                  navigate('/reviews/write', {
+                    state: {
+                      storePublicId: payment.storePublicId,
+                      storeName: payment?.storeName,
+                    },
+                  });
+                }
+              }}
+              disabled={!payment?.storePublicId}
+              className="w-[145px] h-[32px] rounded-[6px] border border-[var(--color-semantic-line-normal-normal)] bg-white text-[14px] font-medium text-[var(--color-semantic-label-normal)] disabled:opacity-40"
             >
               리뷰 작성
             </button>
             <button
               type="button"
-              onClick={() =>
-                navigate(`/stores/${payment?.storePublicId ?? ''}`)
-              }
-              className="w-[145px] h-[32px] rounded-[6px] bg-[var(--color-atomic-redOrange-80)] text-white text-[14px] font-medium"
+              onClick={() => {
+                if (payment?.storePublicId) {
+                  navigate(`/stores/${payment.storePublicId}`);
+                }
+              }}
+              disabled={!payment?.storePublicId}
+              className="w-[145px] h-[32px] rounded-[6px] bg-[var(--color-atomic-redOrange-80)] text-white text-[14px] font-medium disabled:opacity-40"
             >
               재주문
             </button>

@@ -5,10 +5,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { loginUser } from '@/shared/api';
 import { useProfileStore, useAddressBookStore } from '@/shared/store';
 import BackIcon from '@/shared/assets/icons/header/back.svg?react';
+import OpenIcon from '@/shared/assets/icons/open.svg?react';
+import CloseIcon from '@/shared/assets/icons/close.svg?react';
 
 function getErrorMessage(error) {
   return (
     error?.response?.data?.message ??
+    error?.response?.data?.error?.message ??
     error?.message ??
     '로그인 요청에 실패했습니다.'
   );
@@ -22,29 +25,36 @@ export default function LoginPage() {
   const addAddress = useAddressBookStore((s) => s.addAddress);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const loginMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (result) => {
+      const normalizedEmail = email.trim();
+
       localStorage.setItem('accessToken', result.accessToken);
+
       if (result.refreshToken) {
         localStorage.setItem('refreshToken', result.refreshToken);
       }
-      const prevEmail = localStorage.getItem('loggedInEmail');
-      const isDifferentUser = prevEmail && prevEmail !== email.trim();
 
-      saveProfile({ email: email.trim() });
-      localStorage.setItem('loggedInEmail', email.trim());
+      const prevEmail = localStorage.getItem('loggedInEmail');
+      const isDifferentUser = prevEmail && prevEmail !== normalizedEmail;
+
+      saveProfile({ email: normalizedEmail });
+      localStorage.setItem('loggedInEmail', normalizedEmail);
 
       if (isDifferentUser) {
         clearAddresses();
         localStorage.removeItem('mock-payments');
         localStorage.removeItem('mock-reviews');
       }
+
       const pendingAddress = location.state?.pendingAddress;
       if (pendingAddress) {
         addAddress({ ...pendingAddress, isDefault: true });
       }
+
       navigate('/mypage', { replace: true });
     },
   });
@@ -84,15 +94,28 @@ export default function LoginPage() {
           autoComplete="email"
           required
         />
-        <input
-          type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          placeholder="비밀번호"
-          className="w-full h-11 px-3 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body2 outline-none"
-          autoComplete="current-password"
-          required
-        />
+        <div className="relative">
+          <input
+            type={showPassword ? 'text' : 'password'}
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder="비밀번호"
+            className="w-full h-11 px-3 pr-10 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body2 outline-none"
+            autoComplete="current-password"
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2"
+          >
+            {showPassword ? (
+              <CloseIcon className="size-5 [&_path]:fill-[var(--color-semantic-label-alternative)]" />
+            ) : (
+              <OpenIcon className="size-5 [&_path]:fill-[var(--color-semantic-label-alternative)]" />
+            )}
+          </button>
+        </div>
         <button
           type="submit"
           disabled={loginMutation.isPending || !email.trim() || !password}

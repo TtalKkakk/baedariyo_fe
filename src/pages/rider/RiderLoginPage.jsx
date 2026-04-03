@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { loginRider } from '@/shared/api';
 import BackIcon from '@/shared/assets/icons/header/back.svg?react';
+import OpenIcon from '@/shared/assets/icons/open.svg?react';
+import CloseIcon from '@/shared/assets/icons/close.svg?react';
 import { useProfileStore } from '@/shared/store';
 
 function getErrorMessage(error) {
@@ -19,6 +21,7 @@ export default function RiderLoginPage() {
   const saveProfile = useProfileStore((state) => state.saveProfile);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const loginMutation = useMutation({
     mutationFn: loginRider,
@@ -77,15 +80,28 @@ export default function RiderLoginPage() {
           required
         />
 
-        <input
-          type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          placeholder="비밀번호"
-          className="w-full h-11 px-3 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body2 outline-none"
-          autoComplete="current-password"
-          required
-        />
+        <div className="relative">
+          <input
+            type={showPassword ? 'text' : 'password'}
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder="비밀번호"
+            className="w-full h-11 px-3 pr-10 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body2 outline-none"
+            autoComplete="current-password"
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2"
+          >
+            {showPassword ? (
+              <CloseIcon className="size-5 [&_path]:fill-[var(--color-semantic-label-alternative)]" />
+            ) : (
+              <OpenIcon className="size-5 [&_path]:fill-[var(--color-semantic-label-alternative)]" />
+            )}
+          </button>
+        </div>
 
         <button
           type="submit"

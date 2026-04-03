@@ -88,8 +88,22 @@ const router = createBrowserRouter(
 
         // 배달원 로그인
         { path: '/rider/login', element: <RiderLoginPage /> },
-        { path: '/rider/training', element: <RiderTrainingPage /> },
-        { path: '/rider/mode', element: <RiderModePage /> },
+        {
+          path: '/rider/training',
+          element: (
+            <PrivateRoute redirectTo="/rider/login">
+              <RiderTrainingPage />
+            </PrivateRoute>
+          ),
+        },
+        {
+          path: '/rider/mode',
+          element: (
+            <PrivateRoute redirectTo="/rider/login">
+              <RiderModePage />
+            </PrivateRoute>
+          ),
+        },
 
         // 유저 페이지
         {

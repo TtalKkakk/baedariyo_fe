@@ -1,6 +1,7 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import { useNotificationStore } from '@/shared/store';
+import { ConfirmModal, Toast } from '@/shared/ui';
 
 function formatDateTime(value) {
   if (!value) return '-';
@@ -66,6 +67,8 @@ export default function NotificationsPage() {
   const clearNotifications = useNotificationStore(
     (state) => state.clearNotifications
   );
+  const [showClearModal, setShowClearModal] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const unreadCount = useMemo(
     () => notifications.filter((item) => !item.isRead).length,
@@ -94,7 +97,7 @@ export default function NotificationsPage() {
         </button>
         <button
           type="button"
-          onClick={clearNotifications}
+          onClick={() => setShowClearModal(true)}
           disabled={notifications.length === 0}
           className="h-8 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-caption1 disabled:opacity-40 disabled:cursor-not-allowed"
         >
@@ -119,6 +122,26 @@ export default function NotificationsPage() {
           ))}
         </ul>
       )}
+
+      <ConfirmModal
+        isOpen={showClearModal}
+        title="알림을 전체 삭제할까요?"
+        description="삭제한 알림은 복구할 수 없습니다."
+        confirmLabel="전체 삭제"
+        cancelLabel="취소"
+        onConfirm={() => {
+          clearNotifications();
+          setShowClearModal(false);
+          setShowToast(true);
+        }}
+        onCancel={() => setShowClearModal(false)}
+      />
+
+      <Toast
+        message="알림이 전체 삭제되었습니다."
+        isVisible={showToast}
+        onClose={() => setShowToast(false)}
+      />
     </div>
   );
 }
