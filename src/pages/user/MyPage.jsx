@@ -164,7 +164,8 @@ export default function MyPage() {
   const { data: serverProfile } = useQuery({
     queryKey: ['user-profile'],
     // queryFn: getUserProfile,
-    enabled: isLoggedIn,
+    // enabled: isLoggedIn,
+    enabled: false,
   });
 
   const displayProfile = serverProfile ?? profile;
