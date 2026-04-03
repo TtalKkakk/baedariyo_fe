@@ -12,6 +12,7 @@ import TimeIcon from '@/shared/assets/icons/store/time.svg?react';
 import DeliveryFeeIcon from '@/shared/assets/icons/store/deliveryfee.svg?react';
 import { searchStores } from '@/shared/api';
 import { BottomModal } from '@/shared/ui';
+import { useAddressBookStore } from '@/shared/store/useAddressBookStore';
 
 function formatPrice(amount) {
   return `${amount.toLocaleString('ko-KR')}원`;
@@ -108,6 +109,11 @@ export default function SearchResultPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const initialQuery = searchParams.get('q') ?? '';
 
+  const addresses = useAddressBookStore((s) => s.addresses);
+  const defaultAddressId = useAddressBookStore((s) => s.defaultAddressId);
+  const defaultAddress = addresses.find((a) => a.id === defaultAddressId);
+  const { latitude, longitude } = defaultAddress ?? {};
+
   const [inputValue, setInputValue] = useState(initialQuery);
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef(null);
@@ -125,16 +131,22 @@ export default function SearchResultPage() {
 
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useInfiniteQuery({
-      queryKey: ['search-stores', initialQuery],
+      queryKey: ['search-stores', initialQuery, latitude, longitude],
       queryFn: ({ pageParam = 0 }) =>
-        searchStores({ keyword: initialQuery, page: pageParam, size: 20 }),
+        searchStores({
+          keyword: initialQuery,
+          latitude,
+          longitude,
+          page: pageParam,
+          size: 20,
+        }),
       getNextPageParam: (lastPage, allPages) => {
         const total = lastPage?.totalCount ?? 0;
         const fetched = allPages.flatMap((p) => p?.stores ?? p ?? []).length;
         return fetched < total ? allPages.length : undefined;
       },
       initialPageParam: 0,
-      enabled: !!initialQuery,
+      enabled: !!initialQuery && !!latitude && !!longitude,
     });
 
   useEffect(() => {
@@ -368,7 +380,16 @@ export default function SearchResultPage() {
 
       {/* 콘텐츠 */}
       <div className="flex-1 overflow-y-auto">
-        {isLoading ? (
+        {!latitude ? (
+          <div className="flex flex-col items-center justify-center h-40 gap-2">
+            <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
+              주소를 설정해주세요
+            </p>
+            <p className="text-body2 text-[var(--color-semantic-label-alternative)]">
+              배달받을 주소가 필요해요
+            </p>
+          </div>
+        ) : isLoading ? (
           <div className="flex items-center justify-center h-40">
             <p className="text-body2 text-[var(--color-semantic-label-alternative)]">
               검색 중...

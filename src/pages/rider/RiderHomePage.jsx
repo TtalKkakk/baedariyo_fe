@@ -1,5 +1,5 @@
+import { useEffect, useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -7,90 +7,109 @@ import {
   setRiderOffline,
   assignRiderToOrder,
 } from '@/shared/api';
+import { createRiderCallsClient } from '@/shared/socket/client';
 import { useRiderStore } from '@/shared/store';
 import MotorcycleIcon from '@/shared/assets/icons/order-status/motocycle.svg?react';
 import LocationIcon from '@/shared/assets/icons/header/location.svg?react';
 
-const MOCK_CALLS = [
-  {
-    id: 1,
-    storeName: '맥도날드 강남점',
-    storeAddress: '서울 강남구 테헤란로 152',
-    customerAddress: '서울 강남구 역삼동 819-3',
-    distance: '1.2km',
-    estimatedMinutes: 8,
-    fee: 4500,
-  },
-  {
-    id: 2,
-    storeName: '버거킹 선릉점',
-    storeAddress: '서울 강남구 선릉로 433',
-    customerAddress: '서울 강남구 대치동 1005',
-    distance: '2.4km',
-    estimatedMinutes: 14,
-    fee: 5000,
-  },
-  {
-    id: 3,
-    storeName: 'BBQ 삼성점',
-    storeAddress: '서울 강남구 삼성로 212',
-    customerAddress: '서울 강남구 삼성동 144-7',
-    distance: '0.8km',
-    estimatedMinutes: 6,
-    fee: 4000,
-  },
-];
+const TODAY_EARNINGS = 28500;
+const TODAY_COUNT = 6;
+
+function getCurrentPosition() {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error('위치 서비스를 지원하지 않는 브라우저입니다.'));
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(resolve, reject, {
+      timeout: 10000,
+      maximumAge: 60000,
+    });
+  });
+}
 
 export default function RiderHomePage() {
   const navigate = useNavigate();
-  const isOnline = useRiderStore((s) => s.isOnline);
-  const setOnline = useRiderStore((s) => s.setOnline);
-  const setOffline = useRiderStore((s) => s.setOffline);
-  const [todayEarnings] = useState(28500);
-  const [todayCount] = useState(6);
+  const isOnline = useRiderStore((state) => state.isOnline);
+  const setOnline = useRiderStore((state) => state.setOnline);
+  const setOffline = useRiderStore((state) => state.setOffline);
+
+  const [calls, setCalls] = useState([]);
+  const [locationError, setLocationError] = useState(null);
+  const stompClientRef = useRef(null);
 
   const onlineMutation = useMutation({
     mutationFn: setRiderOnline,
-    onSuccess: () => setOnline(),
+    onSuccess: () => {
+      setOnline();
+      setLocationError(null);
+      stompClientRef.current = createRiderCallsClient({
+        onCall: (call) => {
+          setCalls((prev) => {
+            const exists = prev.some((c) => c.orderId === call.orderId);
+            return exists ? prev : [call, ...prev];
+          });
+        },
+      });
+    },
   });
 
   const offlineMutation = useMutation({
     mutationFn: setRiderOffline,
-    onSuccess: () => setOffline(),
+    onSuccess: () => {
+      setOffline();
+      setCalls([]);
+      stompClientRef.current?.deactivate();
+      stompClientRef.current = null;
+    },
   });
 
   const acceptMutation = useMutation({
     mutationFn: (orderId) => assignRiderToOrder({ orderId }),
     onSuccess: (_, orderId) => {
+      setCalls((prev) => prev.filter((c) => c.orderId !== orderId));
       navigate(`/rider/delivery/${orderId}`);
     },
   });
 
-  const toggleOnline = () => {
+  useEffect(() => {
+    return () => {
+      stompClientRef.current?.deactivate();
+    };
+  }, []);
+
+  const toggleOnline = async () => {
+    if (onlineMutation.isPending || offlineMutation.isPending) return;
+
     if (isOnline) {
       offlineMutation.mutate();
-    } else {
+      return;
+    }
+
+    try {
+      await getCurrentPosition();
       onlineMutation.mutate();
+    } catch {
+      setLocationError('위치 권한을 허용해야 온라인 전환이 가능합니다.');
     }
   };
 
-  const isTogglingOnline =
-    onlineMutation.isPending || offlineMutation.isPending;
+  const isToggling = onlineMutation.isPending || offlineMutation.isPending;
 
   return (
     <div className="bg-[var(--color-atomic-coolNeutral-97)] min-h-full pb-6">
-      {/* 상태 바 */}
       <div className="bg-white px-4 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <MotorcycleIcon className="size-5 [&_path]:stroke-[var(--color-semantic-label-normal)]" />
+          <MotorcycleIcon className="size-5 [&_path]:fill-[var(--color-semantic-label-normal)]" />
           <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
             라이더 홈
           </p>
         </div>
+
         <button
           type="button"
           onClick={toggleOnline}
-          disabled={isTogglingOnline}
+          disabled={isToggling}
           className={`flex items-center gap-2 h-9 px-4 rounded-full text-body3 font-semibold transition-colors ${
             isOnline
               ? 'bg-[var(--color-atomic-redOrange-80)] text-white'
@@ -98,38 +117,48 @@ export default function RiderHomePage() {
           } disabled:opacity-50`}
         >
           <span
-            className={`size-2 rounded-full ${isOnline ? 'bg-white' : 'bg-[var(--color-semantic-label-alternative)]'}`}
+            className={`size-2 rounded-full ${
+              isOnline
+                ? 'bg-white'
+                : 'bg-[var(--color-semantic-label-alternative)]'
+            }`}
           />
-          {isOnline ? '온라인' : '오프라인'}
+          {isToggling ? '전환 중...' : isOnline ? '온라인' : '오프라인'}
         </button>
       </div>
 
-      {/* 오늘 수익 요약 */}
+      {locationError && (
+        <div className="mx-4 mt-3 px-4 py-3 rounded-xl bg-[var(--color-semantic-status-cautionary)]/10">
+          <p className="text-body3 text-[var(--color-semantic-status-cautionary)]">
+            {locationError}
+          </p>
+        </div>
+      )}
+
       <div className="mx-4 mt-4 rounded-xl bg-white p-4 flex flex-col items-center">
         <p className="text-body3 text-[var(--color-semantic-label-alternative)]">
           오늘의 수익
         </p>
         <p className="mt-1 text-[22px] font-bold text-[var(--color-semantic-label-normal)]">
-          {todayEarnings.toLocaleString()}원
+          {TODAY_EARNINGS.toLocaleString()}원
         </p>
         <p className="mt-1 text-body3 text-[var(--color-semantic-label-alternative)]">
           완료한 배달{' '}
           <span className="font-semibold text-[var(--color-atomic-redOrange-80)]">
-            {todayCount}건
+            {TODAY_COUNT}건
           </span>
         </p>
       </div>
 
-      {/* 콜 리스트 */}
       <div className="mx-4 mt-4">
         <p className="text-body2 font-semibold text-[var(--color-semantic-label-normal)] mb-3">
-          {isOnline ? `배달 요청 ${MOCK_CALLS.length}건` : '배달 요청'}
+          {isOnline ? `배달 요청 ${calls.length}건` : '배달 요청'}
         </p>
 
         {!isOnline ? (
           <div className="rounded-xl bg-white p-6 flex flex-col items-center gap-3">
             <div className="size-12 rounded-full bg-[var(--color-atomic-coolNeutral-97)] flex items-center justify-center">
-              <MotorcycleIcon className="size-6 [&_path]:stroke-[var(--color-semantic-label-alternative)]" />
+              <MotorcycleIcon className="size-6 [&_path]:fill-[var(--color-semantic-label-alternative)]" />
             </div>
             <p className="text-body2 text-[var(--color-semantic-label-alternative)] text-center">
               온라인 상태로 전환하면
@@ -139,55 +168,72 @@ export default function RiderHomePage() {
             <button
               type="button"
               onClick={toggleOnline}
-              disabled={isTogglingOnline}
+              disabled={isToggling}
               className="h-10 px-5 rounded-full bg-[var(--color-atomic-redOrange-80)] text-white text-body3 font-semibold disabled:opacity-50"
             >
               온라인으로 전환
             </button>
           </div>
+        ) : calls.length === 0 ? (
+          <div className="rounded-xl bg-white p-6 flex flex-col items-center gap-2">
+            <p className="text-body2 text-[var(--color-semantic-label-alternative)]">
+              새로운 배달 요청을 기다리는 중...
+            </p>
+          </div>
         ) : (
           <div className="space-y-3">
-            {MOCK_CALLS.map((call) => (
-              <div key={call.id} className="rounded-xl bg-white p-4">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-body2 font-semibold text-[var(--color-semantic-label-normal)] truncate">
-                      {call.storeName}
-                    </p>
-                    <div className="mt-1.5 flex items-start gap-1">
-                      <LocationIcon className="size-3.5 mt-0.5 shrink-0 [&_path]:fill-[var(--color-semantic-label-alternative)]" />
-                      <p className="text-body3 text-[var(--color-semantic-label-alternative)] truncate">
-                        {call.customerAddress}
+            {calls.map((call) => {
+              const isAcceptingThis =
+                acceptMutation.isPending &&
+                acceptMutation.variables === call.orderId;
+
+              return (
+                <div key={call.orderId} className="rounded-xl bg-white p-4">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-body2 font-semibold text-[var(--color-semantic-label-normal)] truncate">
+                        {call.storeName}
                       </p>
+                      <p className="mt-1 text-body3 text-[var(--color-semantic-label-alternative)] truncate">
+                        {call.storeAddress}
+                      </p>
+                      <div className="mt-1.5 flex items-start gap-1">
+                        <LocationIcon className="size-3.5 mt-0.5 shrink-0 [&_path]:fill-[var(--color-semantic-label-alternative)]" />
+                        <p className="text-body3 text-[var(--color-semantic-label-alternative)] truncate">
+                          {call.customerAddress}
+                        </p>
+                      </div>
                     </div>
+
+                    <p className="text-body1 font-bold text-[var(--color-atomic-redOrange-80)] shrink-0">
+                      {(call.fee ?? 0).toLocaleString()}원
+                    </p>
                   </div>
-                  <p className="text-body1 font-bold text-[var(--color-atomic-redOrange-80)] shrink-0">
-                    {call.fee.toLocaleString()}원
-                  </p>
-                </div>
 
-                <div className="mt-3 flex items-center gap-3">
-                  <span className="text-body3 text-[var(--color-semantic-label-alternative)]">
-                    {call.distance}
-                  </span>
-                  <span className="text-body3 text-[var(--color-semantic-label-alternative)]">
-                    약 {call.estimatedMinutes}분
-                  </span>
-                </div>
+                  <div className="mt-3 flex items-center gap-3">
+                    {call.distance && (
+                      <span className="text-body3 text-[var(--color-semantic-label-alternative)]">
+                        {call.distance}
+                      </span>
+                    )}
+                    {call.estimatedMinutes && (
+                      <span className="text-body3 text-[var(--color-semantic-label-alternative)]">
+                        약 {call.estimatedMinutes}분
+                      </span>
+                    )}
+                  </div>
 
-                <button
-                  type="button"
-                  onClick={() => acceptMutation.mutate(call.id)}
-                  disabled={acceptMutation.isPending}
-                  className="mt-3 w-full h-10 rounded-lg bg-[var(--color-atomic-redOrange-80)] text-white text-body2 font-semibold disabled:opacity-40"
-                >
-                  {acceptMutation.isPending &&
-                  acceptMutation.variables === call.id
-                    ? '수락 중...'
-                    : '수락하기'}
-                </button>
-              </div>
-            ))}
+                  <button
+                    type="button"
+                    onClick={() => acceptMutation.mutate(call.orderId)}
+                    disabled={acceptMutation.isPending}
+                    className="mt-3 w-full h-10 rounded-lg bg-[var(--color-atomic-redOrange-80)] text-white text-body2 font-semibold disabled:opacity-40"
+                  >
+                    {isAcceptingThis ? '수락 중...' : '수락하기'}
+                  </button>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

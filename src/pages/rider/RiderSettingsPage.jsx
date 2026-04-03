@@ -1,18 +1,66 @@
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createPortal } from 'react-dom';
 
 import { withdrawRider, updateRiderVehicle } from '@/shared/api';
+import BicycleIcon from '@/shared/assets/icons/order-status/bicycle.svg?react';
+import MopedIcon from '@/shared/assets/icons/order-status/moped.svg?react';
+import CarIcon from '@/shared/assets/icons/order-status/car.svg?react';
+import MopeddIcon from '@/shared/assets/icons/order-status/mopedd.svg?react';
+import ScooterIcon from '@/shared/assets/icons/order-status/scooter.svg?react';
+import WalkIcon from '@/shared/assets/icons/order-status/walk.svg?react';
+import UserIcon from '@/shared/assets/icons/nav/mypage.svg?react';
 
 const VEHICLE_TYPES = [
-  { value: 'BICYCLE', label: '자전거', emoji: '🚲' },
-  { value: 'MOTORCYCLE', label: '오토바이', emoji: '🛵' },
-  { value: 'CAR', label: '자동차', emoji: '🚗' },
-  { value: 'E_BICYCLE', label: '전기자전거', emoji: '⚡' },
-  { value: 'E_SCOOTER', label: '전동킥보드', emoji: '🛴' },
-  { value: 'WALKING', label: '도보', emoji: '🚶' },
+  { value: 'BICYCLE', label: '자전거', icon: BicycleIcon },
+  { value: 'MOTORCYCLE', label: '오토바이', icon: MopedIcon },
+  { value: 'CAR', label: '자동차', icon: CarIcon },
+  { value: 'E_BICYCLE', label: '전기자전거', icon: MopeddIcon },
+  { value: 'E_SCOOTER', label: '전동킥보드', icon: ScooterIcon },
+  { value: 'WALKING', label: '도보', icon: WalkIcon },
   { value: 'ETC', label: '기타', emoji: '📦' },
 ];
+
+function ConfirmModal({
+  title,
+  description,
+  confirmLabel,
+  confirmClassName,
+  onConfirm,
+  onCancel,
+}) {
+  const portalTarget = document.querySelector('.layout-frame') || document.body;
+  return createPortal(
+    <div className="absolute inset-0 z-50 flex items-end bg-black/40">
+      <div className="w-full bg-white rounded-t-2xl px-5 pt-6 pb-8">
+        <p className="text-[18px] font-bold text-center text-[var(--color-semantic-label-normal)]">
+          {title}
+        </p>
+        <p className="mt-2 text-body2 text-center text-[var(--color-semantic-label-alternative)] leading-relaxed">
+          {description}
+        </p>
+        <div className="mt-6 flex gap-2">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="flex-1 h-12 rounded-xl border border-[var(--color-semantic-line-normal-normal)] text-body2 font-medium text-[var(--color-semantic-label-normal)]"
+          >
+            취소
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            className={`flex-1 h-12 rounded-xl text-body2 font-semibold text-white ${confirmClassName}`}
+          >
+            {confirmLabel}
+          </button>
+        </div>
+      </div>
+    </div>,
+    portalTarget
+  );
+}
 
 function getErrorMessage(error) {
   return (
@@ -22,13 +70,20 @@ function getErrorMessage(error) {
 
 export default function RiderSettingsPage() {
   const navigate = useNavigate();
-  const [vehicleType, setVehicleType] = useState('MOTORCYCLE');
-  const [region, setRegion] = useState('');
+
+  const [vehicleType, setVehicleType] = useState(
+    () => localStorage.getItem('riderVehicleType') ?? 'MOTORCYCLE'
+  );
   const [vehicleSaved, setVehicleSaved] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
 
   const vehicleMutation = useMutation({
-    mutationFn: () => updateRiderVehicle({ vehicleType }),
-    onSuccess: () => setVehicleSaved(true),
+    mutationFn: updateRiderVehicle,
+    onSuccess: () => {
+      localStorage.setItem('riderVehicleType', vehicleType);
+      setVehicleSaved(true);
+    },
   });
 
   const withdrawMutation = useMutation({
@@ -36,6 +91,8 @@ export default function RiderSettingsPage() {
     onSuccess: () => {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
+      localStorage.removeItem('riderVehicleType');
+      navigate('/rider/login');
     },
   });
 
@@ -46,32 +103,27 @@ export default function RiderSettingsPage() {
   };
 
   const handleWithdraw = () => {
-    const isConfirmed = window.confirm(
-      '정말 탈퇴하시겠습니까? 배달원 계정 복구는 지원되지 않습니다.'
-    );
-    if (!isConfirmed) return;
     withdrawMutation.mutate();
   };
 
   const handleVehicleSave = () => {
     setVehicleSaved(false);
-    vehicleMutation.mutate();
+    vehicleMutation.mutate({ vehicleType });
   };
 
   return (
     <div className="bg-[var(--color-atomic-coolNeutral-97)] min-h-full pb-6">
-      {/* 헤더 */}
       <div className="bg-white px-4 py-4">
         <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
           설정
         </p>
       </div>
 
-      {/* 배달 수단 */}
       <div className="mx-4 mt-4 rounded-xl bg-white p-4">
         <p className="text-body2 font-semibold text-[var(--color-semantic-label-normal)] mb-3">
           배달 수단
         </p>
+
         <div className="grid grid-cols-3 gap-2">
           {VEHICLE_TYPES.map((vehicle) => (
             <button
@@ -87,7 +139,17 @@ export default function RiderSettingsPage() {
                   : 'border-[var(--color-semantic-line-normal-normal)]'
               }`}
             >
-              <span className="text-[20px]">{vehicle.emoji}</span>
+              {vehicle.icon ? (
+                <vehicle.icon
+                  className={`size-5 ${
+                    vehicleType === vehicle.value
+                      ? '[&_path]:fill-[var(--color-atomic-redOrange-80)]'
+                      : '[&_path]:fill-[var(--color-semantic-label-alternative)]'
+                  }`}
+                />
+              ) : (
+                <span className="text-[20px]">{vehicle.emoji}</span>
+              )}
               <span
                 className={`text-body3 font-medium ${
                   vehicleType === vehicle.value
@@ -121,66 +183,38 @@ export default function RiderSettingsPage() {
         </button>
       </div>
 
-      {/* 활동 지역 */}
-      <div className="mx-4 mt-3 rounded-xl bg-white p-4">
-        <p className="text-body2 font-semibold text-[var(--color-semantic-label-normal)] mb-3">
-          활동 지역
-        </p>
-        <input
-          type="text"
-          value={region}
-          onChange={(e) => setRegion(e.target.value)}
-          placeholder="예: 서울 강남구"
-          className="w-full h-11 px-3 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body2 outline-none"
-        />
-        <p className="mt-2 text-body3 text-[var(--color-semantic-label-alternative)]">
-          주로 배달하는 지역을 입력하면 해당 지역 콜을 우선으로 받을 수 있어요.
-        </p>
-        <button
-          type="button"
-          disabled={!region.trim()}
-          className="mt-3 w-full h-10 rounded-lg bg-[var(--color-atomic-redOrange-80)] text-white text-body2 font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          저장하기
-        </button>
-      </div>
-
-      {/* 계정 */}
       <div className="mx-4 mt-3 rounded-xl bg-white p-4 space-y-2">
         <p className="text-body2 font-semibold text-[var(--color-semantic-label-normal)] mb-1">
           계정
         </p>
+
         <button
           type="button"
-          onClick={handleLogout}
+          onClick={() => navigate('/login')}
+          className="w-full h-11 rounded-lg bg-[var(--color-atomic-coolNeutral-97)] flex items-center justify-center gap-2"
+        >
+          <UserIcon className="size-5 [&_path]:fill-[var(--color-semantic-label-normal)]" />
+          <span className="text-body2 font-semibold text-[var(--color-semantic-label-normal)]">
+            주문자로 전환
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setShowLogoutModal(true)}
           className="w-full h-11 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body2 font-medium text-[var(--color-semantic-label-normal)]"
         >
           로그아웃
         </button>
 
-        {withdrawMutation.isSuccess ? (
-          <div className="rounded-lg border border-[var(--color-semantic-line-normal-normal)] p-3">
-            <p className="text-body2 font-semibold text-[var(--color-semantic-label-normal)]">
-              탈퇴가 완료되었습니다.
-            </p>
-            <button
-              type="button"
-              onClick={() => navigate('/rider/login')}
-              className="mt-2 h-9 px-3 rounded-md border border-[var(--color-semantic-line-normal-normal)] text-body2 text-[var(--color-semantic-label-normal)]"
-            >
-              로그인 페이지로 이동
-            </button>
-          </div>
-        ) : (
-          <button
-            type="button"
-            onClick={handleWithdraw}
-            disabled={withdrawMutation.isPending}
-            className="w-full h-11 rounded-lg bg-[var(--color-semantic-status-cautionary)] text-white text-body2 font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            {withdrawMutation.isPending ? '탈퇴 처리 중...' : '배달원 탈퇴'}
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={() => setShowWithdrawModal(true)}
+          disabled={withdrawMutation.isPending}
+          className="w-full h-11 rounded-lg bg-[var(--color-semantic-status-cautionary)] text-white text-body2 font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          {withdrawMutation.isPending ? '탈퇴 처리 중...' : '배달원 탈퇴'}
+        </button>
 
         {withdrawMutation.isError && (
           <p className="text-body3 text-[var(--color-semantic-status-cautionary)]">
@@ -188,6 +222,28 @@ export default function RiderSettingsPage() {
           </p>
         )}
       </div>
+
+      {showLogoutModal && (
+        <ConfirmModal
+          title="로그아웃"
+          description="정말 로그아웃 하시겠어요?"
+          confirmLabel="로그아웃"
+          confirmClassName="bg-[var(--color-semantic-label-normal)]"
+          onConfirm={handleLogout}
+          onCancel={() => setShowLogoutModal(false)}
+        />
+      )}
+
+      {showWithdrawModal && (
+        <ConfirmModal
+          title="배달원 탈퇴"
+          description={`탈퇴하면 계정을 복구할 수 없어요.\n정말 탈퇴하시겠어요?`}
+          confirmLabel={withdrawMutation.isPending ? '처리 중...' : '탈퇴하기'}
+          confirmClassName="bg-[var(--color-semantic-status-cautionary)]"
+          onConfirm={handleWithdraw}
+          onCancel={() => setShowWithdrawModal(false)}
+        />
+      )}
     </div>
   );
 }

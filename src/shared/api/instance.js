@@ -46,9 +46,12 @@ api.interceptors.response.use(
 
       switch (status) {
         case 401:
-          // 인증 에러 처리
-          // localStorage.removeItem('accessToken');
-          // window.location.href = '/login';
+          localStorage.removeItem('accessToken');
+          if (window.location.pathname.startsWith('/rider')) {
+            window.location.href = '/baedaliyo_fe/rider/login';
+          } else {
+            window.location.href = '/baedaliyo_fe/login';
+          }
           break;
         case 403:
           // 권한 에러 처리

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getUserProfile } from '@/shared/api';
+// import { getUserProfile } from '@/shared/api';
 import { useProfileStore } from '@/shared/store';
 
 function InfoRow({ icon, label, value, action }) {
@@ -117,7 +117,8 @@ export default function ProfilePage() {
 
   const { data: serverProfile } = useQuery({
     queryKey: ['user-profile'],
-    queryFn: getUserProfile,
+    // queryFn: getUserProfile,
+    enabled: false, // TODO: 백엔드 연결 시 enabled: !!localStorage.getItem('accessToken') 로 교체
   });
 
   const profile = serverProfile ?? localProfile;
@@ -142,12 +143,6 @@ export default function ProfilePage() {
             변경
           </button>
         }
-      />
-
-      <InfoRow
-        icon={<BirthIcon />}
-        label="생년월일"
-        value={profile.birthDate || '-'}
       />
 
       <InfoRow

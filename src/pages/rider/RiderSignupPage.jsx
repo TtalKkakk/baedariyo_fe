@@ -17,6 +17,7 @@ const VEHICLE_TYPES = [
 
 function formatPhone(value) {
   const digits = value.replace(/\D/g, '').slice(0, 11);
+
   if (digits.length < 4) return digits;
   if (digits.length < 8) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
   return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
@@ -43,13 +44,13 @@ export default function RiderSignupPage() {
 
   const isPasswordMismatch = useMemo(
     () =>
-      passwordConfirm.length > 0 &&
       password.length > 0 &&
+      passwordConfirm.length > 0 &&
       password !== passwordConfirm,
     [password, passwordConfirm]
   );
 
-  const canSubmit =
+  const canSubmit = Boolean(
     email.trim() &&
     password &&
     passwordConfirm &&
@@ -57,7 +58,8 @@ export default function RiderSignupPage() {
     nickname.trim() &&
     phoneNumber.trim() &&
     vehicleType &&
-    !isPasswordMismatch;
+    !isPasswordMismatch
+  );
 
   const signupMutation = useMutation({
     mutationFn: () =>
@@ -74,9 +76,13 @@ export default function RiderSignupPage() {
     },
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!canSubmit || signupMutation.isPending) return;
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (!canSubmit || signupMutation.isPending) {
+      return;
+    }
+
     signupMutation.mutate();
   };
 
@@ -102,7 +108,7 @@ export default function RiderSignupPage() {
         <input
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(event) => setEmail(event.target.value)}
           placeholder="이메일"
           className="w-full h-11 px-3 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body2 outline-none"
           autoComplete="email"
@@ -112,7 +118,7 @@ export default function RiderSignupPage() {
         <input
           type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(event) => setPassword(event.target.value)}
           placeholder="비밀번호"
           className="w-full h-11 px-3 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body2 outline-none"
           autoComplete="new-password"
@@ -122,7 +128,7 @@ export default function RiderSignupPage() {
         <input
           type="password"
           value={passwordConfirm}
-          onChange={(e) => setPasswordConfirm(e.target.value)}
+          onChange={(event) => setPasswordConfirm(event.target.value)}
           placeholder="비밀번호 확인"
           className={`w-full h-11 px-3 rounded-lg border text-body2 outline-none ${
             isPasswordMismatch
@@ -136,7 +142,7 @@ export default function RiderSignupPage() {
         <input
           type="text"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(event) => setName(event.target.value)}
           placeholder="이름"
           className="w-full h-11 px-3 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body2 outline-none"
           autoComplete="name"
@@ -146,7 +152,7 @@ export default function RiderSignupPage() {
         <input
           type="text"
           value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
+          onChange={(event) => setNickname(event.target.value)}
           placeholder="닉네임"
           className="w-full h-11 px-3 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body2 outline-none"
           required
@@ -155,7 +161,7 @@ export default function RiderSignupPage() {
         <input
           type="tel"
           value={phoneNumber}
-          onChange={(e) => setPhoneNumber(formatPhone(e.target.value))}
+          onChange={(event) => setPhoneNumber(formatPhone(event.target.value))}
           placeholder="전화번호 (010-0000-0000)"
           className="w-full h-11 px-3 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body2 outline-none"
           autoComplete="tel"
@@ -168,7 +174,6 @@ export default function RiderSignupPage() {
           </p>
         )}
 
-        {/* 이동수단 */}
         <div className="pt-2">
           <p className="text-body2 font-semibold text-[var(--color-semantic-label-normal)] mb-2">
             이동수단

@@ -3,6 +3,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import RootLayout from './layouts/RootLayout';
 import UserLayout from './layouts/UserLayout';
 import RiderLayout from './layouts/RiderLayout';
+import PrivateRoute from './PrivateRoute';
 
 import HomePage from '../pages/user/HomePage';
 import SearchPage from '../pages/user/SearchPage';
@@ -40,6 +41,7 @@ import SecurityPage from '../pages/user/SecurityPage';
 import NotificationSettingsPage from '../pages/user/NotificationSettingsPage';
 import WithdrawPage from '../pages/user/WithdrawPage';
 import ReviewDetailPage from '../pages/user/ReviewDetailPage';
+import WriteReviewPage from '../pages/user/WriteReviewPage';
 import PaymentMethodsPage from '../pages/user/PaymentMethodsPage';
 import PaymentMethodRegisterPage from '../pages/user/PaymentMethodRegisterPage';
 import NotFoundPage from '../pages/NotFoundPage';
@@ -65,6 +67,16 @@ const router = createBrowserRouter(
         // 검색
         { path: '/search', element: <SearchPage /> },
         { path: '/search/result', element: <SearchResultPage /> },
+
+        // 리뷰 작성 (헤더/내비 없음)
+        {
+          path: '/reviews/write',
+          element: (
+            <PrivateRoute>
+              <WriteReviewPage />
+            </PrivateRoute>
+          ),
+        },
 
         // 로그인/회원가입
         { path: '/login', element: <LoginPage /> },
@@ -106,43 +118,178 @@ const router = createBrowserRouter(
             { path: '/reviews/:reviewId', element: <ReviewDetailPage /> },
 
             // 장바구니/주문
-            { path: '/cart', element: <CartPage /> },
-            { path: '/checkout', element: <CheckoutPage /> },
-            { path: '/order-complete', element: <OrderCompletePage /> },
+            {
+              path: '/cart',
+              element: (
+                <PrivateRoute>
+                  <CartPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/checkout',
+              element: (
+                <PrivateRoute>
+                  <CheckoutPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/order-complete',
+              element: (
+                <PrivateRoute>
+                  <OrderCompletePage />
+                </PrivateRoute>
+              ),
+            },
 
             // 주문내역
-            { path: '/orders', element: <OrderListPage /> },
-            { path: '/orders/:orderId', element: <OrderDetailPage /> },
+            {
+              path: '/orders',
+              element: (
+                <PrivateRoute>
+                  <OrderListPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/orders/:orderId',
+              element: (
+                <PrivateRoute>
+                  <OrderDetailPage />
+                </PrivateRoute>
+              ),
+            },
             {
               path: '/orders/:orderId/tracking',
-              element: <OrderTrackingPage />,
+              element: (
+                <PrivateRoute>
+                  <OrderTrackingPage />
+                </PrivateRoute>
+              ),
             },
 
             // 마이페이지
-            { path: '/mypage', element: <MyPage /> },
-            { path: '/mypage/profile', element: <ProfilePage /> },
-            { path: '/mypage/addresses', element: <AddressPage /> },
-            { path: '/mypage/payment', element: <PaymentPage /> },
+            {
+              path: '/mypage',
+              element: (
+                <PrivateRoute>
+                  <MyPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/mypage/profile',
+              element: (
+                <PrivateRoute>
+                  <ProfilePage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/mypage/addresses',
+              element: (
+                <PrivateRoute>
+                  <AddressPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/mypage/payment',
+              element: (
+                <PrivateRoute>
+                  <PaymentPage />
+                </PrivateRoute>
+              ),
+            },
             {
               path: '/mypage/payment-methods',
-              element: <PaymentMethodsPage />,
+              element: (
+                <PrivateRoute>
+                  <PaymentMethodsPage />
+                </PrivateRoute>
+              ),
             },
             {
               path: '/mypage/payment-methods/register',
-              element: <PaymentMethodRegisterPage />,
+              element: (
+                <PrivateRoute>
+                  <PaymentMethodRegisterPage />
+                </PrivateRoute>
+              ),
             },
-            { path: '/mypage/reviews', element: <MyReviewsPage /> },
-            { path: '/mypage/coupons', element: <CouponsPage /> },
-            { path: '/mypage/terms', element: <TermsPage /> },
-            { path: '/mypage/support', element: <SupportPage /> },
-            { path: '/mypage/inquiries', element: <InquiryPage /> },
-            { path: '/mypage/security', element: <SecurityPage /> },
+            {
+              path: '/mypage/reviews',
+              element: (
+                <PrivateRoute>
+                  <MyReviewsPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/mypage/coupons',
+              element: (
+                <PrivateRoute>
+                  <CouponsPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/mypage/terms',
+              element: (
+                <PrivateRoute>
+                  <TermsPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/mypage/support',
+              element: (
+                <PrivateRoute>
+                  <SupportPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/mypage/inquiries',
+              element: (
+                <PrivateRoute>
+                  <InquiryPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/mypage/security',
+              element: (
+                <PrivateRoute>
+                  <SecurityPage />
+                </PrivateRoute>
+              ),
+            },
             {
               path: '/mypage/notification-settings',
-              element: <NotificationSettingsPage />,
+              element: (
+                <PrivateRoute>
+                  <NotificationSettingsPage />
+                </PrivateRoute>
+              ),
             },
-            { path: '/mypage/withdraw', element: <WithdrawPage /> },
-            { path: '/notifications', element: <NotificationsPage /> },
+            {
+              path: '/mypage/withdraw',
+              element: (
+                <PrivateRoute>
+                  <WithdrawPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/notifications',
+              element: (
+                <PrivateRoute>
+                  <NotificationsPage />
+                </PrivateRoute>
+              ),
+            },
           ],
         },
 
@@ -150,26 +297,70 @@ const router = createBrowserRouter(
         {
           element: <RiderLayout />,
           children: [
-            { path: '/rider', element: <RiderHomePage /> },
+            {
+              path: '/rider',
+              element: (
+                <PrivateRoute redirectTo="/rider/login">
+                  <RiderHomePage />
+                </PrivateRoute>
+              ),
+            },
             {
               path: '/rider/delivery/:orderId',
-              element: <RiderDeliveryPage />,
+              element: (
+                <PrivateRoute redirectTo="/rider/login">
+                  <RiderDeliveryPage />
+                </PrivateRoute>
+              ),
             },
             {
               path: '/rider/delivery/:orderId/pickup',
-              element: <RiderPickupPage />,
+              element: (
+                <PrivateRoute redirectTo="/rider/login">
+                  <RiderPickupPage />
+                </PrivateRoute>
+              ),
             },
             {
               path: '/rider/delivery/:orderId/complete',
-              element: <RiderCompletePage />,
+              element: (
+                <PrivateRoute redirectTo="/rider/login">
+                  <RiderCompletePage />
+                </PrivateRoute>
+              ),
             },
             {
               path: '/rider/delivery/:orderId/verify',
-              element: <RiderVerifyPage />,
+              element: (
+                <PrivateRoute redirectTo="/rider/login">
+                  <RiderVerifyPage />
+                </PrivateRoute>
+              ),
             },
-            { path: '/rider/history', element: <RiderHistoryPage /> },
-            { path: '/rider/earnings', element: <RiderEarningsPage /> },
-            { path: '/rider/settings', element: <RiderSettingsPage /> },
+            {
+              path: '/rider/history',
+              element: (
+                <PrivateRoute redirectTo="/rider/login">
+                  <RiderHistoryPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/rider/earnings',
+              element: (
+                <PrivateRoute redirectTo="/rider/login">
+                  <RiderEarningsPage />
+                </PrivateRoute>
+              ),
+            },
+            {
+              path: '/rider/settings',
+              element: (
+                <PrivateRoute redirectTo="/rider/login">
+                  <RiderSettingsPage />
+                </PrivateRoute>
+              ),
+            },
           ],
         },
 

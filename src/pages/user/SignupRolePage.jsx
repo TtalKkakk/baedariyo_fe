@@ -63,7 +63,7 @@ export default function SignupRolePage() {
         />
         <RoleCard
           icon={
-            <MotorcycleIcon className="size-6 [&_path]:stroke-[var(--color-semantic-label-alternative)]" />
+            <MotorcycleIcon className="size-6 [&_path]:fill-[var(--color-semantic-label-alternative)]" />
           }
           title="라이더"
           description="배달 요청을 수락하고 수익을 관리할 수 있어요"

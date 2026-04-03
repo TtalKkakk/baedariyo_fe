@@ -1,12 +1,76 @@
 const DEFAULT_STORE_PUBLIC_ID = '11111111-1111-4111-8111-111111111111';
 
+// 카테고리별 Unsplash 이미지
+const IMG = {
+  // 가게 썸네일 (800×500)
+  cafe1:
+    'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800&h=500&fit=crop',
+  cafe2:
+    'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&h=500&fit=crop',
+  cafe3:
+    'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=800&h=500&fit=crop',
+  bingsu:
+    'https://images.unsplash.com/photo-1488477304112-4944851de03d?w=800&h=500&fit=crop',
+  maratang1:
+    'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=800&h=500&fit=crop',
+  maratang2:
+    'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=800&h=500&fit=crop',
+  maratang3:
+    'https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=800&h=500&fit=crop',
+  chinese:
+    'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800&h=500&fit=crop',
+  chicken:
+    'https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=800&h=500&fit=crop',
+  // 메뉴 썸네일 (400×400)
+  menuAmericano:
+    'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=400&fit=crop',
+  menuLatte:
+    'https://images.unsplash.com/photo-1561047029-3000c68339ca?w=400&h=400&fit=crop',
+  menuVanillaLatte:
+    'https://images.unsplash.com/photo-1542990253-a781e9db9e3e?w=400&h=400&fit=crop',
+  menuCreamCoffee:
+    'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=400&fit=crop',
+  menuStrawberryLatte:
+    'https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?w=400&h=400&fit=crop',
+  menuAde:
+    'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=400&h=400&fit=crop',
+  menuIcedTea:
+    'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=400&fit=crop',
+  menuMaratang:
+    'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400&h=400&fit=crop',
+  menuXiaochao:
+    'https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&h=400&fit=crop',
+  menuGwobaorou:
+    'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400&h=400&fit=crop',
+  menuNoodle:
+    'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=400&fit=crop',
+  menuFriedRice:
+    'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&h=400&fit=crop',
+  menuDumpling:
+    'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=400&h=400&fit=crop',
+  menuFriedChicken:
+    'https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=400&h=400&fit=crop',
+  menuSeasonedChicken:
+    'https://images.unsplash.com/photo-1598103442097-8b74394b95c3?w=400&h=400&fit=crop',
+  menuFries:
+    'https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=400&h=400&fit=crop',
+  menuColeslaw:
+    'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=400&fit=crop',
+  menuCheeseBall:
+    'https://images.unsplash.com/photo-1555126634-323283e090fa?w=400&h=400&fit=crop',
+  menuCola:
+    'https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=400&h=400&fit=crop',
+  menuBeer:
+    'https://images.unsplash.com/photo-1535958636474-b021ee887b13?w=400&h=400&fit=crop',
+};
+
 const SEARCH_RESULT_STORES = [
   {
     storePublicId: 'bb000001-0000-4000-8000-000000000001',
     storeName: '백억커피 구로고척점',
     description: '아메리카노, 백억 김치볶음밥, 블루베리 요거트, 카페라떼',
     storeCategory: 'CAFE_DESSERT',
-    thumbnailUrl: '/maratang1.png',
+    thumbnailUrl: IMG.cafe1,
     totalRating: 4.8,
     reviewCount: 222,
     deliveryFee: { amount: 1300 },
@@ -18,7 +82,7 @@ const SEARCH_RESULT_STORES = [
     storeName: '백다방 동양미래대점',
     description: '바닐라라떼(ICED), 아이스티샷추가(아...',
     storeCategory: 'CAFE_DESSERT',
-    thumbnailUrl: '/maratang2.png',
+    thumbnailUrl: IMG.cafe2,
     totalRating: 5.0,
     reviewCount: 820,
     deliveryFee: { amount: 500 },
@@ -30,7 +94,7 @@ const SEARCH_RESULT_STORES = [
     storeName: '카페인중독 목동점',
     description: '[시그니처] 햅쌀 와플, 로제 컵떡볶이',
     storeCategory: 'CAFE_DESSERT',
-    thumbnailUrl: '/maratang3.png',
+    thumbnailUrl: IMG.cafe3,
     totalRating: 4.7,
     reviewCount: 252,
     deliveryFee: { amount: 4800 },
@@ -42,7 +106,7 @@ const SEARCH_RESULT_STORES = [
     storeName: '설빙 오류동역점',
     description: '생딸기 설빙, 순수요거생딸기설빙',
     storeCategory: 'CAFE_DESSERT',
-    thumbnailUrl: '/maratang4.png',
+    thumbnailUrl: IMG.bingsu,
     totalRating: 5.0,
     reviewCount: 942,
     deliveryFee: { amount: 3700 },
@@ -55,7 +119,7 @@ const SEARCH_RESULT_STORES = [
     description:
       'Self 마라탕 1인분, 꿔바로우 미니, 마라샹궈, 마라 로제 샹궈, 온면, 2~3인분 마라탕',
     storeCategory: 'CHINESE',
-    thumbnailUrl: '/maratang1.png',
+    thumbnailUrl: IMG.maratang1,
     totalRating: 4.1,
     reviewCount: 28000,
     deliveryFee: { amount: 5000 },
@@ -68,7 +132,7 @@ const SEARCH_RESULT_STORES = [
     description:
       'Self 마라탕 1인분, 꿔바로우 미니, 마라샹궈, 마라 로제 샹궈, 온면, 2~3인분 마라탕',
     storeCategory: 'CHINESE',
-    thumbnailUrl: '/maratang2.png',
+    thumbnailUrl: IMG.maratang2,
     totalRating: 4.9,
     reviewCount: 45000,
     deliveryFee: { amount: 3500 },
@@ -81,7 +145,7 @@ const SEARCH_RESULT_STORES = [
     description:
       'Self 마라탕 1인분, 꿔바로우 미니, 마라샹궈, 마라 로제 샹궈, 온면, 2~3인분 마라탕',
     storeCategory: 'CHINESE',
-    thumbnailUrl: '/maratang3.png',
+    thumbnailUrl: IMG.maratang3,
     totalRating: 4.5,
     reviewCount: 847,
     deliveryFee: { amount: 6000 },
@@ -94,7 +158,7 @@ const SEARCH_RESULT_STORES = [
     description:
       'Self 마라탕 1인분, 꿔바로우 미니, 마라샹궈, 마라 로제 샹궈, 온면, 2~3인분 마라탕',
     storeCategory: 'CHINESE',
-    thumbnailUrl: '/maratang4.png',
+    thumbnailUrl: IMG.maratang1,
     totalRating: 5.0,
     reviewCount: 942,
     deliveryFee: { amount: 3700 },
@@ -107,7 +171,7 @@ const SEARCH_RESULT_STORES = [
     description:
       'Self 마라탕 1인분, 꿔바로우 미니, 마라샹궈, 마라 로제 샹궈, 온면, 2~3인분 마라탕',
     storeCategory: 'CHINESE',
-    thumbnailUrl: '/maratang5.png',
+    thumbnailUrl: IMG.maratang2,
     totalRating: 4.3,
     reviewCount: 1200,
     deliveryFee: { amount: 2000 },
@@ -119,7 +183,7 @@ const SEARCH_RESULT_STORES = [
     storeName: '마라도 마라탕',
     description: '직접 만든 마라소스, 신선한 재료, 매운맛 조절 가능',
     storeCategory: 'CHINESE',
-    thumbnailUrl: '/maratang6.png',
+    thumbnailUrl: IMG.maratang3,
     totalRating: 4.7,
     reviewCount: 3200,
     deliveryFee: { amount: 0 },
@@ -131,7 +195,7 @@ const SEARCH_RESULT_STORES = [
     storeName: '마라 헤이 신림점',
     description: '마라탕, 마라샹궈, 꿔바로우 전문점',
     storeCategory: 'CHINESE',
-    thumbnailUrl: '/maratang1.png',
+    thumbnailUrl: IMG.maratang1,
     totalRating: 4.2,
     reviewCount: 520,
     deliveryFee: { amount: 4000 },
@@ -143,7 +207,7 @@ const SEARCH_RESULT_STORES = [
     storeName: '홍콩반점0410 관악점',
     description: '짜장면, 짬뽕, 탕수육 전문 중화요리 레스토랑',
     storeCategory: 'CHINESE',
-    thumbnailUrl: '/maratang2.png',
+    thumbnailUrl: IMG.chinese,
     totalRating: 4.6,
     reviewCount: 8900,
     deliveryFee: { amount: 2500 },
@@ -244,6 +308,7 @@ function buildDefaultMenus(storeId, startMenuId) {
       store: { id: storeId },
       menuName: '후라이드 치킨',
       menuDescription: '겉바속촉 기본 후라이드. 저희 가게 대표 메뉴입니다.',
+      thumbnailUrl: IMG.menuFriedChicken,
       price: { amount: 0 },
       reviewCount: 107,
       menuOptionGroups: [
@@ -314,6 +379,7 @@ function buildDefaultMenus(storeId, startMenuId) {
       store: { id: storeId },
       menuName: '양념 치킨',
       menuDescription: '달콤한 특제 양념소스',
+      thumbnailUrl: IMG.menuSeasonedChicken,
       price: { amount: 0 },
       reviewCount: 1,
       menuOptionGroups: [
@@ -353,6 +419,7 @@ function buildDefaultMenus(storeId, startMenuId) {
       store: { id: storeId },
       menuName: '감자튀김',
       menuDescription: '바삭하게 튀긴 황금빛 감자튀김',
+      thumbnailUrl: IMG.menuFries,
       price: { amount: 0 },
       reviewCount: 3,
       menuOptionGroups: [
@@ -389,6 +456,7 @@ function buildDefaultMenus(storeId, startMenuId) {
       store: { id: storeId },
       menuName: '메인 메뉴 1',
       menuDescription: '메인 메뉴 1에 대한 설명이 어쩌고 저쩌고',
+      thumbnailUrl: IMG.menuColeslaw,
       price: { amount: 0 },
       reviewCount: 22,
       menuOptionGroups: [
@@ -435,6 +503,7 @@ function buildDefaultMenus(storeId, startMenuId) {
       store: { id: storeId },
       menuName: '메인 메뉴 2',
       menuDescription: '메인 메뉴 2에 대한 설명이 어쩌고 저쩌고',
+      thumbnailUrl: IMG.menuCheeseBall,
       price: { amount: 0 },
       reviewCount: 8,
       menuOptionGroups: [
@@ -483,6 +552,7 @@ const EXTRA_MENUS = [
     id: 901,
     menuName: '후라이드+감자튀김 세트',
     menuDescription: '후라이드 치킨과 감자튀김 세트',
+    thumbnailUrl: IMG.menuFriedChicken,
     price: { amount: 0 },
     reviewCount: 15,
     rank: null,
@@ -523,6 +593,7 @@ const EXTRA_MENUS = [
     id: 902,
     menuName: '양념+콜라 세트',
     menuDescription: '양념 치킨과 콜라 세트',
+    thumbnailUrl: IMG.menuSeasonedChicken,
     price: { amount: 0 },
     reviewCount: 7,
     rank: null,
@@ -563,6 +634,7 @@ const EXTRA_MENUS = [
     id: 911,
     menuName: '감자튀김',
     menuDescription: '바삭한 황금빛 감자튀김',
+    thumbnailUrl: IMG.menuFries,
     price: { amount: 0 },
     reviewCount: 32,
     rank: null,
@@ -593,6 +665,7 @@ const EXTRA_MENUS = [
     id: 912,
     menuName: '코울슬로',
     menuDescription: '신선한 채소로 만든 코울슬로',
+    thumbnailUrl: IMG.menuColeslaw,
     price: { amount: 0 },
     reviewCount: 12,
     rank: null,
@@ -622,6 +695,7 @@ const EXTRA_MENUS = [
     id: 913,
     menuName: '치즈볼',
     menuDescription: '쫄깃한 치즈볼 5개',
+    thumbnailUrl: IMG.menuCheeseBall,
     price: { amount: 0 },
     reviewCount: 45,
     rank: null,
@@ -652,6 +726,7 @@ const EXTRA_MENUS = [
     id: 921,
     menuName: '콜라 500ml',
     menuDescription: '시원한 콜라',
+    thumbnailUrl: IMG.menuCola,
     price: { amount: 2000 },
     reviewCount: 5,
     rank: null,
@@ -672,6 +747,7 @@ const EXTRA_MENUS = [
     id: 922,
     menuName: '사이다 500ml',
     menuDescription: '청량한 사이다',
+    thumbnailUrl: IMG.menuCola,
     price: { amount: 2000 },
     reviewCount: 3,
     rank: null,
@@ -692,6 +768,7 @@ const EXTRA_MENUS = [
     id: 923,
     menuName: '맥주 500ml',
     menuDescription: '시원한 맥주',
+    thumbnailUrl: IMG.menuBeer,
     price: { amount: 4000 },
     reviewCount: 18,
     rank: null,
@@ -715,6 +792,7 @@ const BAEKDABANG_MENUS_TEMPLATE = [
     id: 201,
     menuName: '아메리카노',
     menuDescription: '빽다방의 기본 아메리카노. 진한 에스프레소와 물의 조화.',
+    thumbnailUrl: IMG.menuAmericano,
     price: { amount: 0 },
     reviewCount: 1240,
     menuOptionGroups: [
@@ -771,6 +849,7 @@ const BAEKDABANG_MENUS_TEMPLATE = [
     menuName: '원조커피',
     menuDescription:
       '빽다방 시그니처! 달달하고 진한 원조커피. 설탕이 들어간 달달한 커피.',
+    thumbnailUrl: IMG.menuCreamCoffee,
     price: { amount: 0 },
     reviewCount: 2100,
     menuOptionGroups: [
@@ -816,6 +895,7 @@ const BAEKDABANG_MENUS_TEMPLATE = [
     id: 203,
     menuName: '카페라떼',
     menuDescription: '부드러운 우유와 에스프레소의 조화.',
+    thumbnailUrl: IMG.menuLatte,
     price: { amount: 0 },
     reviewCount: 890,
     menuOptionGroups: [
@@ -866,6 +946,7 @@ const BAEKDABANG_MENUS_TEMPLATE = [
     id: 204,
     menuName: '바닐라라떼',
     menuDescription: '달콤한 바닐라 향이 가득한 라떼.',
+    thumbnailUrl: IMG.menuVanillaLatte,
     price: { amount: 0 },
     reviewCount: 1050,
     menuOptionGroups: [
@@ -911,6 +992,7 @@ const BAEKDABANG_MENUS_TEMPLATE = [
     id: 205,
     menuName: '크림커피',
     menuDescription: '달달한 원조커피 위에 크림을 얹은 빽다방 대표 메뉴.',
+    thumbnailUrl: IMG.menuCreamCoffee,
     price: { amount: 0 },
     reviewCount: 1830,
     menuOptionGroups: [
@@ -939,6 +1021,7 @@ const BAEKDABANG_MENUS_TEMPLATE = [
     menuName: '빽스치노',
     menuDescription:
       '달콤 진한 커피에 크림과 초코 드리즐로 마무리한 시그니처 음료.',
+    thumbnailUrl: IMG.menuLatte,
     price: { amount: 0 },
     reviewCount: 740,
     menuOptionGroups: [
@@ -966,6 +1049,7 @@ const BAEKDABANG_MENUS_TEMPLATE = [
     id: 207,
     menuName: '딸기라떼',
     menuDescription: '새콤달콤 딸기와 우유의 조화, 빽다방 딸기라떼.',
+    thumbnailUrl: IMG.menuStrawberryLatte,
     price: { amount: 0 },
     reviewCount: 560,
     menuOptionGroups: [
@@ -993,6 +1077,7 @@ const BAEKDABANG_MENUS_TEMPLATE = [
     id: 208,
     menuName: '딸기에이드',
     menuDescription: '상큼한 딸기와 탄산의 조화.',
+    thumbnailUrl: IMG.menuAde,
     price: { amount: 0 },
     reviewCount: 320,
     menuOptionGroups: [
@@ -1020,6 +1105,7 @@ const BAEKDABANG_MENUS_TEMPLATE = [
     id: 209,
     menuName: '청포도에이드',
     menuDescription: '달콤 상큼한 청포도 에이드.',
+    thumbnailUrl: IMG.menuAde,
     price: { amount: 0 },
     reviewCount: 210,
     menuOptionGroups: [
@@ -1047,6 +1133,7 @@ const BAEKDABANG_MENUS_TEMPLATE = [
     id: 210,
     menuName: '복숭아아이스티',
     menuDescription: '시원하고 달콤한 복숭아 아이스티.',
+    thumbnailUrl: IMG.menuIcedTea,
     price: { amount: 0 },
     reviewCount: 180,
     menuOptionGroups: [
@@ -1078,6 +1165,7 @@ const SHANGTZ_MENUS_TEMPLATE = [
     menuName: 'Self 마라탕 1인분',
     menuDescription:
       '직접 재료를 담아 끓여드리는 셀프 마라탕 1인분. 기본 채소+육류 재료 포함.',
+    thumbnailUrl: IMG.menuMaratang,
     price: { amount: 0 },
     reviewCount: 4200,
     menuOptionGroups: [
@@ -1143,6 +1231,7 @@ const SHANGTZ_MENUS_TEMPLATE = [
     menuName: '2~3인분 마라탕 세트',
     menuDescription:
       '두 명 이상이 함께 즐기는 마라탕 세트. 푸짐한 재료와 함께.',
+    thumbnailUrl: IMG.menuMaratang,
     price: { amount: 0 },
     reviewCount: 1800,
     menuOptionGroups: [
@@ -1195,6 +1284,7 @@ const SHANGTZ_MENUS_TEMPLATE = [
     menuName: '마라샹궈 1인분',
     menuDescription:
       '볶음식 마라 요리. 강한 마라향이 재료에 깊게 배어 있는 볶음 요리.',
+    thumbnailUrl: IMG.menuXiaochao,
     price: { amount: 0 },
     reviewCount: 3100,
     menuOptionGroups: [
@@ -1254,6 +1344,7 @@ const SHANGTZ_MENUS_TEMPLATE = [
     id: 304,
     menuName: '마라샹궈 2인분',
     menuDescription: '두 명이 함께 즐기는 마라샹궈. 푸짐한 양과 진한 마라향.',
+    thumbnailUrl: IMG.menuXiaochao,
     price: { amount: 0 },
     reviewCount: 980,
     menuOptionGroups: [
@@ -1295,6 +1386,7 @@ const SHANGTZ_MENUS_TEMPLATE = [
     menuName: '마라 로제 샹궈',
     menuDescription:
       '마라 특유의 얼얼함에 부드러운 로제 크림소스를 더한 퓨전 샹궈.',
+    thumbnailUrl: IMG.menuXiaochao,
     price: { amount: 0 },
     reviewCount: 2400,
     menuOptionGroups: [
@@ -1325,6 +1417,7 @@ const SHANGTZ_MENUS_TEMPLATE = [
     id: 306,
     menuName: '꿔바로우 미니',
     menuDescription: '바삭한 튀김옷에 새콤달콤 소스를 곁들인 꿔바로우 소자.',
+    thumbnailUrl: IMG.menuGwobaorou,
     price: { amount: 0 },
     reviewCount: 5600,
     menuOptionGroups: [
@@ -1361,6 +1454,7 @@ const SHANGTZ_MENUS_TEMPLATE = [
     id: 307,
     menuName: '꿔바로우',
     menuDescription: '바삭한 튀김옷에 새콤달콤 소스를 곁들인 꿔바로우 정자.',
+    thumbnailUrl: IMG.menuGwobaorou,
     price: { amount: 0 },
     reviewCount: 3200,
     menuOptionGroups: [
@@ -1403,6 +1497,7 @@ const SHANGTZ_MENUS_TEMPLATE = [
     menuName: '온면',
     menuDescription:
       '따뜻한 마라 국물에 담긴 온면. 마라탕과 함께 즐기기 좋은 사이드.',
+    thumbnailUrl: IMG.menuNoodle,
     price: { amount: 0 },
     reviewCount: 870,
     menuOptionGroups: [
@@ -1432,6 +1527,7 @@ const SHANGTZ_MENUS_TEMPLATE = [
     id: 309,
     menuName: '볶음면',
     menuDescription: '마라 소스로 볶아낸 탱탱한 볶음면.',
+    thumbnailUrl: IMG.menuNoodle,
     price: { amount: 0 },
     reviewCount: 540,
     menuOptionGroups: [
@@ -1461,6 +1557,7 @@ const SHANGTZ_MENUS_TEMPLATE = [
     id: 310,
     menuName: '계란볶음밥',
     menuDescription: '고슬고슬하게 볶아낸 중식 계란볶음밥.',
+    thumbnailUrl: IMG.menuFriedRice,
     price: { amount: 4900 },
     reviewCount: 310,
     menuOptionGroups: [],
@@ -1470,6 +1567,7 @@ const SHANGTZ_MENUS_TEMPLATE = [
     menuName: '고수 군만두 (8개)',
     menuDescription:
       '고소하고 바삭한 군만두. 고수 향이 살짝 가미된 중식 스타일.',
+    thumbnailUrl: IMG.menuDumpling,
     price: { amount: 5900 },
     reviewCount: 420,
     menuOptionGroups: [],
@@ -1600,6 +1698,7 @@ function buildPayment({
   paymentId,
   orderId,
   storeName,
+  storePublicId,
   paymentStatus,
   amount,
   paymentKey,
@@ -1614,6 +1713,7 @@ function buildPayment({
     orderId,
     userId: MOCK_USER_ID,
     storeName,
+    storePublicId: storePublicId ?? null,
     paymentStatus,
     status: paymentStatus,
     amount,
@@ -1633,27 +1733,6 @@ const seedStore = buildStore({
   storeName: 'Mock 바삭치킨',
   menus: buildDefaultMenus(1, 1),
 });
-
-const seedStoreReviews = [
-  buildStoreReview({
-    publicId: '33333333-3333-4333-8333-333333333333',
-    storePublicId: DEFAULT_STORE_PUBLIC_ID,
-    storeName: seedStore.storeName,
-    rating: 5,
-    createdAt: '2026-02-27T09:30:00.000Z',
-    comment: '치킨이 바삭하고 배달도 빨랐어요.',
-    images: ['https://picsum.photos/seed/review-1/480/320'],
-  }),
-  buildStoreReview({
-    publicId: '44444444-4444-4444-8444-444444444444',
-    storePublicId: DEFAULT_STORE_PUBLIC_ID,
-    storeName: seedStore.storeName,
-    rating: 4,
-    createdAt: '2026-02-26T11:45:00.000Z',
-    comment: '양념이 달달해서 아이들도 좋아해요.',
-    images: ['https://picsum.photos/seed/review-2/480/320'],
-  }),
-];
 
 const searchResultSeedStores = SEARCH_RESULT_STORES.map((s, i) => {
   const storeId = 2 + i;
@@ -1679,6 +1758,49 @@ const searchResultSeedStores = SEARCH_RESULT_STORES.map((s, i) => {
   return store;
 });
 
+const MOCK_PAYMENTS_KEY = 'mock-payments';
+const MOCK_REVIEWS_KEY = 'mock-reviews';
+
+function loadPayments() {
+  try {
+    const raw = localStorage.getItem(MOCK_PAYMENTS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function savePayments() {
+  try {
+    localStorage.setItem(MOCK_PAYMENTS_KEY, JSON.stringify(mockState.payments));
+  } catch {
+    // ignore
+  }
+}
+
+function loadReviews() {
+  try {
+    const raw = localStorage.getItem(MOCK_REVIEWS_KEY);
+    return raw ? JSON.parse(raw) : { myReviews: [], storeReviews: {} };
+  } catch {
+    return { myReviews: [], storeReviews: {} };
+  }
+}
+
+function saveReviews() {
+  try {
+    localStorage.setItem(
+      MOCK_REVIEWS_KEY,
+      JSON.stringify({
+        myReviews: mockState.myReviews,
+        storeReviews: mockState.storeReviewsByStoreId,
+      })
+    );
+  } catch {
+    // ignore
+  }
+}
+
 const mockState = {
   currentUser: null,
   nextStoreId: 2 + SEARCH_RESULT_STORES.length,
@@ -1686,13 +1808,19 @@ const mockState = {
   nextOrderId: 5000,
   nextPaymentId: 7000,
   stores: [seedStore, ...searchResultSeedStores],
-  storeReviewsByStoreId: {
-    [DEFAULT_STORE_PUBLIC_ID]: seedStoreReviews,
-    ...Object.fromEntries(
-      SEARCH_RESULT_STORES.map((s) => [s.storePublicId, []])
-    ),
-  },
-  myReviews: seedStoreReviews.map((review) => buildMyReview(review)),
+  storeReviewsByStoreId: (() => {
+    const saved = loadReviews();
+    const base = {
+      ...Object.fromEntries(
+        [
+          DEFAULT_STORE_PUBLIC_ID,
+          ...SEARCH_RESULT_STORES.map((s) => s.storePublicId),
+        ].map((id) => [id, []])
+      ),
+    };
+    return { ...base, ...saved.storeReviews };
+  })(),
+  myReviews: loadReviews().myReviews,
   userAddresses: [
     {
       alias: '집',
@@ -1704,46 +1832,7 @@ const mockState = {
   ],
   recentKeywords: ['처갓집양념치킨', '메가커피', '춘', '마라탕', '치킨'],
   deliveryLocations: {},
-  payments: [
-    buildPayment({
-      paymentId: 6101,
-      orderId: 4001,
-      storeName: seedStore.storeName,
-      paymentStatus: 'APPROVED',
-      amount: 24000,
-      paymentKey: 'mock_payment_6101',
-      createdAt: '2026-02-27T08:20:00.000Z',
-      orderMenus: [
-        { menuName: '후라이드 치킨', quantity: 1, price: 18000 },
-        { menuName: '감자튀김', quantity: 1, price: 4000 },
-      ],
-      storeImages: [seedStore.thumbnailUrl],
-      rating: 5,
-      storeReviewComment: '다시 주문할게요.',
-    }),
-    buildPayment({
-      paymentId: 6102,
-      orderId: 4002,
-      storeName: seedStore.storeName,
-      paymentStatus: 'REQUESTED',
-      amount: 20000,
-      paymentKey: 'mock_payment_6102',
-      createdAt: '2026-02-27T12:00:00.000Z',
-      orderMenus: [{ menuName: '양념 치킨', quantity: 1, price: 20000 }],
-      storeImages: [seedStore.thumbnailUrl],
-    }),
-    buildPayment({
-      paymentId: 6103,
-      orderId: 4003,
-      storeName: seedStore.storeName,
-      paymentStatus: 'FAILED',
-      amount: 18000,
-      paymentKey: 'mock_payment_6103',
-      createdAt: '2026-02-25T15:10:00.000Z',
-      orderMenus: [{ menuName: '후라이드 치킨', quantity: 1, price: 18000 }],
-      storeImages: [seedStore.thumbnailUrl],
-    }),
-  ],
+  payments: loadPayments(),
 };
 
 function getReviewsByStoreId(storePublicId) {
@@ -2005,6 +2094,7 @@ function createStoreReview(storePublicId, payload) {
   getReviewsByStoreId(store.storePublicId).unshift(review);
   mockState.myReviews.unshift(myReview);
   recalculateStoreStats(store.storePublicId);
+  saveReviews();
 
   return clone({
     publicId,
@@ -2054,6 +2144,7 @@ function deleteMyReview(publicStoreReviewId) {
     recalculateStoreStats(storePublicId);
   }
 
+  saveReviews();
   return clone({ deleted: true, publicStoreReviewId });
 }
 
@@ -2064,7 +2155,9 @@ function createOrder(payload) {
   mockState.nextPaymentId += 1;
 
   const storeId = toPositiveInteger(payload?.storeId) ?? 1;
-  const storeName = resolveStoreNameById(storeId, 'Mock 치킨집');
+  const storeName =
+    payload?.storeName?.trim() || resolveStoreNameById(storeId, 'Mock 치킨집');
+  const storePublicId = payload?.storePublicId ?? null;
   const orderMenus = Array.isArray(payload?.menus)
     ? payload.menus.map((menu) => ({
         menuName: menu?.menuName ?? '메뉴',
@@ -2081,6 +2174,7 @@ function createOrder(payload) {
     paymentId,
     orderId,
     storeName,
+    storePublicId,
     paymentStatus: 'READY',
     amount,
     paymentKey: `mock_order_payment_${paymentId}`,
@@ -2090,6 +2184,7 @@ function createOrder(payload) {
   });
 
   mockState.payments.unshift(payment);
+  savePayments();
 
   return clone({
     orderId,
@@ -2131,6 +2226,7 @@ function createPayment(payload) {
   });
 
   mockState.payments.unshift(payment);
+  savePayments();
   return paymentId;
 }
 
@@ -2212,6 +2308,7 @@ function getMyPayments(status) {
 function deleteMyPayment(paymentId) {
   const idx = mockState.payments.findIndex((p) => p.paymentId === paymentId);
   if (idx !== -1) mockState.payments.splice(idx, 1);
+  savePayments();
   return clone({ deleted: true, paymentId });
 }
 

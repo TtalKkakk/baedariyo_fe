@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const HISTORY = [
@@ -57,19 +58,24 @@ const HISTORY = [
   },
 ];
 
-const grouped = HISTORY.reduce((acc, item) => {
-  const key = item.date;
-  if (!acc[key]) acc[key] = [];
-  acc[key].push(item);
-  return acc;
-}, {});
-
 export default function RiderHistoryPage() {
   const navigate = useNavigate();
 
+  const groupedHistory = useMemo(() => {
+    return HISTORY.reduce((accumulator, item) => {
+      const key = item.date;
+
+      if (!accumulator[key]) {
+        accumulator[key] = [];
+      }
+
+      accumulator[key].push(item);
+      return accumulator;
+    }, {});
+  }, []);
+
   return (
     <div className="bg-[var(--color-atomic-coolNeutral-97)] min-h-full pb-6">
-      {/* 헤더 */}
       <div className="bg-white px-4 py-4">
         <p className="text-body1 font-semibold text-[var(--color-semantic-label-normal)]">
           배달 내역
@@ -77,19 +83,20 @@ export default function RiderHistoryPage() {
       </div>
 
       <div className="mt-4">
-        {Object.entries(grouped).map(([date, items]) => (
+        {Object.entries(groupedHistory).map(([date, items]) => (
           <div key={date} className="mb-4">
             <p className="px-4 mb-2 text-body3 font-semibold text-[var(--color-semantic-label-alternative)]">
               {date}
             </p>
+
             <div className="mx-4 rounded-xl bg-white overflow-hidden">
-              {items.map((item, i) => (
+              {items.map((item, index) => (
                 <button
                   key={item.id}
                   type="button"
                   onClick={() => navigate(`/rider/delivery/${item.id}`)}
                   className={`w-full flex items-center justify-between px-4 py-3.5 text-left ${
-                    i < items.length - 1
+                    index < items.length - 1
                       ? 'border-b border-[var(--color-semantic-line-normal-normal)]'
                       : ''
                   }`}
@@ -105,6 +112,7 @@ export default function RiderHistoryPage() {
                       {item.time}
                     </p>
                   </div>
+
                   <div className="ml-3 text-right">
                     <p className="text-body2 font-semibold text-[var(--color-atomic-redOrange-80)]">
                       +{item.fee.toLocaleString()}원

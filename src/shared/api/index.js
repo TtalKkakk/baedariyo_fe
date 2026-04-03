@@ -10,7 +10,6 @@ export { changeRiderPassword, checkRiderEmailDuplicate } from './auth';
 
 // user profile & address
 export {
-  getUserProfile,
   updateUserNickname,
   updateUserPhoneNumber,
   getUserAddresses,
