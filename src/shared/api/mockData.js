@@ -2490,6 +2490,10 @@ function getUserProfile() {
   });
 }
 
+function startCardRegistration() {
+  return { token: `mock-pg-token-${Date.now()}` };
+}
+
 function getPaymentMethods() {
   return clone(mockState.paymentMethods ?? []);
 }
@@ -2634,6 +2638,7 @@ export const mockApi = {
   searchStores,
   getSearchHistory,
   getUserProfile,
+  startCardRegistration,
   getPaymentMethods,
   addPaymentMethod,
   deletePaymentMethod,

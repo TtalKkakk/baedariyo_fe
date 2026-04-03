@@ -21,6 +21,7 @@ export {
 
 // payment methods
 export {
+  startCardRegistration,
   getPaymentMethods,
   addPaymentMethod,
   deletePaymentMethod,
