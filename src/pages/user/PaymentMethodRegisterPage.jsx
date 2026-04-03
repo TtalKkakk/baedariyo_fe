@@ -23,7 +23,11 @@ export default function PaymentMethodRegisterPage() {
     const handler = async (event) => {
       if (event.data?.type !== 'CARD_REGISTERED') return;
       const { billingKey, cardNumber } = event.data;
-      await addPaymentMethod({ billingKey, cardNumber });
+      try {
+        await addPaymentMethod({ billingKey, cardNumber });
+      } catch {
+        // 백엔드 에러 시에도 목록으로 이동
+      }
       queryClient.invalidateQueries({ queryKey: ['payment-methods'] });
       navigate('/mypage/payment-methods');
     };

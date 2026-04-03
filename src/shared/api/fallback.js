@@ -25,7 +25,7 @@ function hasNetworkFailureMessage(error) {
 
 function isEndpointNotImplemented(error) {
   const status = error?.response?.status;
-  return status === 404 || status === 405;
+  return status === 403 || status === 404 || status === 405;
 }
 
 function isBackendUnavailable(error) {
