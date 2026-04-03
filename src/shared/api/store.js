@@ -66,8 +66,7 @@ export async function getSearchHistory(limit = 5) {
   const userId = getAccountIdFromToken();
   return requestWithMockFallback({
     apiName: 'getSearchHistory',
-    request: () =>
-      api.get('/api/search/recent', { params: { userId } }),
+    request: () => api.get('/api/search/recent', { params: { userId } }),
     fallback: () => mockApi.getSearchHistory(limit),
   });
 }
