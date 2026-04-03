@@ -11,6 +11,7 @@ import CloseIcon from '@/shared/assets/icons/close.svg?react';
 function getErrorMessage(error) {
   return (
     error?.response?.data?.message ??
+    error?.response?.data?.error?.message ??
     error?.message ??
     '로그인 요청에 실패했습니다.'
   );
@@ -29,25 +30,31 @@ export default function LoginPage() {
   const loginMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (result) => {
+      const normalizedEmail = email.trim();
+
       localStorage.setItem('accessToken', result.accessToken);
+
       if (result.refreshToken) {
         localStorage.setItem('refreshToken', result.refreshToken);
       }
-      const prevEmail = localStorage.getItem('loggedInEmail');
-      const isDifferentUser = prevEmail && prevEmail !== email.trim();
 
-      saveProfile({ email: email.trim() });
-      localStorage.setItem('loggedInEmail', email.trim());
+      const prevEmail = localStorage.getItem('loggedInEmail');
+      const isDifferentUser = prevEmail && prevEmail !== normalizedEmail;
+
+      saveProfile({ email: normalizedEmail });
+      localStorage.setItem('loggedInEmail', normalizedEmail);
 
       if (isDifferentUser) {
         clearAddresses();
         localStorage.removeItem('mock-payments');
         localStorage.removeItem('mock-reviews');
       }
+
       const pendingAddress = location.state?.pendingAddress;
       if (pendingAddress) {
         addAddress({ ...pendingAddress, isDefault: true });
       }
+
       navigate('/mypage', { replace: true });
     },
   });

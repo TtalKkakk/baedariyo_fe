@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 // import { getUserProfile } from '@/shared/api';
 import { useProfileStore } from '@/shared/store';
+import { BottomModal } from '@/shared/ui';
 
 function InfoRow({ icon, label, value, action }) {
   return (
@@ -114,6 +115,7 @@ function PhoneIcon() {
 
 export default function ProfilePage() {
   const localProfile = useProfileStore((state) => state.profile);
+  const saveProfile = useProfileStore((state) => state.saveProfile);
 
   const { data: serverProfile } = useQuery({
     queryKey: ['user-profile'],
@@ -122,6 +124,20 @@ export default function ProfilePage() {
   });
 
   const profile = serverProfile ?? localProfile;
+
+  const handleChangeNickname = () => {
+    const nextNickname = window.prompt(
+      '새 닉네임을 입력해주세요.',
+      profile.nickname || ''
+    );
+
+    if (nextNickname === null) return;
+
+    const trimmed = nextNickname.trim();
+    if (!trimmed) return;
+
+    saveProfile({ nickname: trimmed });
+  };
 
   return (
     <div className="min-h-full bg-white pb-8">
@@ -138,6 +154,7 @@ export default function ProfilePage() {
         action={
           <button
             type="button"
+            onClick={handleChangeNickname}
             className="rounded-md border border-[var(--color-semantic-line-normal-normal)] px-2.5 py-1 text-caption1 text-[var(--color-semantic-label-normal)]"
           >
             변경

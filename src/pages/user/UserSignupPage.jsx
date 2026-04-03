@@ -19,6 +19,7 @@ function formatPhone(value) {
 function getErrorMessage(error) {
   return (
     error?.response?.data?.message ??
+    error?.response?.data?.error?.message ??
     error?.message ??
     '회원가입 요청에 실패했습니다.'
   );

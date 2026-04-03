@@ -207,10 +207,10 @@ export default function CheckoutPage() {
         paymentMethod: 'CARD',
       });
     },
-    onSuccess: (result) => {
+    onSuccess: () => {
       addActiveOrder({
-        paymentId: result?.paymentId ?? fallbackPaymentIdRef.current,
-        orderId: result?.orderId ?? null,
+        paymentId: fallbackPaymentIdRef.current,
+        orderId: null,
         storeName: items[0]?.storeName ?? '주문',
         orderMenus: items.map((item) => ({
           menuName: item.menuName,
