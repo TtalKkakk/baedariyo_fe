@@ -41,3 +41,11 @@ export async function updateDeliveryLocation(orderId, payload) {
     fallback: () => mockApi.updateDeliveryLocation(orderId, payload),
   });
 }
+
+export async function getRiderDeliveryHistory() {
+  return requestWithMockFallback({
+    apiName: 'getRiderDeliveryHistory',
+    request: () => api.get('/api/deliveries/my/history'),
+    fallback: () => mockApi.getRiderDeliveryHistory(),
+  });
+}

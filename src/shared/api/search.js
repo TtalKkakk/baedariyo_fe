@@ -51,8 +51,7 @@ export async function deleteAllRecentKeywords() {
   const userId = getAccountIdFromToken();
   return requestWithMockFallback({
     apiName: 'deleteAllRecentKeywords',
-    request: () =>
-      api.delete('/api/search/recent', { params: { userId } }),
+    request: () => api.delete('/api/search/recent', { params: { userId } }),
     fallback: () => mockApi.deleteAllRecentKeywords(),
   });
 }

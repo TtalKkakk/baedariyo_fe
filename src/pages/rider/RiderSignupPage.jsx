@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { signupRider } from '@/shared/api';
 import BackIcon from '@/shared/assets/icons/header/back.svg?react';
+import OpenIcon from '@/shared/assets/icons/open.svg?react';
+import CloseIcon from '@/shared/assets/icons/close.svg?react';
 
 const VEHICLE_TYPES = [
   { value: 'BICYCLE', label: '자전거', emoji: '🚲' },
@@ -37,6 +39,8 @@ export default function RiderSignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
   const [name, setName] = useState('');
   const [nickname, setNickname] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -115,29 +119,55 @@ export default function RiderSignupPage() {
           required
         />
 
-        <input
-          type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          placeholder="비밀번호"
-          className="w-full h-11 px-3 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body2 outline-none"
-          autoComplete="new-password"
-          required
-        />
+        <div className="relative">
+          <input
+            type={showPassword ? 'text' : 'password'}
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder="비밀번호"
+            className="w-full h-11 px-3 pr-10 rounded-lg border border-[var(--color-semantic-line-normal-normal)] text-body2 outline-none"
+            autoComplete="new-password"
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2"
+          >
+            {showPassword ? (
+              <CloseIcon className="size-5 [&_path]:fill-[var(--color-semantic-label-alternative)]" />
+            ) : (
+              <OpenIcon className="size-5 [&_path]:fill-[var(--color-semantic-label-alternative)]" />
+            )}
+          </button>
+        </div>
 
-        <input
-          type="password"
-          value={passwordConfirm}
-          onChange={(event) => setPasswordConfirm(event.target.value)}
-          placeholder="비밀번호 확인"
-          className={`w-full h-11 px-3 rounded-lg border text-body2 outline-none ${
-            isPasswordMismatch
-              ? 'border-[var(--color-semantic-status-cautionary)]'
-              : 'border-[var(--color-semantic-line-normal-normal)]'
-          }`}
-          autoComplete="new-password"
-          required
-        />
+        <div className="relative">
+          <input
+            type={showPasswordConfirm ? 'text' : 'password'}
+            value={passwordConfirm}
+            onChange={(event) => setPasswordConfirm(event.target.value)}
+            placeholder="비밀번호 확인"
+            className={`w-full h-11 px-3 pr-10 rounded-lg border text-body2 outline-none ${
+              isPasswordMismatch
+                ? 'border-[var(--color-semantic-status-cautionary)]'
+                : 'border-[var(--color-semantic-line-normal-normal)]'
+            }`}
+            autoComplete="new-password"
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
+            className="absolute right-3 top-1/2 -translate-y-1/2"
+          >
+            {showPasswordConfirm ? (
+              <CloseIcon className="size-5 [&_path]:fill-[var(--color-semantic-label-alternative)]" />
+            ) : (
+              <OpenIcon className="size-5 [&_path]:fill-[var(--color-semantic-label-alternative)]" />
+            )}
+          </button>
+        </div>
 
         <input
           type="text"

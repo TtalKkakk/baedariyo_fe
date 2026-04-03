@@ -10,6 +10,7 @@ import CarIcon from '@/shared/assets/icons/order-status/car.svg?react';
 import MopeddIcon from '@/shared/assets/icons/order-status/mopedd.svg?react';
 import ScooterIcon from '@/shared/assets/icons/order-status/scooter.svg?react';
 import WalkIcon from '@/shared/assets/icons/order-status/walk.svg?react';
+import EtcIcon from '@/shared/assets/icons/etc.svg?react';
 import UserIcon from '@/shared/assets/icons/nav/mypage.svg?react';
 
 const VEHICLE_TYPES = [
@@ -19,7 +20,7 @@ const VEHICLE_TYPES = [
   { value: 'E_BICYCLE', label: '전기자전거', icon: MopeddIcon },
   { value: 'E_SCOOTER', label: '전동킥보드', icon: ScooterIcon },
   { value: 'WALKING', label: '도보', icon: WalkIcon },
-  { value: 'ETC', label: '기타', emoji: '📦' },
+  { value: 'ETC', label: '기타', icon: EtcIcon },
 ];
 
 function ConfirmModal({

@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 
 import { useAddressBookStore } from '@/shared/store';
+import { Toast } from '@/shared/ui';
 
 function DeleteConfirmModal({ onCancel, onConfirm }) {
   const frame = document.querySelector('.layout-frame') ?? document.body;
@@ -96,6 +97,7 @@ export default function AddressPage() {
   const removeAddress = useAddressBookStore((state) => state.removeAddress);
 
   const [pendingDeleteId, setPendingDeleteId] = useState(null);
+  const [showToast, setShowToast] = useState(false);
 
   const handleEdit = (address) => {
     navigate('/address/register', {
@@ -116,6 +118,7 @@ export default function AddressPage() {
   const handleConfirmDelete = () => {
     removeAddress(pendingDeleteId);
     setPendingDeleteId(null);
+    setShowToast(true);
   };
 
   return (
@@ -157,6 +160,12 @@ export default function AddressPage() {
           onConfirm={handleConfirmDelete}
         />
       )}
+
+      <Toast
+        message="주소가 삭제되었습니다."
+        isVisible={showToast}
+        onClose={() => setShowToast(false)}
+      />
     </div>
   );
 }
