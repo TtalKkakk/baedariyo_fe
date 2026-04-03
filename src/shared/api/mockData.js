@@ -3,36 +3,65 @@ const DEFAULT_STORE_PUBLIC_ID = '11111111-1111-4111-8111-111111111111';
 // 카테고리별 Unsplash 이미지
 const IMG = {
   // 가게 썸네일 (800×500)
-  cafe1: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800&h=500&fit=crop',
-  cafe2: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&h=500&fit=crop',
-  cafe3: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=800&h=500&fit=crop',
-  bingsu: 'https://images.unsplash.com/photo-1488477304112-4944851de03d?w=800&h=500&fit=crop',
-  maratang1: 'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=800&h=500&fit=crop',
-  maratang2: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=800&h=500&fit=crop',
-  maratang3: 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=800&h=500&fit=crop',
-  chinese: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800&h=500&fit=crop',
-  chicken: 'https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=800&h=500&fit=crop',
+  cafe1:
+    'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800&h=500&fit=crop',
+  cafe2:
+    'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&h=500&fit=crop',
+  cafe3:
+    'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=800&h=500&fit=crop',
+  bingsu:
+    'https://images.unsplash.com/photo-1488477304112-4944851de03d?w=800&h=500&fit=crop',
+  maratang1:
+    'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=800&h=500&fit=crop',
+  maratang2:
+    'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=800&h=500&fit=crop',
+  maratang3:
+    'https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=800&h=500&fit=crop',
+  chinese:
+    'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800&h=500&fit=crop',
+  chicken:
+    'https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=800&h=500&fit=crop',
   // 메뉴 썸네일 (400×400)
-  menuAmericano: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=400&fit=crop',
-  menuLatte: 'https://images.unsplash.com/photo-1561047029-3000c68339ca?w=400&h=400&fit=crop',
-  menuVanillaLatte: 'https://images.unsplash.com/photo-1542990253-a781e9db9e3e?w=400&h=400&fit=crop',
-  menuCreamCoffee: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=400&fit=crop',
-  menuStrawberryLatte: 'https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?w=400&h=400&fit=crop',
-  menuAde: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=400&h=400&fit=crop',
-  menuIcedTea: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=400&fit=crop',
-  menuMaratang: 'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400&h=400&fit=crop',
-  menuXiaochao: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&h=400&fit=crop',
-  menuGwobaorou: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400&h=400&fit=crop',
-  menuNoodle: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=400&fit=crop',
-  menuFriedRice: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&h=400&fit=crop',
-  menuDumpling: 'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=400&h=400&fit=crop',
-  menuFriedChicken: 'https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=400&h=400&fit=crop',
-  menuSeasonedChicken: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c3?w=400&h=400&fit=crop',
-  menuFries: 'https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=400&h=400&fit=crop',
-  menuColeslaw: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=400&fit=crop',
-  menuCheeseBall: 'https://images.unsplash.com/photo-1555126634-323283e090fa?w=400&h=400&fit=crop',
-  menuCola: 'https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=400&h=400&fit=crop',
-  menuBeer: 'https://images.unsplash.com/photo-1535958636474-b021ee887b13?w=400&h=400&fit=crop',
+  menuAmericano:
+    'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=400&fit=crop',
+  menuLatte:
+    'https://images.unsplash.com/photo-1561047029-3000c68339ca?w=400&h=400&fit=crop',
+  menuVanillaLatte:
+    'https://images.unsplash.com/photo-1542990253-a781e9db9e3e?w=400&h=400&fit=crop',
+  menuCreamCoffee:
+    'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=400&fit=crop',
+  menuStrawberryLatte:
+    'https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?w=400&h=400&fit=crop',
+  menuAde:
+    'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=400&h=400&fit=crop',
+  menuIcedTea:
+    'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=400&fit=crop',
+  menuMaratang:
+    'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400&h=400&fit=crop',
+  menuXiaochao:
+    'https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&h=400&fit=crop',
+  menuGwobaorou:
+    'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400&h=400&fit=crop',
+  menuNoodle:
+    'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=400&fit=crop',
+  menuFriedRice:
+    'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&h=400&fit=crop',
+  menuDumpling:
+    'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=400&h=400&fit=crop',
+  menuFriedChicken:
+    'https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=400&h=400&fit=crop',
+  menuSeasonedChicken:
+    'https://images.unsplash.com/photo-1598103442097-8b74394b95c3?w=400&h=400&fit=crop',
+  menuFries:
+    'https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=400&h=400&fit=crop',
+  menuColeslaw:
+    'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=400&fit=crop',
+  menuCheeseBall:
+    'https://images.unsplash.com/photo-1555126634-323283e090fa?w=400&h=400&fit=crop',
+  menuCola:
+    'https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=400&h=400&fit=crop',
+  menuBeer:
+    'https://images.unsplash.com/photo-1535958636474-b021ee887b13?w=400&h=400&fit=crop',
 };
 
 const SEARCH_RESULT_STORES = [

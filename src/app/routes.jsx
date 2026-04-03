@@ -1,13 +1,9 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 
 import RootLayout from './layouts/RootLayout';
 import UserLayout from './layouts/UserLayout';
 import RiderLayout from './layouts/RiderLayout';
-
-function PrivateRoute({ children, redirectTo = '/login' }) {
-  const token = localStorage.getItem('accessToken');
-  return token ? children : <Navigate to={redirectTo} replace />;
-}
+import PrivateRoute from './PrivateRoute';
 
 import HomePage from '../pages/user/HomePage';
 import SearchPage from '../pages/user/SearchPage';
