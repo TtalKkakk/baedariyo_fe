@@ -23,8 +23,14 @@ function hasNetworkFailureMessage(error) {
   );
 }
 
+function isEndpointNotImplemented(error) {
+  const status = error?.response?.status;
+  return status === 403 || status === 404 || status === 405;
+}
+
 function isBackendUnavailable(error) {
   if (!error) return false;
+  if (isEndpointNotImplemented(error)) return true;
   if (error.response) return false;
 
   if (NETWORK_ERROR_CODES.has(error.code)) return true;
