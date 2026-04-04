@@ -64,7 +64,7 @@ export default function CartPage() {
           {/* Store info */}
           <div className="bg-white px-4 py-4 flex items-center gap-3">
             <img
-              src={`https://picsum.photos/seed/store-${encodeURIComponent(storePublicId)}/80/80`}
+              src={items[0]?.storeThumbnailUrl ?? '/maratang1.png'}
               alt={storeName}
               className="w-10 h-10 rounded-lg object-cover shrink-0"
             />

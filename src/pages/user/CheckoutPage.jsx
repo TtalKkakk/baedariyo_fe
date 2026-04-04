@@ -196,6 +196,7 @@ export default function CheckoutPage() {
         storeId: resolvedStoreId,
         storePublicId: items[0]?.storePublicId,
         storeName: items[0]?.storeName,
+        storeThumbnailUrl: items[0]?.storeThumbnailUrl ?? null,
         menus,
         storeRequest: buildStoreRequestString(),
         riderRequest: riderRequest === '없음' ? '' : riderRequest,
@@ -212,6 +213,7 @@ export default function CheckoutPage() {
         paymentId: fallbackPaymentIdRef.current,
         orderId: null,
         storeName: items[0]?.storeName ?? '주문',
+        storeImage: items[0]?.storeThumbnailUrl ?? null,
         orderMenus: items.map((item) => ({
           menuName: item.menuName,
           quantity: item.quantity ?? 1,

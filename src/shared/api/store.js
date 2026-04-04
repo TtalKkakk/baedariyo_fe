@@ -38,15 +38,41 @@ export async function searchStores({
   longitude,
   page = 0,
   size = 20,
+  sort,
+  minRating,
+  maxMinOrderAmount,
+  freeDelivery,
+  instantDiscount,
 } = {}) {
   const result = await requestWithMockFallback({
     apiName: 'searchStores',
     request: () =>
       api.get('/api/stores', {
-        params: { keyword, storeCategory, latitude, longitude, page, size },
+        params: {
+          keyword,
+          storeCategory,
+          latitude,
+          longitude,
+          page,
+          size,
+          sort,
+          minRating,
+          maxMinOrderAmount,
+          freeDelivery: freeDelivery || undefined,
+          instantDiscount: instantDiscount || undefined,
+        },
       }),
     fallback: () =>
-      mockApi.searchStores({ keyword, storeCategory, page, size }),
+      mockApi.searchStores({
+        keyword,
+        storeCategory,
+        page,
+        size,
+        sort,
+        minRating,
+        maxMinOrderAmount,
+        freeDelivery,
+      }),
   });
   return Array.isArray(result) ? result.map(normalizeStore) : result;
 }

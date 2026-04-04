@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import ArrowIcon from '@/shared/assets/icons/header/arrow.svg?react';
+import ResetIcon from '@/shared/assets/icons/header/reset.svg?react';
 import StarIcon from '@/shared/assets/icons/store/star.svg?react';
 import { CATEGORIES } from '@/shared/lib/categories';
 import TimeIcon from '@/shared/assets/icons/store/time.svg?react';
@@ -122,32 +123,67 @@ export default function CategoryPage() {
   const [ratingOpen, setRatingOpen] = useState(false);
   const [minOrderOpen, setMinOrderOpen] = useState(false);
 
+  const isFilterActive =
+    sort !== '기본순' ||
+    rating !== '전체' ||
+    minOrder !== null ||
+    freeDelivery ||
+    instantDiscount;
+
+  const resetFilters = () => {
+    setSort('기본순');
+    setRating('전체');
+    setMinOrder(null);
+    setFreeDelivery(false);
+    setInstantDiscount(false);
+  };
+
   const sentinelRef = useRef(null);
 
-  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
-    useInfiniteQuery({
-      queryKey: [
-        'category-stores',
-        activeCategory.apiValue,
+  const minRating = RATING_MAP[rating] ?? undefined;
+  const maxMinOrderAmount =
+    minOrder && minOrder !== '전체' ? MIN_ORDER_MAP[minOrder] : undefined;
+
+  const {
+    data,
+    isLoading,
+    isFetching,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery({
+    queryKey: [
+      'category-stores',
+      activeCategory.apiValue,
+      latitude,
+      longitude,
+      sort,
+      minRating,
+      maxMinOrderAmount,
+      freeDelivery,
+      instantDiscount,
+    ],
+    queryFn: ({ pageParam = 0 }) =>
+      searchStores({
+        storeCategory: activeCategory.apiValue,
         latitude,
         longitude,
-      ],
-      queryFn: ({ pageParam = 0 }) =>
-        searchStores({
-          storeCategory: activeCategory.apiValue,
-          latitude,
-          longitude,
-          page: pageParam,
-          size: 20,
-        }),
-      getNextPageParam: (lastPage, allPages) => {
-        const total = lastPage?.totalCount ?? 0;
-        const fetched = allPages.flatMap((p) => p?.stores ?? p ?? []).length;
-        return fetched < total ? allPages.length : undefined;
-      },
-      initialPageParam: 0,
-      enabled: !!latitude && !!longitude,
-    });
+        page: pageParam,
+        size: 20,
+        sort: sort !== '기본순' ? sort : undefined,
+        minRating,
+        maxMinOrderAmount,
+        freeDelivery: freeDelivery || undefined,
+        instantDiscount: instantDiscount || undefined,
+      }),
+    getNextPageParam: (lastPage, allPages) => {
+      const total = lastPage?.totalCount ?? 0;
+      const fetched = allPages.flatMap((p) => p?.stores ?? p ?? []).length;
+      return fetched < total ? allPages.length : undefined;
+    },
+    initialPageParam: 0,
+    enabled: !!latitude && !!longitude,
+  });
 
   useEffect(() => {
     if (!sentinelRef.current || !hasNextPage) return;
@@ -161,43 +197,10 @@ export default function CategoryPage() {
     return () => observer.disconnect();
   }, [hasNextPage, fetchNextPage]);
 
-  const rawStores = data?.pages.flatMap((p) => p?.stores ?? p ?? []) ?? [];
+  const filteredStores =
+    data?.pages.flatMap((p) => p?.stores ?? p ?? []) ?? [];
 
-  let filteredStores = rawStores;
-
-  if (freeDelivery) {
-    filteredStores = filteredStores.filter((s) => s.deliveryFee?.amount === 0);
-  }
-
-  if (rating !== '전체') {
-    const minRating = RATING_MAP[rating];
-    filteredStores = filteredStores.filter(
-      (s) => (s.totalRating ?? 0) >= minRating
-    );
-  }
-
-  if (minOrder && minOrder !== '전체') {
-    const limit = MIN_ORDER_MAP[minOrder];
-    filteredStores = filteredStores.filter(
-      (s) => (s.minimumOrderAmount?.amount ?? Infinity) <= limit
-    );
-  }
-
-  if (sort === '별점 높은 순') {
-    filteredStores = [...filteredStores].sort(
-      (a, b) => (b.totalRating ?? 0) - (a.totalRating ?? 0)
-    );
-  } else if (sort === '주문 많은 순') {
-    filteredStores = [...filteredStores].sort(
-      (a, b) => (b.reviewCount ?? 0) - (a.reviewCount ?? 0)
-    );
-  } else if (sort === '추천순') {
-    filteredStores = [...filteredStores].sort(
-      (a, b) =>
-        (b.totalRating ?? 0) * (b.reviewCount ?? 0) -
-        (a.totalRating ?? 0) * (a.reviewCount ?? 0)
-    );
-  }
+  const isFilterLoading = isFetching && !isFetchingNextPage;
 
   return (
     <>
@@ -280,6 +283,14 @@ export default function CategoryPage() {
         {/* 필터 */}
         <div className="sticky top-[45px] z-10 bg-white">
           <div className="flex items-center gap-2 px-4 pt-4 pb-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {isFilterActive && (
+              <button
+                className="flex items-center justify-center w-[31px] h-[31px] rounded-full border border-[var(--color-atomic-redOrange-80)] bg-white shrink-0"
+                onClick={resetFilters}
+              >
+                <ResetIcon className="w-4 h-4 [&_path]:fill-[var(--color-atomic-redOrange-80)]" />
+              </button>
+            )}
             <button
               className="flex items-center gap-1 h-[31px] px-3 rounded-full border border-[var(--color-atomic-coolNeutral-90)] bg-[var(--color-atomic-coolNeutral-98)] text-body2 font-medium text-[var(--color-semantic-label-normal)] shrink-0 whitespace-nowrap"
               onClick={() => {
@@ -347,8 +358,9 @@ export default function CategoryPage() {
                 배달받을 주소가 필요해요
               </p>
             </div>
-          ) : isLoading ? (
-            <div className="flex items-center justify-center h-40">
+          ) : isLoading || isFilterLoading ? (
+            <div className="flex flex-col items-center justify-center h-40 gap-3">
+              <div className="w-8 h-8 rounded-full border-[3px] border-[var(--color-atomic-redOrange-80)] border-b-transparent animate-spin" />
               <p className="text-body2 text-[var(--color-semantic-label-alternative)]">
                 불러오는 중...
               </p>
@@ -381,9 +393,7 @@ export default function CategoryPage() {
           <div ref={sentinelRef} className="h-4" />
           {isFetchingNextPage && (
             <div className="flex justify-center py-4">
-              <p className="text-body2 text-[var(--color-semantic-label-alternative)]">
-                불러오는 중...
-              </p>
+              <div className="w-6 h-6 rounded-full border-2 border-[var(--color-atomic-redOrange-80)] border-b-transparent animate-spin" />
             </div>
           )}
         </div>
