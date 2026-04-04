@@ -14,7 +14,11 @@ function getAccountIdFromToken() {
 }
 
 export async function getAutocompleteSuggestions(keyword) {
-  return mockApi.getAutocompleteSuggestions(keyword);
+  return requestWithMockFallback({
+    apiName: 'getAutocompleteSuggestions',
+    request: () => api.get('/api/search/autocomplete', { params: { keyword } }),
+    fallback: () => mockApi.getAutocompleteSuggestions(keyword),
+  });
 }
 
 export async function getPopularKeywords() {

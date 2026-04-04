@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-// import { getUserProfile } from '@/shared/api';
+import { getUserProfile } from '@/shared/api';
 import { useProfileStore } from '@/shared/store';
 import { BottomModal } from '@/shared/ui';
 
@@ -119,8 +119,8 @@ export default function ProfilePage() {
 
   const { data: serverProfile } = useQuery({
     queryKey: ['user-profile'],
-    // queryFn: getUserProfile,
-    enabled: false, // TODO: 백엔드 연결 시 enabled: !!localStorage.getItem('accessToken') 로 교체
+    queryFn: getUserProfile,
+    enabled: !!localStorage.getItem('accessToken'),
   });
 
   const profile = serverProfile ?? localProfile;

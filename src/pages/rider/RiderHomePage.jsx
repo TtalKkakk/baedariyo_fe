@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
@@ -36,21 +36,12 @@ export default function RiderHomePage() {
 
   const [calls, setCalls] = useState([]);
   const [locationError, setLocationError] = useState(null);
-  const stompClientRef = useRef(null);
 
   const onlineMutation = useMutation({
     mutationFn: setRiderOnline,
     onSuccess: () => {
       setOnline();
       setLocationError(null);
-      stompClientRef.current = createRiderCallsClient({
-        onCall: (call) => {
-          setCalls((prev) => {
-            const exists = prev.some((c) => c.orderId === call.orderId);
-            return exists ? prev : [call, ...prev];
-          });
-        },
-      });
     },
   });
 
@@ -59,8 +50,6 @@ export default function RiderHomePage() {
     onSuccess: () => {
       setOffline();
       setCalls([]);
-      stompClientRef.current?.deactivate();
-      stompClientRef.current = null;
     },
   });
 
@@ -73,10 +62,21 @@ export default function RiderHomePage() {
   });
 
   useEffect(() => {
+    if (!isOnline) return undefined;
+
+    const client = createRiderCallsClient({
+      onCall: (call) => {
+        setCalls((prev) => {
+          const exists = prev.some((c) => c.orderId === call.orderId);
+          return exists ? prev : [call, ...prev];
+        });
+      },
+    });
+
     return () => {
-      stompClientRef.current?.deactivate();
+      client.deactivate();
     };
-  }, []);
+  }, [isOnline]);
 
   const toggleOnline = async () => {
     if (onlineMutation.isPending || offlineMutation.isPending) return;

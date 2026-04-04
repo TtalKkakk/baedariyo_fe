@@ -6,7 +6,8 @@ import { createStompClient } from '@/shared/socket/client';
 import {
   startRiderDelivery,
   completeRiderDelivery,
-  updateDeliveryLocation,
+  startDelivery,
+  completeDelivery,
 } from '@/shared/api';
 import { RiderDeliveryMap } from '@/features/map';
 import BackIcon from '@/shared/assets/icons/header/back.svg?react';
@@ -15,19 +16,19 @@ import MotorcycleIcon from '@/shared/assets/icons/order-status/motocycle.svg?rea
 import HouseIcon from '@/shared/assets/icons/order-status/house.svg?react';
 import PinIcon from '@/shared/assets/icons/order-status/pin.svg?react';
 
-const STATUSES = ['ACCEPTED', 'PICKUP_READY', 'DELIVERING', 'DELIVERED'];
+const STATUSES = ['ASSIGNED', 'PICKED_UP', 'IN_DELIVERY', 'COMPLETED'];
 
 const STATUS_LABELS = {
-  ACCEPTED: '수락됨',
-  PICKUP_READY: '픽업 대기',
-  DELIVERING: '배달 중',
-  DELIVERED: '배달 완료',
+  ASSIGNED: '수락됨',
+  PICKED_UP: '픽업 대기',
+  IN_DELIVERY: '배달 중',
+  COMPLETED: '배달 완료',
 };
 
 const STATUS_BUTTON_LABELS = {
-  ACCEPTED: '픽업 출발',
-  PICKUP_READY: '픽업 완료',
-  DELIVERING: '배달 완료',
+  ASSIGNED: '픽업 출발',
+  PICKED_UP: '픽업 완료',
+  IN_DELIVERY: '배달 완료',
 };
 
 const MOCK_ORDER = {
@@ -45,19 +46,26 @@ export default function RiderDeliveryPage() {
   const { orderId } = useParams();
   const navigate = useNavigate();
 
-  const [status, setStatus] = useState('ACCEPTED');
+  const [status, setStatus] = useState('ASSIGNED');
   const [showMap, setShowMap] = useState(false);
   const [riderLocation, setRiderLocation] = useState(null);
   const watchIdRef = useRef(null);
+  const stompClientRef = useRef(null);
+
+  const pickupMutation = useMutation({
+    mutationFn: startRiderDelivery,
+    onSuccess: () => setStatus('PICKED_UP'),
+  });
 
   const startMutation = useMutation({
-    mutationFn: startRiderDelivery,
-    onSuccess: () => setStatus('DELIVERING'),
+    mutationFn: ({ orderId: id }) => startDelivery(id),
+    onSuccess: () => setStatus('IN_DELIVERY'),
   });
 
   const completeMutation = useMutation({
-    mutationFn: completeRiderDelivery,
-    onSuccess: () => setStatus('DELIVERED'),
+    mutationFn: ({ orderId: id }) =>
+      Promise.all([completeDelivery(id), completeRiderDelivery()]),
+    onSuccess: () => setStatus('COMPLETED'),
   });
 
   useEffect(() => {
@@ -77,28 +85,30 @@ export default function RiderDeliveryPage() {
             longitude: message.longitude,
           });
         }
-
-        if (message.status && STATUSES.includes(message.status)) {
-          setStatus(message.status);
-        }
       },
     });
+    stompClientRef.current = client;
 
     return () => {
       client.deactivate();
+      stompClientRef.current = null;
     };
   }, [orderId]);
 
-  // 배달 중일 때 GPS 위치 실시간 업데이트
+  // 배달 중일 때 GPS 위치 실시간 업데이트 (STOMP로 전송)
   useEffect(() => {
-    if (status !== 'DELIVERING' || !orderId || !navigator.geolocation) return;
+    if (status !== 'IN_DELIVERY' || !orderId || !navigator.geolocation) return;
 
     watchIdRef.current = navigator.geolocation.watchPosition(
       (position) => {
-        updateDeliveryLocation(orderId, {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        }).catch(() => {});
+        if (!stompClientRef.current?.connected) return;
+        stompClientRef.current.publish({
+          destination: '/app/location',
+          body: JSON.stringify({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          }),
+        });
       },
       () => {},
       { enableHighAccuracy: true, maximumAge: 0 }
@@ -115,23 +125,26 @@ export default function RiderDeliveryPage() {
   const handleNext = () => {
     if (!orderId) return;
 
-    if (status === 'ACCEPTED') {
-      setStatus('PICKUP_READY');
+    if (status === 'ASSIGNED') {
+      pickupMutation.mutate();
       return;
     }
 
-    if (status === 'PICKUP_READY') {
+    if (status === 'PICKED_UP') {
       startMutation.mutate({ orderId });
       return;
     }
 
-    if (status === 'DELIVERING') {
+    if (status === 'IN_DELIVERY') {
       completeMutation.mutate({ orderId });
     }
   };
 
-  const isPending = startMutation.isPending || completeMutation.isPending;
-  const isDone = status === 'DELIVERED';
+  const isPending =
+    pickupMutation.isPending ||
+    startMutation.isPending ||
+    completeMutation.isPending;
+  const isDone = status === 'COMPLETED';
   const currentStepIndex = STATUSES.indexOf(status);
 
   return (

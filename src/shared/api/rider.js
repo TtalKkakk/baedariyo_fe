@@ -42,18 +42,18 @@ export async function setRiderOffline() {
   });
 }
 
-export async function startRiderDelivery({ orderId }) {
+export async function startRiderDelivery() {
   return requestWithMockFallback({
     apiName: 'startRiderDelivery',
-    request: () => api.post(`/api/deliveries/${orderId}/start`),
-    fallback: () => mockApi.startRiderDelivery(orderId),
+    request: () => api.patch('/api/rider/deliveries/start'),
+    fallback: () => mockApi.startRiderDelivery(),
   });
 }
 
-export async function completeRiderDelivery({ orderId }) {
+export async function completeRiderDelivery() {
   return requestWithMockFallback({
     apiName: 'completeRiderDelivery',
-    request: () => api.post(`/api/deliveries/${orderId}/complete`),
-    fallback: () => mockApi.completeRiderDelivery(orderId),
+    request: () => api.patch('/api/rider/deliveries/complete'),
+    fallback: () => mockApi.completeRiderDelivery(),
   });
 }
