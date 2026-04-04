@@ -47,6 +47,7 @@ api.interceptors.response.use(
       switch (status) {
         case 401:
           localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
           if (window.location.pathname.startsWith('/rider')) {
             window.location.href = '/baedaliyo_fe/rider/login';
           } else {

@@ -15,7 +15,7 @@ export const createStompClient = ({ orderId, onMessage }) => {
     },
 
     onConnect: () => {
-      client.subscribe(`/topic/delivery/${orderId}`, (message) => {
+      client.subscribe(`/topic/order/${orderId}`, (message) => {
         const data = JSON.parse(message.body);
         onMessage(data);
       });
