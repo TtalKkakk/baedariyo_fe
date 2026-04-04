@@ -53,7 +53,7 @@ export async function setDefaultAddress(payload) {
 export async function getUserProfile() {
   return requestWithMockFallback({
     apiName: 'getUserProfile',
-    request: () => api.get('/api/user/profile'),
+    request: () => api.get('/api/user/me'),
     fallback: () => mockApi.getUserProfile(),
   });
 }
