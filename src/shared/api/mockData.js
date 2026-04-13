@@ -27,7 +27,7 @@ const IMG = {
   menuLatte:
     'https://images.unsplash.com/photo-1561047029-3000c68339ca?w=400&h=400&fit=crop',
   menuVanillaLatte:
-    'https://images.unsplash.com/photo-1542990253-a781e9db9e3e?w=400&h=400&fit=crop',
+    'https://images.unsplash.com/photo-1534778101976-62847782c213?w=400&h=400&fit=crop',
   menuCreamCoffee:
     'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=400&fit=crop',
   menuStrawberryLatte:
@@ -51,7 +51,7 @@ const IMG = {
   menuFriedChicken:
     'https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=400&h=400&fit=crop',
   menuSeasonedChicken:
-    'https://images.unsplash.com/photo-1598103442097-8b74394b95c3?w=400&h=400&fit=crop',
+    'https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=400&h=400&fit=crop',
   menuFries:
     'https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=400&h=400&fit=crop',
   menuColeslaw:
@@ -67,7 +67,7 @@ const IMG = {
   menuInjeolmi:
     'https://images.unsplash.com/photo-1541614101331-1a5a3a194e92?w=400&h=400&fit=crop',
   menuJjajang:
-    'https://images.unsplash.com/photo-1585703900468-13b37a4cc556?w=400&h=400&fit=crop',
+    'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=400&fit=crop',
   menuJjambbong:
     'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400&h=400&fit=crop',
   menuTangsuyuk:
