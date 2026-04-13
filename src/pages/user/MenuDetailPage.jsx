@@ -63,7 +63,7 @@ function normalizeMenu(menu, index) {
     menuDescription: menu?.menuDescription ?? menu?.description ?? '',
     priceAmount: toPriceAmount(menu?.price),
     reviewCount: menu?.reviewCount ?? 0,
-    imageUrl: menu?.imageUrl ?? null,
+    imageUrl: menu?.imageUrl ?? menu?.thumbnailUrl ?? null,
     optionGroups: optionGroups.map((group, groupIndex) => ({
       id: group?.id ?? `${rawMenuId}-${groupIndex}`,
       groupName: group?.groupName ?? `옵션 그룹 ${groupIndex + 1}`,
@@ -261,6 +261,7 @@ export default function MenuDetailPage() {
       storePublicId: trimmedStoreId,
       storeId: selectedMenu.storeIdNumeric,
       storeName: data?.store?.storeName ?? '가게명 없음',
+      storeThumbnailUrl: data?.store?.thumbnailUrl ?? null,
       menuId: selectedMenu.id,
       menuNumericId: selectedMenu.menuNumericId,
       menuName: selectedMenu.menuName,

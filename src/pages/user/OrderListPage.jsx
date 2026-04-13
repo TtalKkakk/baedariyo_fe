@@ -50,9 +50,7 @@ function ActiveOrderCard({ order }) {
   const progressPercent =
     stepIndex === 0 ? 8 : (stepIndex / (DELIVERY_STATUSES.length - 1)) * 100;
 
-  const storeImage =
-    order.storeImage ??
-    `https://picsum.photos/seed/active-${order.paymentId}/120/120`;
+  const storeImage = order.storeImage ?? '/maratang1.png';
 
   const StatusIcon = STATUS_ICONS[order.deliveryStatus] ?? OrderIcon;
   const isDelivered = order.deliveryStatus === 'DELIVERED';
@@ -135,10 +133,7 @@ function OrderCard({ payment, onOpenDetail, activeOrders }) {
           className={`flex items-start gap-[10px] flex-1 min-w-0 text-left${payment?.storePublicId ? '' : ' cursor-default'}`}
         >
           <img
-            src={
-              storeImage ??
-              `https://picsum.photos/seed/store-${payment?.orderId}/120/120`
-            }
+            src={storeImage ?? '/maratang1.png'}
             alt={payment?.storeName}
             className="w-[46px] h-[46px] rounded-xl object-cover shrink-0"
           />

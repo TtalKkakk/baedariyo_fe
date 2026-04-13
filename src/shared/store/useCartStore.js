@@ -27,6 +27,7 @@ export const useCartStore = create(
           storePublicId,
           storeId,
           storeName,
+          storeThumbnailUrl,
           menuId,
           menuNumericId,
           menuName,
@@ -78,6 +79,7 @@ export const useCartStore = create(
                 {
                   itemKey,
                   storePublicId,
+                  storeThumbnailUrl: storeThumbnailUrl ?? null,
                   storeId:
                     typeof storeId === 'number' && Number.isFinite(storeId)
                       ? storeId

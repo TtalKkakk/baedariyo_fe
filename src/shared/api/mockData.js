@@ -216,7 +216,16 @@ const SEARCH_RESULT_STORES = [
   },
 ];
 
-function searchStores({ keyword, storeCategory, page = 0, size = 20 } = {}) {
+function searchStores({
+  keyword,
+  storeCategory,
+  page = 0,
+  size = 20,
+  sort,
+  minRating,
+  maxMinOrderAmount,
+  freeDelivery,
+} = {}) {
   const q = (keyword ?? '').trim().toLowerCase();
   let filtered = SEARCH_RESULT_STORES;
   if (storeCategory) {
@@ -227,6 +236,32 @@ function searchStores({ keyword, storeCategory, page = 0, size = 20 } = {}) {
       (s) =>
         s.storeName.toLowerCase().includes(q) ||
         s.description.toLowerCase().includes(q)
+    );
+  }
+  if (typeof minRating === 'number') {
+    filtered = filtered.filter((s) => (s.totalRating ?? 0) >= minRating);
+  }
+  if (typeof maxMinOrderAmount === 'number') {
+    filtered = filtered.filter(
+      (s) => (s.minimumOrderAmount?.amount ?? Infinity) <= maxMinOrderAmount
+    );
+  }
+  if (freeDelivery) {
+    filtered = filtered.filter((s) => s.deliveryFee?.amount === 0);
+  }
+  if (sort === '별점 높은 순') {
+    filtered = [...filtered].sort(
+      (a, b) => (b.totalRating ?? 0) - (a.totalRating ?? 0)
+    );
+  } else if (sort === '주문 많은 순') {
+    filtered = [...filtered].sort(
+      (a, b) => (b.reviewCount ?? 0) - (a.reviewCount ?? 0)
+    );
+  } else if (sort === '추천순') {
+    filtered = [...filtered].sort(
+      (a, b) =>
+        (b.totalRating ?? 0) * (b.reviewCount ?? 0) -
+        (a.totalRating ?? 0) * (a.reviewCount ?? 0)
     );
   }
   const start = page * size;
@@ -2386,7 +2421,9 @@ function createOrder(payload) {
     paymentKey: `mock_order_payment_${paymentId}`,
     createdAt: nowIso(),
     orderMenus,
-    storeImages: [`https://picsum.photos/seed/order-store-${storeId}/800/500`],
+    storeImages: payload?.storeThumbnailUrl
+      ? [payload.storeThumbnailUrl]
+      : [`https://picsum.photos/seed/order-store-${storeId}/800/500`],
   });
 
   mockState.payments.unshift(payment);
