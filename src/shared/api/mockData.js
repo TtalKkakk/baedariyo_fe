@@ -62,6 +62,16 @@ const IMG = {
     'https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=400&h=400&fit=crop',
   menuBeer:
     'https://images.unsplash.com/photo-1535958636474-b021ee887b13?w=400&h=400&fit=crop',
+  menuBingsu:
+    'https://images.unsplash.com/photo-1488477304112-4944851de03d?w=400&h=400&fit=crop',
+  menuInjeolmi:
+    'https://images.unsplash.com/photo-1541614101331-1a5a3a194e92?w=400&h=400&fit=crop',
+  menuJjajang:
+    'https://images.unsplash.com/photo-1585703900468-13b37a4cc556?w=400&h=400&fit=crop',
+  menuJjambbong:
+    'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400&h=400&fit=crop',
+  menuTangsuyuk:
+    'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400&h=400&fit=crop',
 };
 
 const SEARCH_RESULT_STORES = [
@@ -1609,9 +1619,481 @@ const SHANGTZ_MENUS_TEMPLATE = [
   },
 ];
 
+const CAFE_MENUS_TEMPLATE = [
+  {
+    id: 401,
+    menuName: '아메리카노',
+    menuDescription: '깔끔하고 진한 에스프레소에 물을 더한 기본 아메리카노.',
+    thumbnailUrl: IMG.menuAmericano,
+    price: { amount: 0 },
+    reviewCount: 980,
+    menuOptionGroups: [
+      {
+        id: '401-g1',
+        groupName: '온도 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          {
+            name: 'ICE (355ml)',
+            optionPrice: { amount: 2000 },
+            isPopular: true,
+          },
+          {
+            name: 'HOT (355ml)',
+            optionPrice: { amount: 2000 },
+            isPopular: false,
+          },
+          {
+            name: 'ICE Large (500ml)',
+            optionPrice: { amount: 2500 },
+            isPopular: false,
+          },
+        ],
+      },
+      {
+        id: '401-g2',
+        groupName: '추가 옵션',
+        maxSelectableCount: 2,
+        absolutePrice: false,
+        options: [
+          { name: '샷 추가', optionPrice: { amount: 500 }, isPopular: true },
+          { name: '시럽 추가', optionPrice: { amount: 300 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 402,
+    menuName: '카페라떼',
+    menuDescription: '부드러운 우유 거품과 에스프레소의 조화.',
+    thumbnailUrl: IMG.menuLatte,
+    price: { amount: 0 },
+    reviewCount: 720,
+    menuOptionGroups: [
+      {
+        id: '402-g1',
+        groupName: '온도 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          {
+            name: 'ICE (355ml)',
+            optionPrice: { amount: 3000 },
+            isPopular: true,
+          },
+          {
+            name: 'HOT (355ml)',
+            optionPrice: { amount: 3000 },
+            isPopular: false,
+          },
+        ],
+      },
+      {
+        id: '402-g2',
+        groupName: '추가 옵션',
+        maxSelectableCount: 2,
+        absolutePrice: false,
+        options: [
+          { name: '샷 추가', optionPrice: { amount: 500 }, isPopular: false },
+          {
+            name: '바닐라 시럽 추가',
+            optionPrice: { amount: 300 },
+            isPopular: true,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 403,
+    menuName: '바닐라라떼',
+    menuDescription: '달콤한 바닐라 시럽을 넣은 부드러운 라떼.',
+    thumbnailUrl: IMG.menuVanillaLatte,
+    price: { amount: 0 },
+    reviewCount: 850,
+    menuOptionGroups: [
+      {
+        id: '403-g1',
+        groupName: '온도 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          {
+            name: 'ICE (355ml)',
+            optionPrice: { amount: 3500 },
+            isPopular: true,
+          },
+          {
+            name: 'HOT (355ml)',
+            optionPrice: { amount: 3500 },
+            isPopular: false,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 404,
+    menuName: '카푸치노',
+    menuDescription: '에스프레소에 우유 거품을 듬뿍 올린 클래식 카푸치노.',
+    thumbnailUrl: IMG.menuCreamCoffee,
+    price: { amount: 0 },
+    reviewCount: 430,
+    menuOptionGroups: [
+      {
+        id: '404-g1',
+        groupName: '온도 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          {
+            name: 'HOT (355ml)',
+            optionPrice: { amount: 3500 },
+            isPopular: true,
+          },
+          {
+            name: 'ICE (355ml)',
+            optionPrice: { amount: 3500 },
+            isPopular: false,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 405,
+    menuName: '딸기라떼',
+    menuDescription: '상큼한 딸기와 우유의 달콤한 조화.',
+    thumbnailUrl: IMG.menuStrawberryLatte,
+    price: { amount: 0 },
+    reviewCount: 610,
+    menuOptionGroups: [
+      {
+        id: '405-g1',
+        groupName: '온도 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          {
+            name: 'ICE (355ml)',
+            optionPrice: { amount: 4000 },
+            isPopular: true,
+          },
+          {
+            name: 'HOT (355ml)',
+            optionPrice: { amount: 4000 },
+            isPopular: false,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 406,
+    menuName: '레몬에이드',
+    menuDescription: '상큼한 레몬과 탄산의 시원한 조화.',
+    thumbnailUrl: IMG.menuAde,
+    price: { amount: 0 },
+    reviewCount: 340,
+    menuOptionGroups: [
+      {
+        id: '406-g1',
+        groupName: '사이즈 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          {
+            name: 'Regular (355ml)',
+            optionPrice: { amount: 3500 },
+            isPopular: true,
+          },
+          {
+            name: 'Large (500ml)',
+            optionPrice: { amount: 4000 },
+            isPopular: false,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 407,
+    menuName: '복숭아아이스티',
+    menuDescription: '달콤한 복숭아 향이 가득한 시원한 아이스티.',
+    thumbnailUrl: IMG.menuIcedTea,
+    price: { amount: 0 },
+    reviewCount: 280,
+    menuOptionGroups: [
+      {
+        id: '407-g1',
+        groupName: '사이즈 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          {
+            name: 'Regular (355ml)',
+            optionPrice: { amount: 3000 },
+            isPopular: true,
+          },
+          {
+            name: 'Large (500ml)',
+            optionPrice: { amount: 3500 },
+            isPopular: false,
+          },
+        ],
+      },
+    ],
+  },
+];
+
+const BINGSU_MENUS_TEMPLATE = [
+  {
+    id: 501,
+    menuName: '생딸기설빙',
+    menuDescription: '신선한 딸기를 듬뿍 올린 설빙의 대표 메뉴.',
+    thumbnailUrl: IMG.menuBingsu,
+    price: { amount: 0 },
+    reviewCount: 1540,
+    menuOptionGroups: [
+      {
+        id: '501-g1',
+        groupName: '사이즈 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '1인', optionPrice: { amount: 9900 }, isPopular: true },
+          { name: '2인', optionPrice: { amount: 16900 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 502,
+    menuName: '인절미설빙',
+    menuDescription: '고소한 인절미와 콩가루가 올라간 설빙.',
+    thumbnailUrl: IMG.menuBingsu,
+    price: { amount: 0 },
+    reviewCount: 1120,
+    menuOptionGroups: [
+      {
+        id: '502-g1',
+        groupName: '사이즈 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '1인', optionPrice: { amount: 9900 }, isPopular: true },
+          { name: '2인', optionPrice: { amount: 16900 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 503,
+    menuName: '순수요거트설빙',
+    menuDescription: '상큼한 요거트 소스와 함께하는 부드러운 설빙.',
+    thumbnailUrl: IMG.menuBingsu,
+    price: { amount: 0 },
+    reviewCount: 890,
+    menuOptionGroups: [
+      {
+        id: '503-g1',
+        groupName: '사이즈 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '1인', optionPrice: { amount: 9400 }, isPopular: true },
+          { name: '2인', optionPrice: { amount: 15900 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 504,
+    menuName: '망고빙수',
+    menuDescription: '달콤한 망고 과육이 가득한 여름 시그니처.',
+    thumbnailUrl: IMG.menuAde,
+    price: { amount: 0 },
+    reviewCount: 670,
+    menuOptionGroups: [
+      {
+        id: '504-g1',
+        groupName: '사이즈 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '1인', optionPrice: { amount: 10900 }, isPopular: true },
+          { name: '2인', optionPrice: { amount: 18900 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 505,
+    menuName: '팥빙수',
+    menuDescription: '달콤한 팥과 떡이 올라간 클래식 팥빙수.',
+    thumbnailUrl: IMG.menuBingsu,
+    price: { amount: 0 },
+    reviewCount: 540,
+    menuOptionGroups: [
+      {
+        id: '505-g1',
+        groupName: '사이즈 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '1인', optionPrice: { amount: 8900 }, isPopular: true },
+          { name: '2인', optionPrice: { amount: 14900 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 506,
+    menuName: '아메리카노',
+    menuDescription: '진한 에스프레소와 물의 조화.',
+    thumbnailUrl: IMG.menuAmericano,
+    price: { amount: 0 },
+    reviewCount: 320,
+    menuOptionGroups: [
+      {
+        id: '506-g1',
+        groupName: '온도 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: 'ICE', optionPrice: { amount: 2500 }, isPopular: true },
+          { name: 'HOT', optionPrice: { amount: 2500 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+];
+
+const CHINESE_RESTAURANT_MENUS_TEMPLATE = [
+  {
+    id: 601,
+    menuName: '짜장면',
+    menuDescription: '춘장으로 만든 달콤하고 진한 소스의 짜장면.',
+    thumbnailUrl: IMG.menuJjajang,
+    price: { amount: 7000 },
+    reviewCount: 2100,
+    menuOptionGroups: [
+      {
+        id: '601-g1',
+        groupName: '면 추가',
+        maxSelectableCount: 1,
+        absolutePrice: false,
+        options: [
+          { name: '기본', optionPrice: { amount: 0 }, isPopular: true },
+          { name: '곱배기', optionPrice: { amount: 1500 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 602,
+    menuName: '짬뽕',
+    menuDescription: '해산물과 채소가 가득한 얼큰한 짬뽕.',
+    thumbnailUrl: IMG.menuJjambbong,
+    price: { amount: 8000 },
+    reviewCount: 1850,
+    menuOptionGroups: [
+      {
+        id: '602-g1',
+        groupName: '맵기 선택',
+        maxSelectableCount: 1,
+        absolutePrice: false,
+        options: [
+          { name: '보통', optionPrice: { amount: 0 }, isPopular: true },
+          { name: '덜 맵게', optionPrice: { amount: 0 }, isPopular: false },
+          { name: '곱배기', optionPrice: { amount: 1500 }, isPopular: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 603,
+    menuName: '탕수육',
+    menuDescription: '바삭하게 튀긴 돼지고기에 새콤달콤 소스.',
+    thumbnailUrl: IMG.menuTangsuyuk,
+    price: { amount: 0 },
+    reviewCount: 1430,
+    menuOptionGroups: [
+      {
+        id: '603-g1',
+        groupName: '사이즈 선택',
+        maxSelectableCount: 1,
+        absolutePrice: true,
+        options: [
+          { name: '소 (2인)', optionPrice: { amount: 18000 }, isPopular: true },
+          {
+            name: '대 (3~4인)',
+            optionPrice: { amount: 26000 },
+            isPopular: false,
+          },
+        ],
+      },
+      {
+        id: '603-g2',
+        groupName: '소스 선택',
+        maxSelectableCount: 1,
+        absolutePrice: false,
+        options: [
+          { name: '부먹', optionPrice: { amount: 0 }, isPopular: false },
+          { name: '찍먹', optionPrice: { amount: 0 }, isPopular: true },
+        ],
+      },
+    ],
+  },
+  {
+    id: 604,
+    menuName: '볶음밥',
+    menuDescription: '중식 웍에서 볶은 고소한 중화볶음밥.',
+    thumbnailUrl: IMG.menuFriedRice,
+    price: { amount: 8000 },
+    reviewCount: 980,
+    menuOptionGroups: [
+      {
+        id: '604-g1',
+        groupName: '추가 선택',
+        maxSelectableCount: 1,
+        absolutePrice: false,
+        options: [
+          { name: '기본', optionPrice: { amount: 0 }, isPopular: true },
+          {
+            name: '계란 추가',
+            optionPrice: { amount: 1000 },
+            isPopular: false,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 605,
+    menuName: '군만두 (8개)',
+    menuDescription: '바삭하게 구운 육즙 가득한 군만두.',
+    thumbnailUrl: IMG.menuDumpling,
+    price: { amount: 6000 },
+    reviewCount: 740,
+    menuOptionGroups: [],
+  },
+];
+
 const CUSTOM_STORE_MENUS_MAP = {
+  'bb000001-0000-4000-8000-000000000001': CAFE_MENUS_TEMPLATE,
   'bb000002-0000-4000-8000-000000000002': BAEKDABANG_MENUS_TEMPLATE,
+  'bb000003-0000-4000-8000-000000000003': CAFE_MENUS_TEMPLATE,
+  'bb000004-0000-4000-8000-000000000004': BINGSU_MENUS_TEMPLATE,
   'aa000001-0000-4000-8000-000000000001': SHANGTZ_MENUS_TEMPLATE,
+  'aa000002-0000-4000-8000-000000000002': SHANGTZ_MENUS_TEMPLATE,
+  'aa000003-0000-4000-8000-000000000003': SHANGTZ_MENUS_TEMPLATE,
+  'aa000004-0000-4000-8000-000000000004': SHANGTZ_MENUS_TEMPLATE,
+  'aa000005-0000-4000-8000-000000000005': SHANGTZ_MENUS_TEMPLATE,
+  'aa000006-0000-4000-8000-000000000006': SHANGTZ_MENUS_TEMPLATE,
+  'aa000007-0000-4000-8000-000000000007': SHANGTZ_MENUS_TEMPLATE,
+  'aa000008-0000-4000-8000-000000000008': CHINESE_RESTAURANT_MENUS_TEMPLATE,
 };
 
 function buildMenuGroupsFromMenus(menus, { includeExtraGroups = true } = {}) {
