@@ -8,6 +8,11 @@ const NETWORK_ERROR_CODES = new Set([
 
 const warnedApiNames = new Set();
 
+// 데모용: 백엔드 URL이 없는 프로덕션 빌드(GitHub Pages 등)에서는
+// 네트워크 요청을 건너뛰고 즉시 mock 데이터를 반환한다.
+const FORCE_MOCK =
+  import.meta.env.PROD && !import.meta.env.VITE_API_BASE_URL?.trim();
+
 function extractApiData(response) {
   return response?.data?.data ?? response?.data;
 }
@@ -49,6 +54,10 @@ function warnFallbackOnce(apiName, error) {
 }
 
 export async function requestWithMockFallback({ apiName, request, fallback }) {
+  if (FORCE_MOCK) {
+    return fallback();
+  }
+
   try {
     const response = await request();
     return extractApiData(response);

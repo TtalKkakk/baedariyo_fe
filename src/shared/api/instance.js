@@ -14,7 +14,7 @@ const BASE_URL =
 
 export const api = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000,
+  timeout: 3000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -49,9 +49,9 @@ api.interceptors.response.use(
           localStorage.removeItem('accessToken');
           localStorage.removeItem('refreshToken');
           if (window.location.pathname.startsWith('/rider')) {
-            window.location.href = '/baedaliyo_fe/rider/login';
+            window.location.href = '/baedariyo_fe/rider/login';
           } else {
-            window.location.href = '/baedaliyo_fe/login';
+            window.location.href = '/baedariyo_fe/login';
           }
           break;
         case 403:
