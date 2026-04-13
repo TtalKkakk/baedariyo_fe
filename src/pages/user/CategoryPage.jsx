@@ -197,8 +197,7 @@ export default function CategoryPage() {
     return () => observer.disconnect();
   }, [hasNextPage, fetchNextPage]);
 
-  const filteredStores =
-    data?.pages.flatMap((p) => p?.stores ?? p ?? []) ?? [];
+  const filteredStores = data?.pages.flatMap((p) => p?.stores ?? p ?? []) ?? [];
 
   const isFilterLoading = isFetching && !isFetchingNextPage;
 
