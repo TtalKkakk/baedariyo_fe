@@ -13,7 +13,7 @@ export default defineConfig({
   define: {
     global: 'globalThis',
   },
-  base: '/baedaliyo_fe/',
+  base: '/baedariyo_fe/',
   server: {
     proxy: {
       '/api': {

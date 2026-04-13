@@ -384,7 +384,7 @@ const router = createBrowserRouter(
     },
   ],
   {
-    basename: '/baedaliyo_fe',
+    basename: '/baedariyo_fe',
   }
 );
 
