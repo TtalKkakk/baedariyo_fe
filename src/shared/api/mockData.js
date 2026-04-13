@@ -1824,16 +1824,222 @@ const mockState = {
   userAddresses: [
     {
       alias: '집',
-      roadAddress: '서울특별시 관악구 관악로 1',
-      jibunAddress: '서울특별시 관악구 봉천동 1',
-      detailAddress: '101동 101호',
+      roadAddress: '서울특별시 구로구 구로중앙로 152',
+      jibunAddress: '서울특별시 구로구 구로동 440-1',
+      detailAddress: '101동 1502호',
       isDefault: true,
+    },
+    {
+      alias: '회사',
+      roadAddress: '서울특별시 영등포구 여의대로 128',
+      jibunAddress: '서울특별시 영등포구 여의도동 20',
+      detailAddress: 'LG트윈타워 서관 15층',
+      isDefault: false,
+    },
+    {
+      alias: '본가',
+      roadAddress: '경기도 성남시 분당구 판교역로 235',
+      jibunAddress: '경기도 성남시 분당구 삼평동 680',
+      detailAddress: '에이치스퀘어 N동 12층',
+      isDefault: false,
+    },
+  ],
+  paymentMethods: [
+    {
+      id: 'pm-seed-1',
+      cardName: '신한 Deep Dream',
+      cardNumber: '4520-****-****-3421',
+      isDefault: true,
+    },
+    {
+      id: 'pm-seed-2',
+      cardName: '카카오뱅크 체크',
+      cardNumber: '5254-****-****-7890',
+      isDefault: false,
     },
   ],
   recentKeywords: ['처갓집양념치킨', '메가커피', '춘', '마라탕', '치킨'],
   deliveryLocations: {},
   payments: loadPayments(),
 };
+
+// ---- 데모 seed: localStorage가 비어있을 때만 주입 ----
+function buildDemoPayments() {
+  const now = Date.now();
+  const iso = (ms) => new Date(now - ms).toISOString();
+  return [
+    buildPayment({
+      paymentId: 6990,
+      orderId: 4990,
+      storeName: '백억커피 구로고척점',
+      storePublicId: 'bb000001-0000-4000-8000-000000000001',
+      paymentStatus: 'DONE',
+      amount: 12300,
+      paymentKey: 'demo-pk-6990',
+      createdAt: iso(2 * 60 * 60 * 1000), // 2시간 전
+      orderMenus: [
+        { menuName: '아메리카노 (ICED)', quantity: 2, price: 4500 },
+        { menuName: '카페라떼', quantity: 1, price: 5000 },
+      ],
+      storeImages: [IMG.cafe1],
+    }),
+    buildPayment({
+      paymentId: 6985,
+      orderId: 4985,
+      storeName: '마라탕전문 상츠마라 신도림점',
+      storePublicId: 'aa000001-0000-4000-8000-000000000001',
+      paymentStatus: 'DONE',
+      amount: 18900,
+      paymentKey: 'demo-pk-6985',
+      createdAt: iso(1 * 24 * 60 * 60 * 1000), // 1일 전
+      orderMenus: [
+        { menuName: 'Self 마라탕 1인분', quantity: 1, price: 11900 },
+        { menuName: '꿔바로우 미니', quantity: 1, price: 7000 },
+      ],
+      storeImages: [IMG.maratang1],
+    }),
+    buildPayment({
+      paymentId: 6980,
+      orderId: 4980,
+      storeName: 'Mock 바삭치킨',
+      storePublicId: DEFAULT_STORE_PUBLIC_ID,
+      paymentStatus: 'DONE',
+      amount: 23800,
+      paymentKey: 'demo-pk-6980',
+      createdAt: iso(5 * 24 * 60 * 60 * 1000), // 5일 전
+      orderMenus: [
+        { menuName: '후라이드 치킨 (중 10조각)', quantity: 1, price: 13900 },
+        { menuName: '양념 치킨 (미니 6조각)', quantity: 1, price: 9900 },
+      ],
+      storeImages: [IMG.chicken],
+    }),
+    buildPayment({
+      paymentId: 6975,
+      orderId: 4975,
+      storeName: '설빙 오류동역점',
+      storePublicId: 'bb000004-0000-4000-8000-000000000004',
+      paymentStatus: 'CANCELED',
+      amount: 15800,
+      paymentKey: 'demo-pk-6975',
+      createdAt: iso(10 * 24 * 60 * 60 * 1000), // 10일 전
+      orderMenus: [{ menuName: '생딸기 설빙', quantity: 1, price: 15800 }],
+      storeImages: [IMG.bingsu],
+    }),
+  ];
+}
+
+function buildDemoReviews() {
+  const now = Date.now();
+  const iso = (ms) => new Date(now - ms).toISOString();
+
+  const reviewsByStore = {
+    [DEFAULT_STORE_PUBLIC_ID]: [
+      {
+        publicId: 'rev-seed-001',
+        storePublicId: DEFAULT_STORE_PUBLIC_ID,
+        storeName: 'Mock 바삭치킨',
+        rating: 5,
+        createdAt: iso(3 * 24 * 60 * 60 * 1000),
+        comment: '바삭하고 겉바속촉! 배달도 빠르네요.',
+        images: [IMG.menuFriedChicken],
+      },
+      {
+        publicId: 'rev-seed-002',
+        storePublicId: DEFAULT_STORE_PUBLIC_ID,
+        storeName: 'Mock 바삭치킨',
+        rating: 4,
+        createdAt: iso(10 * 24 * 60 * 60 * 1000),
+        comment: '양념이 맛있어요. 다만 양이 좀 아쉽',
+        images: [IMG.menuSeasonedChicken],
+      },
+      {
+        publicId: 'rev-seed-003',
+        storePublicId: DEFAULT_STORE_PUBLIC_ID,
+        storeName: 'Mock 바삭치킨',
+        rating: 5,
+        createdAt: iso(30 * 24 * 60 * 60 * 1000),
+        comment: '가성비 최고! 재주문 의사 있음.',
+        images: [],
+      },
+    ],
+    'bb000001-0000-4000-8000-000000000001': [
+      {
+        publicId: 'rev-seed-101',
+        storePublicId: 'bb000001-0000-4000-8000-000000000001',
+        storeName: '백억커피 구로고척점',
+        rating: 5,
+        createdAt: iso(2 * 60 * 60 * 1000),
+        comment: '아메리카노 진하고 좋아요. 라떼도 고소!',
+        images: [IMG.menuAmericano, IMG.menuLatte],
+      },
+      {
+        publicId: 'rev-seed-102',
+        storePublicId: 'bb000001-0000-4000-8000-000000000001',
+        storeName: '백억커피 구로고척점',
+        rating: 4,
+        createdAt: iso(7 * 24 * 60 * 60 * 1000),
+        comment: '매일 시켜먹는 단골집. 포장 깔끔해요.',
+        images: [],
+      },
+    ],
+    'aa000001-0000-4000-8000-000000000001': [
+      {
+        publicId: 'rev-seed-201',
+        storePublicId: 'aa000001-0000-4000-8000-000000000001',
+        storeName: '마라탕전문 상츠마라 신도림점',
+        rating: 5,
+        createdAt: iso(1 * 24 * 60 * 60 * 1000),
+        comment: '매운맛 조절 가능하고 꿔바로우 바삭합니다.',
+        images: [IMG.menuMaratang, IMG.menuGwobaorou],
+      },
+      {
+        publicId: 'rev-seed-202',
+        storePublicId: 'aa000001-0000-4000-8000-000000000001',
+        storeName: '마라탕전문 상츠마라 신도림점',
+        rating: 4,
+        createdAt: iso(14 * 24 * 60 * 60 * 1000),
+        comment: '재료 신선해요. 다만 배달 시간이 좀 걸림.',
+        images: [],
+      },
+    ],
+  };
+
+  const storeReviews = {};
+  const myReviews = [];
+
+  for (const [sid, list] of Object.entries(reviewsByStore)) {
+    storeReviews[sid] = list.map((r) => buildStoreReview(r));
+  }
+  // 내 리뷰: 바삭치킨 첫번째, 마라탕 첫번째
+  myReviews.push(
+    buildMyReview(buildStoreReview(reviewsByStore[DEFAULT_STORE_PUBLIC_ID][0]))
+  );
+  myReviews.push(
+    buildMyReview(
+      buildStoreReview(
+        reviewsByStore['aa000001-0000-4000-8000-000000000001'][0]
+      )
+    )
+  );
+
+  return { storeReviews, myReviews };
+}
+
+(function seedDemoDataIfEmpty() {
+  if (mockState.payments.length === 0) {
+    mockState.payments = buildDemoPayments();
+    savePayments();
+  }
+  if (mockState.myReviews.length === 0) {
+    const { storeReviews, myReviews } = buildDemoReviews();
+    for (const [sid, list] of Object.entries(storeReviews)) {
+      mockState.storeReviewsByStoreId[sid] = list;
+    }
+    mockState.myReviews = myReviews;
+    saveReviews();
+    recalculateAllStoreStats();
+  }
+})();
 
 function getReviewsByStoreId(storePublicId) {
   if (!mockState.storeReviewsByStoreId[storePublicId]) {

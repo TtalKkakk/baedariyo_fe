@@ -25,3 +25,7 @@ dist-ssr
 
 .env
 .env.*
+
+# Playwright smoke test output
+smoke-out/
+.claude/
